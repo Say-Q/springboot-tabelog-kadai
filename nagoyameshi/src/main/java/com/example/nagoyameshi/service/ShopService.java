@@ -77,10 +77,10 @@ public class ShopService {
 		shop.setPrice(shopEditForm.getPrice());
 		shop.setSeats(shopEditForm.getSeats());
 		shop.setShopSite(shopEditForm.getShopSite());
+		
+		shopRepository.save(shop);
 	}
 	
-	
-
 	//UUIDを使って生成したファイル名を返す
 	public String generateNewFileName(String fileName) {
 		String[] fileNames = fileName.split("\\.");

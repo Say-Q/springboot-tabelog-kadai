@@ -22,6 +22,7 @@ import com.example.nagoyameshi.form.ShopRegisterForm;
 import com.example.nagoyameshi.repository.ShopRepository;
 import com.example.nagoyameshi.service.ShopService;
 
+
 @Controller
 @RequestMapping("/admin/shops")
 public class AdminshopController {
@@ -102,5 +103,29 @@ public class AdminshopController {
 
 		return "admin/shops/edit";
 	}
+
+	@PostMapping("/{id}/update")
+	public String update(@ModelAttribute @Validated ShopEditForm shopEditForm, BindingResult bindingResult,
+			RedirectAttributes redirectAttributes) {
+		if (bindingResult.hasErrors()) {
+
+			return "admin/shops/edit";
+
+		}
+
+		shopService.update(shopEditForm);
+		redirectAttributes.addFlashAttribute("successMessage", "店舗情報を編集しました。");
+		return "redirect:/admin/shops";
+	}
+	
+	@PostMapping("/{id}/delete")
+	public String delete(@PathVariable(name = "id") Integer id, RedirectAttributes redirectAttributes) {
+		shopRepository.deleteById(id);
+		
+		redirectAttributes.addFlashAttribute("successMessage", "民宿を削除しました。");
+		
+		return "redirect:/admin/shops";
+	}
+	
 
 }

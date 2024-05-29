@@ -27,3 +27,9 @@ INSERT IGNORE INTO categories (id, category_name) VALUES (6, '鉄板スパ');
 INSERT IGNORE INTO roles (id, name) VALUES (1, 'ROLE_ADMIN');
 INSERT IGNORE INTO roles (id, name) VALUES (2, 'ROLE_FREEMEMBER');
 INSERT IGNORE INTO roles (id, name) VALUES (3, 'ROLE_PAYMEMBER');
+
+-- usersテーブル
+INSERT IGNORE INTO users (id, roles_id, name, furigana, birthday, phone_number, profession, mail, password, enabled) VALUES (1, 1, '名古屋 飯主', 'ナゴヤハンシュ', '1984/03/01', '080-1234-5678', 'エンジニア', 'nagoya.hansyu@example.com', 'admin', false);
+INSERT IGNORE INTO users (id, roles_id, name, furigana, birthday, phone_number, profession, mail, password, enabled) VALUES (2, 2, '名古屋　飯太', 'ナゴヤハンタ', '2010/01/01', '080-1234-5678', '営業', 'nagoya.hanta@example.com', 'password', false);
+INSERT IGNORE INTO users (id, roles_id, name, furigana, birthday, phone_number, profession, mail, password, enabled) VALUES (3, 2, '名古屋　飯子', 'ナゴヤハンコ', '2015/02/02', '080-1234-5678', '学生', 'nagoya.hanko@example.com', 'password', false);
+INSERT IGNORE INTO users (id, roles_id, name, furigana, birthday, phone_number, profession, mail, password, enabled) VALUES (4, 3, '名古屋　飯副', 'ナゴヤハンプク', '1982/05/29', '080-1234-5678', '主婦', 'nagoya.hanpuku@example.com', 'password', false);

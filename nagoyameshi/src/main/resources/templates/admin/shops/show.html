@@ -35,8 +35,8 @@
 
 						<div class="mb-3">
 							<img th:if="${shop.getImageName()}" th:src="@{/storage/__${shop.getImageName()}__}"
-								class="w-50" alt="店舗画像">
-							<img th:unless="${shop.getImageName()}" th:src="@{/images/noImage.png}" class="w-50"
+								class="w-100" alt="店舗画像">
+							<img th:unless="${shop.getImageName()}" th:src="@{/images/noImage.png}" class="w-100"
 								alt="NO IMAGE">
 						</div>
 
@@ -58,6 +58,16 @@
 
 								<div class="col">
 									<span th:text="${shop.getName()}"></span>
+								</div>
+							</div>
+
+							<div class="row pb-2 mb-2 border-bottom">
+								<div class="col-4">
+									<span class="fw-bold">カテゴリ</span>
+								</div>
+
+								<div class="col">
+									<span th:text="${shop.getCategoriesId()}"></span>
 								</div>
 							</div>
 
