@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.nagoyameshi.entity.Shop;
+import com.example.nagoyameshi.form.ShopEditForm;
 import com.example.nagoyameshi.form.ShopRegisterForm;
 import com.example.nagoyameshi.repository.ShopRepository;
 
@@ -41,11 +42,44 @@ public class ShopService {
 		shop.setPostalCode(shopRegisterForm.getPostalCode());
 		shop.setAddress(shopRegisterForm.getAddress());
 		shop.setPhoneNumber(shopRegisterForm.getPhoneNumber());
+		shop.setOpenTime(shopRegisterForm.getOpenTime());
+		shop.setCloseTime(shopRegisterForm.getCloseTime());
+		shop.setRegularHoliday(shopRegisterForm.getRegularHoliday());
 		shop.setPrice(shopRegisterForm.getPrice());
 		shop.setSeats(shopRegisterForm.getSeats());
+		shop.setShopSite(shopRegisterForm.getShopSite());
 
 		shopRepository.save(shop);
 	}
+	
+	@Transactional
+	public void update(ShopEditForm shopEditForm) {
+		Shop shop = shopRepository.getReferenceById(shopEditForm.getId());
+		MultipartFile imageFile = shopEditForm.getImageFile();
+		
+		if (!imageFile.isEmpty()) {
+			String imageName = imageFile.getOriginalFilename();
+			String hashedImageName = generateNewFileName(imageName);
+			Path filePath = Paths.get("src/main/resources/static/storage/" + hashedImageName);
+			copyImageFile(imageFile, filePath);
+			shop.setImageName(hashedImageName);
+		}
+		
+		shop.setName(shopEditForm.getName());
+		shop.setCategoriesId(shopEditForm.getCategoriesId());
+		shop.setDescription(shopEditForm.getDescription());
+		shop.setPostalCode(shopEditForm.getPostalCode());
+		shop.setAddress(shopEditForm.getAddress());
+		shop.setPhoneNumber(shopEditForm.getPhoneNumber());
+		shop.setOpenTime(shopEditForm.getOpenTime());
+		shop.setCloseTime(shopEditForm.getCloseTime());
+		shop.setRegularHoliday(shopEditForm.getRegularHoliday());
+		shop.setPrice(shopEditForm.getPrice());
+		shop.setSeats(shopEditForm.getSeats());
+		shop.setShopSite(shopEditForm.getShopSite());
+	}
+	
+	
 
 	//UUIDを使って生成したファイル名を返す
 	public String generateNewFileName(String fileName) {

@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.nagoyameshi.entity.Shop;
+import com.example.nagoyameshi.form.ShopEditForm;
 import com.example.nagoyameshi.form.ShopRegisterForm;
 import com.example.nagoyameshi.repository.ShopRepository;
 import com.example.nagoyameshi.service.ShopService;
-
 
 @Controller
 @RequestMapping("/admin/shops")
@@ -66,21 +66,41 @@ public class AdminshopController {
 
 		return "admin/shops/register";
 	}
-	
+
 	@PostMapping("/create")
-	public String create(@ModelAttribute @Validated ShopRegisterForm shopRegisterForm, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+	public String create(@ModelAttribute @Validated ShopRegisterForm shopRegisterForm, BindingResult bindingResult,
+			RedirectAttributes redirectAttributes) {
 		if (bindingResult.hasErrors()) {
-			
+
 			return "admin/shops/register";
-					
+
 		}
-		
-			shopService.create(shopRegisterForm);
-			redirectAttributes.addFlashAttribute("successMessage", "店舗を登録しました。");
-		
+
+		shopService.create(shopRegisterForm);
+		redirectAttributes.addFlashAttribute("successMessage", "店舗を登録しました。");
+
 		return "redirect:/admin/shops";
-			
+
 	}
-	
+
+	@GetMapping("/{id}/edit")
+	public String edit(@PathVariable(name = "id") Integer id, Model model) {
+		Shop shop = shopRepository.getReferenceById(id);
+		//店舗画像のファイル名を取得する
+		String imageName = shop.getImageName();
+
+		//フォームクラスをインスタンス化する
+		ShopEditForm shopEditForm = new ShopEditForm(shop.getId(), shop.getName(), null, shop.getCategoriesId(),
+				shop.getDescription(), shop.getPostalCode(), shop.getAddress(), shop.getPhoneNumber(),
+				shop.getOpenTime(), shop.getCloseTime(), shop.getRegularHoliday(), shop.getPrice(), shop.getSeats(),
+				shop.getShopSite());
+
+		//店舗画像のファイル名をビューに渡す
+		model.addAttribute("imageName", imageName);
+		//生成したインスタンスをビューに渡す
+		model.addAttribute("shopEditForm", shopEditForm);
+
+		return "admin/shops/edit";
+	}
 
 }
