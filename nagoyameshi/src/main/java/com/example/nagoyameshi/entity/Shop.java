@@ -1,6 +1,5 @@
 package com.example.nagoyameshi.entity;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 
 import jakarta.persistence.Column;
@@ -23,9 +22,6 @@ public class Shop {
 	@Column(name = "categories_id")
 	private Integer categoriesId;
 	
-//	@OneToOne
-//	private Categories categories;
-	
 	@Column(name = "name")
 	private String name;
 	
@@ -46,10 +42,10 @@ public class Shop {
 	private String phoneNumber;
 	
 	@Column(name = "open_time")
-	private Time openTime;
+	private String openTime;
 	
 	@Column(name = "close_time")
-	private Time closeTime;
+	private String closeTime;
 	
 	@Column(name = "regular_holiday")
 	private String regularHoliday;

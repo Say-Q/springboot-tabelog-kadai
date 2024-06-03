@@ -1,7 +1,5 @@
 package com.example.nagoyameshi.form;
 
-import java.sql.Time;
-
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.constraints.Min;
@@ -37,10 +35,10 @@ public class ShopEditForm {
 	private String phoneNumber;
 
 	@NotNull(message = "開店時間を入力してください。")
-	private Time openTime;
+	private String openTime;
 
 	@NotNull(message = "閉店時間を入力してください。")
-	private Time closeTime;
+	private String closeTime;
 
 	@NotBlank(message = "定休日を入力してください。")
 	private String regularHoliday;

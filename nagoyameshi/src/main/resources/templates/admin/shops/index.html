@@ -55,8 +55,11 @@
 							<tbody>
 								<tr th:each="shop : ${shopPage}">
 									<td th:text="${shop.getId()}"></td>
-									<td th:text="${shop.getCategoriesId()}"></td>
-									<!--<td th:text"${shop.categories.categoryName()}"></td>-->
+									<!--カテゴリDB（categories）のIDとショップDB（shop）のIDが一致した場合、カテゴリDBからカテゴリ名（CategoryName）を表示する。-->
+									<span th:each="categories : ${category}">
+										<td th:if="${categories.getId() == shop.getCategoriesId()}"
+											th:text="${categories.getCategoryName()}"></td>
+									</span>
 									<td th:text="${shop.getName()}"></td>
 									<td th:text="${shop.getAddress()}"></td>
 									<td th:text="${shop.getPhoneNumber()}"></td>

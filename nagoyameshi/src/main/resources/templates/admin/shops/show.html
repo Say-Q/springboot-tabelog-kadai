@@ -67,7 +67,10 @@
 								</div>
 
 								<div class="col">
-									<span th:text="${shop.getCategoriesId()}"></span>
+									<span th:each="categories : ${category}">
+										<td th:if="${categories.getId() == shop.getCategoriesId()}"
+											th:text="${categories.getCategoryName()}"></td>
+									</span>
 								</div>
 							</div>
 

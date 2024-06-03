@@ -1,5 +1,7 @@
 package com.example.nagoyameshi.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -16,9 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.nagoyameshi.entity.Categories;
 import com.example.nagoyameshi.entity.Shop;
 import com.example.nagoyameshi.form.ShopEditForm;
 import com.example.nagoyameshi.form.ShopRegisterForm;
+import com.example.nagoyameshi.repository.CategoryRepository;
 import com.example.nagoyameshi.repository.ShopRepository;
 import com.example.nagoyameshi.service.ShopService;
 
@@ -28,10 +32,12 @@ import com.example.nagoyameshi.service.ShopService;
 public class AdminshopController {
 	private final ShopRepository shopRepository;
 	private final ShopService shopService;
+	private final CategoryRepository categoryRepository;
 
-	public AdminshopController(ShopRepository shopRepository, ShopService shopService) {
+	public AdminshopController(ShopRepository shopRepository, ShopService shopService, CategoryRepository categoryRepository) {
 		this.shopRepository = shopRepository;
 		this.shopService = shopService;
+		this.categoryRepository = categoryRepository;
 	}
 
 	@GetMapping
@@ -39,15 +45,20 @@ public class AdminshopController {
 			@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable,
 			@RequestParam(name = "keyword", required = false) String keyword) {
 		Page<Shop> shopPage;
+		List<Categories> category = categoryRepository.findAll();
 
 		if (keyword != null && !keyword.isEmpty()) {
+			
 			shopPage = shopRepository.findByNameLike("%" + keyword + "%", pageable);
+			
 		} else {
+
 			shopPage = shopRepository.findAll(pageable);
 		}
 
 		model.addAttribute("shopPage", shopPage);
 		model.addAttribute("keyword", keyword);
+		model.addAttribute("category", category);
 
 		return "admin/shops/index";
 	}
@@ -55,8 +66,11 @@ public class AdminshopController {
 	@GetMapping("/{id}")
 	public String show(@PathVariable(name = "id") Integer id, Model model) {
 		Shop shop = shopRepository.getReferenceById(id);
+		List<Categories> category = categoryRepository.findAll();
+//		List<Categories> category = categoryRepository.findAll(Categories.getId().equals(shop.getCategoriesId()));
 
 		model.addAttribute("shop", shop);
+		model.addAttribute("category", category);
 
 		return "admin/shops/show";
 	}

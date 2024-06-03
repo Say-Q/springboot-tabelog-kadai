@@ -107,7 +107,7 @@
 								<div class="col-md-8">
 									<div th:if="${#fields.hasErrors('address')}" class="text-danger small mb-2"
 										th:errors="*{address}"></div>
-									<input type="text" class="form-control" th:field="*{address}">
+									<textarea class="form-control" th:field="*{address}" cols="30" rows="3"></textarea>
 								</div>
 							</div>
 
@@ -127,74 +127,71 @@
 									<label for="openTime" class="col-form-label text-md-left fw-bold">開店時間</label>
 								</div>
 								<div class="col-md-8">
-									<!--<div th:if="${#fields.hasErrors('openTime')}" class="text-danger small mb-2"-->
-									<!--th:errors="*{openTime}"></div>-->
+									<div th:if="${#fields.hasErrors('openTime')}" class="text-danger small mb-2"
+										th:errors="*{openTime}"></div>
 									<input type="time" class="form-contorl" th:field="*{openTime}" placeholder="17:00">
 								</div>
+							</div>
 
-								<div class="form-group row mb-3">
-									<div class="col-md-4">
-										<label for="closeTime" class="col-form-label text-md-left fw-bold">閉店時間</label>
-									</div>
-									<div class="col-md-8">
-										<!--<div th:if="${#fields.hasErrors('closeTime')}" class="text-danger small mb-2"-->
-										<!--th:errors="*{closeTime}"></div>-->
-										<input type="time" class="form-contorl" th:field="*{closeTime}"
-											placeholder="00:00">
-									</div>
-
+							<div class="form-group row mb-3">
+								<div class="col-md-4">
+									<label for="closeTime" class="col-form-label text-md-left fw-bold">閉店時間</label>
 								</div>
-
-								<div class="form-group row mb-3">
-									<div class="col-md-4">
-										<label for="regularHoliday"
-											class="col-form-label text-md-left fw-bold">定休日</label>
-									</div>
-									<div class="col-md-8">
-										<div th:if="${#fields.hasErrors('regularHoliday')}"
-											class="text-danger small mb-2" th:errors="*{regularHoliday}"></div>
-										<input type="text" class="form-control" th:field="*{regularHoliday}"
-											placeholder="火曜、水曜">
-									</div>
+								<div class="col-md-8">
+									<div th:if="${#fields.hasErrors('closeTime')}" class="text-danger small mb-2"
+										th:errors="*{closeTime}"></div>
+									<input type="time" class="form-contorl" th:field="*{closeTime}" placeholder="00:00">
 								</div>
+							</div>
 
-								<div class="form-group row mb-3">
-									<div class="col-md-4">
-										<label for="price" class="col-form-label text-md-left fw-bold">価格帯（単位：円）</label>
-									</div>
-									<div class="col-md-8">
-										<div th:if="${#fields.hasErrors('price')}" class="text-danger small mb-2"
-											th:errors="*{price}"></div>
-										<input type="number" step="10" class="form-control" th:field="*{price}">
-									</div>
+							<div class="form-group row mb-3">
+								<div class="col-md-4">
+									<label for="regularHoliday" class="col-form-label text-md-left fw-bold">定休日</label>
 								</div>
-
-								<div class="form-group row mb-3">
-									<div class="col-md-4">
-										<label for="seats" class="col-form-label text-md-left fw-bold">座席数（単位：席）</label>
-									</div>
-									<div class="col-md-8">
-										<div th:if="${#fields.hasErrors('seats')}" class="text-danger small mb-2"
-											th:errors="*{seats}"></div>
-										<input type="number" class="form-control" th:field="*{seats}">
-									</div>
+								<div class="col-md-8">
+									<div th:if="${#fields.hasErrors('regularHoliday')}" class="text-danger small mb-2"
+										th:errors="*{regularHoliday}"></div>
+									<textarea class="form-control" th:field="*{regularHoliday}" cols="30" rows="2"
+										placeholder="火曜、水曜"></textarea>
 								</div>
+							</div>
 
-								<div class="form-gorup row  mb-3">
-									<div class="col-md-4">
-										<label for="shopSite" class="col-form-label text-md-left fw-bold">サイトURL</label>
-									</div>
-									<div class="col-md-8">
+							<div class="form-group row mb-3">
+								<div class="col-md-4">
+									<label for="price" class="col-form-label text-md-left fw-bold">価格帯（単位：円）</label>
+								</div>
+								<div class="col-md-8">
+									<div th:if="${#fields.hasErrors('price')}" class="text-danger small mb-2"
+										th:errors="*{price}"></div>
+									<input type="number" min="10" step="10" class="form-control" th:field="*{price}">
+								</div>
+							</div>
+
+							<div class="form-group row mb-3">
+								<div class="col-md-4">
+									<label for="seats" class="col-form-label text-md-left fw-bold">座席数（単位：席）</label>
+								</div>
+								<div class="col-md-8">
+									<div th:if="${#fields.hasErrors('seats')}" class="text-danger small mb-2"
+										th:errors="*{seats}"></div>
+									<input type="number" min="0" class="form-control" th:field="*{seats}">
+								</div>
+							</div>
+
+							<div class="form-gorup row  mb-3">
+								<div class="col-md-4">
+									<label for="shopSite" class="col-form-label text-md-left fw-bold">サイトURL</label>
+								</div>
+								<div class="col-md-8">
 									<!--<div th:if="${fieldsd.hasErrors('shopSite')}" class="text-danger small mb-2"											-->
-										<!--th:errors="*{shopSite}"></div>-->
-											<input type="text" class="form-control" th:field="*{shopSite}">
-										</div>
-									</div>
+									<!--th:errors="*{shopSite}"></div>-->
+									<input type="text" class="form-control" th:field="*{shopSite}">
+								</div>
+							</div>
 
-									<div class="form-group d-flex justify-content-center my-4">
-										<button type="submit"
-											class="btn text-white shadow-sm w-50 nagoyameshi-btn">更新</button>
-									</div>
+							<div class="form-group d-flex justify-content-center my-4">
+								<button type="submit" class="btn text-white shadow-sm w-50 nagoyameshi-btn">更新</button>
+							</div>
 						</form>
 					</div>
 				</div>

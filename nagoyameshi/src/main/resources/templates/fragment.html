@@ -42,7 +42,7 @@
 
 				<div class="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul class="navbar-nav ms-auto">
-					<!-- 未ログインであれば表示する -->
+						<!-- 未ログインであれば表示する -->
 						<li class="nav-item" sec:authorize="isAnonymous()">
 							<a class="nav-link" th:href="@{/login}">ログイン</a>
 						</li>
@@ -50,7 +50,7 @@
 							<a class="nav-link" th:href="@{/signup}">新規会員登録</a>
 						</li>
 
-					<!-- 無料会員がログイン済みであれば表示する -->
+						<!-- 無料会員がログイン済みであれば表示する -->
 						<li class="nav-item dropdown" sec:authorize="hasRole('ROLE_FREEMEMBER')">
 							<a id="navbarDropdownFreemember" class="nav-link dropdown-toggle" href="#" role="button"
 								data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -58,7 +58,9 @@
 							</a>
 
 							<div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownFreemember">
-								<a class="dropdown-item nagoyameshi-dropdown-item" th:href="@{/user}">会員情報</a>
+								<a class="dropdown-item nagoyameshi-dropdown-item" th:href="@{/}">トップページ</a>
+								<a class="dropdown-item nagoyameshi-dropdown-item">店舗一覧</a>
+								<a class="dropdown-item nagoyameshi-dropdown-item" th:href="@{/user}">マイページ</a>
 								<a class="dropdown-item nagoyameshi-dropdown-item" th:href="@{/reservations}">予約一覧</a>
 
 								<div class="dropdown-divider"></div>
@@ -72,26 +74,55 @@
 						</li>
 					</ul>
 					<!-- 有料会員がログイン済みであれば表示する -->
-						<li class="nav-item dropdown" sec:authorize="hasRole('ROLE_PPAYMEMBER')">
-							<a id="navbarDropdownPaymember" class="nav-link dropdown-toggle" href="#" role="button"
-								data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-								<span sec:authentication="principal.user.name"></span>
+					<li class="nav-item dropdown" sec:authorize="hasRole('ROLE_PPAYMEMBER')">
+						<a id="navbarDropdownPaymember" class="nav-link dropdown-toggle" href="#" role="button"
+							data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+							<span sec:authentication="principal.user.name"></span>
+						</a>
+
+						<div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownPaymember">
+							<a class="dropdwon-item nagoyameshi-dropdown-item" th:href="@{}/">トップページ</a>
+							<a class="dropdown-item nagoyameshi-dropdown-item">店舗一覧</a>
+							<a class="dropdown-item nagoyameshi-dropdown-item" th:href="@{/user}">マイページ</a>
+							<a class="dropdown-item nagoyameshi-dropdown-item" th:href="@{/reservations}">予約一覧</a>
+							<a class="dropdown-item nagoyameshi-dropdown-item">お気に入り店舗</a>
+							<a class="dropdown-item nagoyameshi-dorpdown-item">レビュー投稿一覧</a>
+
+							<div class="dropdown-divider"></div>
+
+							<a class="dropdown-item nagoyameshi-dropdown-item" th:href="@{/logout}"
+								onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+								ログアウト
 							</a>
+							<form class="d-none" id="logout-form" th:action="@{/logout}" method="post"></form>
+						</div>
+					</li>
+					<!-- 管理者がログイン済みであれば表示する -->
+					<li class="nav-item dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
+						<a id="navbarDropdownPaymember" class="nav-link dropdown-toggle" href="#" role="button"
+							data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+							<span sec:authentication="principal.user.name"></span>
+						</a>
 
-							<div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownPaymember">
-								<a class="dropdown-item nagoyameshi-dropdown-item" th:href="@{/user}">会員情報</a>
-								<a class="dropdown-item nagoyameshi-dropdown-item" th:href="@{/reservations}">予約一覧</a>
+						<div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownPaymember">
+							<a class="dropdwon-item nagoyameshi-dropdown-item">管理者ページ</a>
+							<a class="dropdown-item nagoyameshi-dropdown-item">会社概要編集</a>
+							<a class="dropdown-item nagoyameshi-dropdown-item">会員一覧</a>
+							<a class="dropdown-item nagoyameshi-dropdown-item">登録店舗一覧</a>
+							<a class="dropdown-item nagoyameshi-dropdown-item">レビュー一覧</a>
+							<a class="dropdown-item nagoyameshi-dorpdown-item">カテゴリ一覧</a>
+							<a class="dropdown-item nagoyameshi-dorpdown-item">集計</a>
 
-								<div class="dropdown-divider"></div>
+							<div class="dropdown-divider"></div>
 
-								<a class="dropdown-item nagoyameshi-dropdown-item" th:href="@{/logout}"
-									onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-									ログアウト
-								</a>
-								<form class="d-none" id="logout-form" th:action="@{/logout}" method="post"></form>
-							</div>
-						</li>
-					</ul>					
+							<a class="dropdown-item nagoyameshi-dropdown-item" th:href="@{/logout}"
+								onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+								ログアウト
+							</a>
+							<form class="d-none" id="logout-form" th:action="@{/logout}" method="post"></form>
+						</div>
+					</li>
+					</ul>
 				</div>
 			</div>
 		</nav>
