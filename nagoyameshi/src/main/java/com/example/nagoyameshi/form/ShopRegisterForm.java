@@ -29,18 +29,8 @@ public class ShopRegisterForm {
 	@NotBlank(message = "電話番号を入力してください。")
 	private String phoneNumber;
 
-//	@NotNull(message = "開店時間を入力してください。")
-//	@Pattern(^([01][0-9]|2[0-3]):[0-5][0-9]$)
-//	private String openTime;
-
-//	@NotNull(message = "開店時間を入力してください。")
-//	private Time openTime;
-
 	@NotNull(message = "開店時間を入力してください。")
 	private String openTime;
-
-//	@NotNull(message = "閉店時間を入力してください。")
-//	private Time closeTime;
 
 	@NotNull(message = "閉店時間を入力してください。")
 	private String closeTime;
