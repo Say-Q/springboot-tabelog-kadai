@@ -41,8 +41,9 @@
 									<th scope="col">ID</th>
 									<th scope="col">氏名</th>
 									<th scope="col">フリガナ</th>
+									<th scope="col">電話番号</th>
+									<th scope="col">職業</th>
 									<th scope="col">メールアドレス</th>
-									<th scope="col"></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -50,8 +51,9 @@
 									<td th:text="${user.getId()}"></td>
 									<td th:text="${user.getName()}"></td>
 									<td th:text="${user.getFurigana()}"></td>
+									<td th:text="${user.getPhoneNumber()}"></td>
+									<td th:text="${user.getProfession()}"></td>
 									<td th:text="${user.getMail()}"></td>
-									<td><a th:href="@{/admin/users/__${user.getId()}__}">詳細</a></td>
 								</tr>
 							</tbody>
 						</table>
