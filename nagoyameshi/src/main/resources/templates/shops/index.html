@@ -35,15 +35,15 @@
 							</div>
 
 							<div class="col-auto me-1 mb-1 mb-sm-0">
-								<select class="form-control form-select" name="categoryid">
+								<select class="form-control form-select" name="categoriesid">
 									<option value="" hidden>カテゴリ</option>
 									<option value="">指定しない</option>
-									<option value="1" th:selected="${categoryid == 1}">めん類</option>
-									<option value="2" th:selected="${categoryid == 2}">手羽先</option>
-									<option value="3" th:selected="${categoryid == 3}">名古屋コーチン</option>
-									<option value="4" th:selected="${categoryid == 4}">ひつまぶし</option>
-									<option value="5" th:selected="${categoryid == 5}">天むす</option>
-									<option value="6" th:selected="${categoryid == 6}">鉄板スパ</option>
+									<option value="1" th:selected="${categoriesid == 1}">めん類</option>
+									<option value="2" th:selected="${categoriesid == 2}">手羽先</option>
+									<option value="3" th:selected="${categoriesid == 3}">名古屋コーチン</option>
+									<option value="4" th:selected="${categoriesid == 4}">ひつまぶし</option>
+									<option value="5" th:selected="${categoriesid == 5}">天むす</option>
+									<option value="6" th:selected="${categoriesid == 6}">鉄板スパ</option>
 								</select>
 							</div>
 
@@ -59,8 +59,7 @@
 								</select>
 							</div>
 							<div class="col-auto">
-								<button type="submit"
-									class="btn text-white shadow-sm nagoyameshi-btn">検索</button>
+								<button type="submit" class="btn text-white shadow-sm nagoyameshi-btn">検索</button>
 							</div>
 						</form>
 					</div>
@@ -75,7 +74,8 @@
 
 							<form method="get" th:action="@{/shops}" class="mb-3 nagoyameshi-sort-box">
 								<input th:if="${keyword}" type="hidden" name="keyword" th:value="${keyword}">
-								<input th:if="${categoryid}" type="hidden" name="categoryid" th:value="${categoryid}">
+								<input th:if="${categoriesid}" type="hidden" name="categoriesid"
+									th:value="${categoriesid}">
 								<input th:if="${price}" type="hidden" name="price" th:value="${price}">
 								<select class="form-select form-select-sm" name="order" onChange="this.form.submit();">
 									<option value="priceAsc" th:selected="${order == 'priceAsc' || order == null}">
@@ -137,7 +137,7 @@
 									<li class="page-item">
 										<span th:if="${shopPage.isFirst()}" class="page-link disabled">前</span>
 										<a th:unless="${shopPage.isFirst()}"
-											th:href="@{/shops(page = ${shopPage.getNumber() - 1}, keyword = ${keyword}, categoryid = ${categoryid}, price = ${price}, order = ${order})}"
+											th:href="@{/shops(page = ${shopPage.getNumber() - 1}, keyword = ${keyword}, categoriseid = ${categoriseid}, price = ${price}, order = ${order})}"
 											class="page-link nagoyameshi-page-link">前</a>
 									</li>
 									<li th:each="i : ${#numbers.sequence(0, shopPage.getTotalPages() - 1)}"
@@ -145,13 +145,13 @@
 										<span th:if="${i == shopPage.getNumber()}"
 											class="page-link active nagoyameshi-active" th:text="${i + 1}"></span>
 										<a th:unless="${i == shopPage.getNumber()}"
-											th:href="@{/shops(page = ${i}, keyword = ${keyword}, categoryid = ${categoryid}, price = ${price}, order = ${order})}"
+											th:href="@{/shops(page = ${i}, keyword = ${keyword}, categoriesid = ${categoriseid}, price = ${price}, order = ${order})}"
 											class="page-link nagoyameshi-page-link" th:text="${i + 1}"></a>
 									</li>
 									<li class="page-item">
 										<span th:if="${shopPage.isLast()}" class="page-link disabled">次</span>
 										<a th:unless="${shopPage.isLast()}"
-											th:href="@{/shops(page = ${shopPage.getNumber() + 1}, keyword = ${keyword}, categoryid = ${categoryid}, price = ${price}, order = ${order})}"
+											th:href="@{/shops(page = ${shopPage.getNumber() + 1}, keyword = ${keyword}, categoriseid = ${categoriseid}, price = ${price}, order = ${order})}"
 											class="page-link nagoyameshi-page-link">次</a>
 									</li>
 								</ul>

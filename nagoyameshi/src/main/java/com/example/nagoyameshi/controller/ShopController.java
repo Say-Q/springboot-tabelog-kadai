@@ -32,38 +32,41 @@ public class ShopController {
 
 	@GetMapping
 	public String index(@RequestParam(name = "keyword", required = false) String keyword,
-			@RequestParam(name = "categoryid", required = false) Integer categoryid,
+			@RequestParam(name = "categoriesid", required = false) Integer categoriesid,
 			@RequestParam(name = "price", required = false) Integer price,
 			@RequestParam(name = "order", required = false) String order,
 			@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable,
 			Model model) {
 
 		Page<Shop> shopPage;
-		
-		boolean keywordck = keyword != null && !keyword.isEmpty();
-		boolean categoryidck = categoryid != null;
-		boolean priceck = price != null;
-		
-		if (keyword != null && !keyword.isEmpty() && categoryid != null && Objects.nonNull(price)) {
-			if (order != null && order.equals("priceDesc")) {
+
+		boolean keywordck = Objects.nonNull(keyword) && !keyword.isEmpty();
+		boolean categoriesidck = Objects.nonNull(categoriesid);
+		boolean priceck = Objects.nonNull(price);
+		boolean orderck = Objects.nonNull(order) && order.equals("priceDesc");
+
+		if (keywordck && categoriesidck && priceck) {
+			if (orderck && order.equals("priceDesc")) {
 				shopPage = shopRepository.findByNameAndCategoriesIdAndPriceLessThanEqualOrderByPriceDesc(
-						"%" + keyword + "%", categoryid, price, pageable);
+						"%" + keyword + "%", categoriesid, price, pageable);
 			} else {
 				shopPage = shopRepository.findByNameAndCategoriesIdAndPriceLessThanEqualOrderByPriceAsc(
-						"% " + keyword + "%", categoryid, price, pageable);
+						"% " + keyword + "%", categoriesid, price, pageable);
 			}
 
-		} else if (keyword != null && !keyword.isEmpty() && categoryid != null) {
+		} else if (keywordck && categoriesidck) {
 
-			if (order != null && order.equals("priceDesc")) {
-				shopPage = shopRepository.findByNameAndCategoriesIdOrderByPriceDesc("%" + keyword + "%%", categoryid, pageable);
+			if (orderck) {
+				shopPage = shopRepository.findByNameContainingAndCategoriesIdOrderByPriceDesc("%" + keyword + "%%", categoriesid,
+						pageable);
 			} else {
-				shopPage = shopRepository.findByNameAndCategoriesIdOrderByPriceAsc("%" + keyword + "%", categoryid, pageable);
+				shopPage = shopRepository.findByNameContainingAndCategoriesIdOrderByPriceAsc("%" + keyword + "%", categoriesid,
+						pageable);
 			}
 
-		} else if (keyword != null && keyword.isEmpty() && price != null) {
+		} else if (keywordck && priceck) {
 
-			if (order != null && order.equals("priceDesc")) {
+			if (orderck) {
 				shopPage = shopRepository.findByNameAndPriceLessThanEqualOrderByPriceDesc("%" + keyword + "%",
 						price, pageable);
 			} else {
@@ -71,35 +74,35 @@ public class ShopController {
 						pageable);
 			}
 
-		} else if (categoryid != null && price != null) {
+		} else if (categoriesidck && priceck) {
 
-			if (order != null && order.equals("priceDesc")) {
-				shopPage = shopRepository.findByCategoriesIdAndPriceLessThanEqualOrderByPriceDesc(categoryid, price,
+			if (orderck) {
+				shopPage = shopRepository.findByCategoriesIdAndPriceLessThanEqualOrderByPriceDesc(categoriesid, price,
 						pageable);
 			} else {
-				shopPage = shopRepository.findByCategoriesIdAndPriceLessThanEqualOrderByPriceAsc(categoryid, price,
+				shopPage = shopRepository.findByCategoriesIdAndPriceLessThanEqualOrderByPriceAsc(categoriesid, price,
 						pageable);
 			}
 
 		} else if (keywordck) {
 
-			if (order != null && order.equals("priceDesc")) {
+			if (orderck) {
 				shopPage = shopRepository.findByNameLikeOrderByPriceDesc("%" + keyword + "%", pageable);
 			} else {
 				shopPage = shopRepository.findByNameLikeOrderByPriceAsc("%" + keyword + "%", pageable);
 			}
 
-		} else if (categoryid != null) {
+		} else if (categoriesidck) {
 
-			if (order != null && order.equals("priceDesc")) {
-				shopPage = shopRepository.findByCategoriesIdOrderByPriceDesc(categoryid, pageable);
+			if (orderck) {
+				shopPage = shopRepository.findByCategoriesIdOrderByPriceDesc(categoriesid, pageable);
 			} else {
-				shopPage = shopRepository.findByCategoriesIdOrderByPriceAsc(categoryid, pageable);
+				shopPage = shopRepository.findByCategoriesIdOrderByPriceAsc(categoriesid, pageable);
 			}
 
-		} else if (price != null) {
+		} else if (priceck) {
 
-			if (order != null && order.equals("priceDesc")) {
+			if (orderck) {
 				shopPage = shopRepository.findByPriceLessThanEqualOrderByPriceDesc(price, pageable);
 			} else {
 				shopPage = shopRepository.findByPriceLessThanEqualOrderByPriceAsc(price, pageable);
@@ -107,7 +110,7 @@ public class ShopController {
 
 		} else {
 
-			if (order != null && order.equals("priceDesc")) {
+			if (orderck) {
 				shopPage = shopRepository.findAllByOrderByPriceDesc(pageable);
 			} else {
 				shopPage = shopRepository.findAllByOrderByPriceAsc(pageable);
@@ -117,7 +120,7 @@ public class ShopController {
 
 		model.addAttribute("shopPage", shopPage);
 		model.addAttribute("keyword", keyword);
-		model.addAttribute("categoryid", categoryid);
+		model.addAttribute("categoriesid", categoriesid);
 		model.addAttribute("price", price);
 		model.addAttribute("order", order);
 
