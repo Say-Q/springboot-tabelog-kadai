@@ -15,6 +15,21 @@
 		<div th:replace="~{fragment :: header}"></div>
 
 		<main>
+			<!--画像をスライドする-->
+			<div id="carouselExampleSlidesOnly" class="carousel slide carousel-fade" data-bs-ride="carousel">
+				<div class="carousel-inner">
+					<div class="carousel-item active" date-bs-interval="5000">
+						<img th:src="@{/images/top1.png}" class="d-block w-100" alt="キャッチコッピー画像">
+					</div>
+					<div class="carousel-item" data-bs-interval="5000">
+						<img th:src="@{/images/top2.png}" class="d-block w-100" alt="名古屋城">
+					</div>
+					<div class="carousel-item" data-bs-interval="5000">
+						<img th:src="@{/images/top3.png}" class="d-block w-100" alt="名古屋めし画像">
+					</div>
+				</div>
+			</div>
+
 			<div class="container pt-4 pb-5 nagoyameshi-container">
 				<div th:if="${param.loggedIn}" class="alert alert-info">
 					ログインしました。
@@ -26,6 +41,80 @@
 
 				<div th:if="${successMessage}" class="alert alert-info">
 					<span th:text="${successMessage}"></span>
+				</div>
+
+				<div class="d-flex justify-content-center mb-5">
+					<form method="get" th:action="@{/shops}"
+						class="d-flex justify-content-center nagoyameshi-search-form">
+						<div class="col-7 me-1">
+							<div class="input-group">
+								<input type="text" class="form-control" name="keyword" th:value="${keyword}"
+									placeholder="店舗名">
+							</div>
+						</div>
+
+						<div class="col-auto me-1">
+							<select class="form-control form-select" name="categoryid">
+								<option value="" hidden>カテゴリ</option>
+								<option value="">指定しない</option>
+								<option value="1" th:selected="${categoryid == 1}">めん類</option>
+								<option value="2" th:selected="${categoryid == 2}">手羽先</option>
+								<option value="3" th:selected="${categoryid == 3}">名古屋コーチン</option>
+								<option value="4" th:selected="${categoryid == 4}">ひつまぶし</option>
+								<option value="5" th:selected="${categoryid == 5}">天むす</option>
+								<option value="6" th:selected="${categoryid == 6}">鉄板スパ</option>
+							</select>
+						</div>
+
+						<div class="col-auto me-1">
+							<select class="form-control form-select" name="price">
+								<option value="" hidden>予算</option>
+								<option value="">指定しない</option>
+								<option value="1000" th:selected="${price == 1000}">1,000円以内</option>
+								<option value="2000" th:selected="${price == 2000}">2,000円以内</option>
+								<option value="3000" th:selected="${price == 3000}">3,000円以内</option>
+								<option value="4000" th:selected="${price == 4000}">4,000円以内</option>
+								<option value="5000" th:selected="${price == 5000}">5,000円以内</option>
+							</select>
+						</div>
+						<div class="col-auto">
+							<button type="submit"
+								class="btn text-white shadow-sm nagoyameshi-btn">検索</button>
+						</div>
+					</form>
+				</div>
+
+				<h2 class="text-center mb-3">低価格</h2>
+				<div class="row row-cols-lg-5 row-cols-2 g-3 mb-5">
+					<div class="col" th:each="topShop : ${topShops}">
+						<a th:href="@{/shops/__${topShop.getId()}__}" class="link-dark nagoyameshi-card-link">
+							<div class="card h-100">
+								<img th:if="${topShop.getImageName()}"
+									th:src="@{/storage/__${topShop.getImageName()}__}"
+									class="card-img-top nagoyameshi-vertical-card-image" alt="店舗画像">
+								<img th:unless="${topShop.getImageName()}" th:src="@{/images/noImage.png}"
+									class="card-img-top nagoyameshi-vertical-card-image" alt="NO IMAGE">
+
+								<div class="rating">
+									<span class="star"></span>
+									<span class="star"></span>
+									<span class="star"></span>
+									<span class="star"></span>
+									<span class="star"></span>
+								</div>
+								<div class="card-body">
+									<h3 class="card-title" th:text="${topShop.getName()}"></h3>
+									<p class="card-text mb-1">
+										<small class="text-muted" th:text="${topShop.getAddress()}"></small>
+									</p>
+									<p class="card-text">
+										<span
+											th:text="${#numbers.formatInteger(topShop.getPrice(), 1, 'COMMA') + '円～'}"></span>
+									</p>
+								</div>
+							</div>
+						</a>
+					</div>
 				</div>
 			</div>
 		</main>

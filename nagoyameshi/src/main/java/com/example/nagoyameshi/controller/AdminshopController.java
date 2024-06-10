@@ -67,7 +67,6 @@ public class AdminshopController {
 	public String show(@PathVariable(name = "id") Integer id, Model model) {
 		Shop shop = shopRepository.getReferenceById(id);
 		List<Categories> category = categoryRepository.findAll();
-//		List<Categories> category = categoryRepository.findAll(Categories.getId().equals(shop.getCategoriesId()));
 
 		model.addAttribute("shop", shop);
 		model.addAttribute("category", category);

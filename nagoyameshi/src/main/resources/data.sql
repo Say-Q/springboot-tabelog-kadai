@@ -12,10 +12,22 @@ INSERT IGNORE INTO shops (id, categories_id, name, image_name, description, post
 INSERT IGNORE INTO shops (id, categories_id, name, image_name, description, postal_code, address, phone_number, open_time, close_time, regular_holiday, price, seats, shop_site) VALUES (8, 4, '炭焼 ひつまぶし割烹　うな善', 'shop08.jpg', '創業昭和32年の当店のひつまぶしは、ふんわり柔らかな食感。あえて細かくすることなく、鰻本来の旨みを感じて、食して頂けます。', '450-0003', '名古屋市中村区名駅南1-17-26', '052-551-5235', '11:30', '22:00', '月曜、日曜（夜）', 6000, 150, 'http://www.meieki-unazen.com/');
 INSERT IGNORE INTO shops (id, categories_id, name, image_name, description, postal_code, address, phone_number, open_time, close_time, regular_holiday, price, seats, shop_site) VALUES (9, 4, 'あつた蓬莱軒　松坂屋店', 'shop09.jpg', '創業明治六年。四季折々の日本料理とつぎ足し守り続けた秘伝のタレで焼き上げた鰻料理をお楽しみいただけます。', '460-0008', '名古屋市中区栄3-30-8　松坂屋名古屋店南館10F', '052-264-3825', '11:00', '20:30', '無休（松坂屋名古屋店に準ずる）', 5500, 60, 'http://www.houraiken.com/');
 INSERT IGNORE INTO shops (id, categories_id, name, image_name, description, postal_code, address, phone_number, open_time, close_time, regular_holiday, price, seats, shop_site) VALUES (10, 5, 'めいふつ天むす千寿', 'shop10.jpg', '昭和55年よりの天むすの専門店。厳選したお米に小えびの天ぷらを入れのりで巻いた手軽にお召し上がりいただける小ぶりのおむすび。', '460-0011', '名古屋市中区大須4-10-82', '052-262-0466', '8:30', '14:00', '火曜、水曜', 400, 5, '');
-INSERT IGNORE INTO shops (id, categories_id, name, image_name, description, postal_code, address, phone_number, open_time, close_time, regular_holiday, price, seats, shop_site) VALUES (11, 1, '喫茶リッチ', 'shop11.jpg', '代々味を受け継いできたエビフライやハンバーグといった王道の洋食に、アツアツの鉄板ナポリタンなど、懐かしい味に出会えます。', '453-0015', '名古屋市中村区椿町6-9号先　エスカ地下街内', '052-452-3456', '07:00', '20:30', '無休（エスカ地下街に準ずる）', 2500, 60, 'http://www.esca-sc.com/rest_cafe_0039.html');
+INSERT IGNORE INTO shops (id, categories_id, name, image_name, description, postal_code, address, phone_number, open_time, close_time, regular_holiday, price, seats, shop_site) VALUES (11, 6, '喫茶リッチ', 'shop11.jpg', '代々味を受け継いできたエビフライやハンバーグといった王道の洋食に、アツアツの鉄板ナポリタンなど、懐かしい味に出会えます。', '453-0015', '名古屋市中村区椿町6-9号先　エスカ地下街内', '052-452-3456', '07:00', '20:30', '無休（エスカ地下街に準ずる）', 2500, 60, 'http://www.esca-sc.com/rest_cafe_0039.html');
 INSERT IGNORE INTO shops (id, categories_id, name, image_name, description, postal_code, address, phone_number, open_time, close_time, regular_holiday, price, seats, shop_site) VALUES (12, 1, '中国台湾料理 味仙　本店', 'shop12.jpg', '1960年創業の元祖台湾ラーメンの店。 唐辛子とニンニクの旨味を効かせた、たっぷりの豚肉ミンチと鶏ガラスープの味わいは絶品！', '464-0850', '名古屋市千種区今池1-12-10', '052-733-7670', '17:30', '2:00', '無休', 550, 40, 'http://www.misen.ne.jp/');
 
---categoriesテーブル
+--reviews（レビュー）テーブル
+INSERT IGNORE INTO reviews (id, users_id, shops_id, assessment, review) VALUES (1, 1, 1, 5, 'テスト5');
+INSERT IGNORE INTO reviews (id, users_id, shops_id, assessment, review) VALUES (2, 1, 1, 4, 'テスト4');
+INSERT IGNORE INTO reviews (id, users_id, shops_id, assessment, review) VALUES (3, 1, 1, 3.5, 'テスト3.5');
+INSERT IGNORE INTO reviews (id, users_id, shops_id, assessment, review) VALUES (4, 1, 1, 2.5, 'テスト2.5');
+INSERT IGNORE INTO reviews (id, users_id, shops_id, assessment, review) VALUES (5, 1, 1, 1, 'テスト1');
+INSERT IGNORE INTO reviews (id, users_id, shops_id, assessment, review) VALUES (6, 1, 2, 4.5, 'テスト4.5');
+INSERT IGNORE INTO reviews (id, users_id, shops_id, assessment, review) VALUES (7, 1, 2, 3, 'テスト3');
+INSERT IGNORE INTO reviews (id, users_id, shops_id, assessment, review) VALUES (8, 1, 2, 2.5, 'テスト2.5');
+INSERT IGNORE INTO reviews (id, users_id, shops_id, assessment, review) VALUES (9, 1, 2, 1.5, 'テスト1.5');
+INSERT IGNORE INTO reviews (id, users_id, shops_id, assessment, review) VALUES (10, 1, 2, 1, 'テスト1');
+
+--categories（カテゴリ）テーブル
 INSERT IGNORE INTO categories (id, category_name) VALUES (1, 'めん類');
 INSERT IGNORE INTO categories (id, category_name) VALUES (2, '手羽先');
 INSERT IGNORE INTO categories (id, category_name) VALUES (3, '名古屋コーチン');
@@ -23,12 +35,12 @@ INSERT IGNORE INTO categories (id, category_name) VALUES (4, 'ひつまぶし');
 INSERT IGNORE INTO categories (id, category_name) VALUES (5, '天むす');
 INSERT IGNORE INTO categories (id, category_name) VALUES (6, '鉄板スパ');
 
--- rolesテーブル
+--rolesテーブル
 INSERT IGNORE INTO roles (id, name) VALUES (1, 'ROLE_ADMIN');
 INSERT IGNORE INTO roles (id, name) VALUES (2, 'ROLE_FREEMEMBER');
 INSERT IGNORE INTO roles (id, name) VALUES (3, 'ROLE_PAYMEMBER');
 
--- usersテーブル
+--users（会員）テーブル
 INSERT IGNORE INTO users (id, roles_id, name, furigana, birthday, phone_number, profession, mail, password, enabled) VALUES (1, 1, '名古屋　飯主', 'ナゴヤハンシュ', '1984/03/01', '080-1234-5678', 'エンジニア', 'nagoya.hansyu@example.com', '$2a$10$2JNjTwZBwo7fprL2X4sv.OEKqxnVtsVQvuXDkI8xVGix.U3W5B7CO', true);
 INSERT IGNORE INTO users (id, roles_id, name, furigana, birthday, phone_number, profession, mail, password, enabled) VALUES (2, 2, '名古屋　飯太', 'ナゴヤハンタ', '2010/01/01', '080-1234-5678', '大学生', 'nagoya.hanta@example.com', '$2a$10$2JNjTwZBwo7fprL2X4sv.OEKqxnVtsVQvuXDkI8xVGix.U3W5B7CO', true);
 INSERT IGNORE INTO users (id, roles_id, name, furigana, birthday, phone_number, profession, mail, password, enabled) VALUES (3, 2, '名古屋　飯子', 'ナゴヤハンコ', '2015/02/02', '080-1234-5678', '学生', 'nagoya.hanko@example.com', '$2a$10$qKT4WD93t8H80zsbSLCrTucwZ6b6PEr20tzGgZqpMMArn497.E0Vq', true);
@@ -42,3 +54,8 @@ INSERT IGNORE INTO users (id, roles_id, name, furigana, birthday, phone_number, 
 INSERT IGNORE INTO users (id, roles_id, name, furigana, birthday, phone_number, profession, mail, password, enabled) VALUES (11, 2, '名古屋　三玖', 'ナゴヤミク', '2007/05/05', '080-1234-5678', '学生', 'nagoya.miku@example.com', 'password', true);
 INSERT IGNORE INTO users (id, roles_id, name, furigana, birthday, phone_number, profession, mail, password, enabled) VALUES (12, 2, '名古屋　四葉', 'ナゴヤヨツバ', '2007/05/05', '080-1234-5678', '学生', 'nagoya.yotsuba@example.com', 'password', true);
 INSERT IGNORE INTO users (id, roles_id, name, furigana, birthday, phone_number, profession, mail, password, enabled) VALUES (13, 2, '名古屋　五月', 'ナゴヤイツキ', '2007/05/06', '080-1234-5678', '学生', 'nagoya.itsuki@example.com', 'password', true);
+
+--reservations（予約）テーブル
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (1, 2, 1, '2024-10-01', '18:00', 2);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (2, 2, 2, '2024-10-02', '18:00', 2);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (3, 2, 3, '2024-10-03', '18:00', 2);

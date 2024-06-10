@@ -28,7 +28,7 @@
 <body>
 	<!-- ヘッダーの部品化 -->
 	<div th:fragment="header" th:remove="tag">
-		<nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm nagoyameshi-navbar">
+		<nav class="fixed-top navbar navbar-expand-md navbar-light bg-white shadow-sm nagoyameshi-navbar">
 			<div class="container nagoyameshi-container">
 				<a class="navbar-brand" th:href="@{/}">
 					<img class="nagoyameshi-logo me-1" th:src="@{/images/logo.png}" alt="nagoyameshi">
@@ -59,7 +59,7 @@
 
 							<div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownFreemember">
 								<a class="dropdown-item nagoyameshi-dropdown-item" th:href="@{/}">トップページ</a>
-								<a class="dropdown-item nagoyameshi-dropdown-item">店舗一覧</a>
+								<a class="dropdown-item nagoyameshi-dropdown-item" th:href="@{/shops}">店舗一覧</a>
 								<a class="dropdown-item nagoyameshi-dropdown-item" th:href="@{/user}">マイページ</a>
 								<a class="dropdown-item nagoyameshi-dropdown-item" th:href="@{/reservations}">予約一覧</a>
 
