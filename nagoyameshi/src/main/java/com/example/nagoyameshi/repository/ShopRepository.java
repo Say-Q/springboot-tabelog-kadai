@@ -20,17 +20,17 @@ public interface ShopRepository extends JpaRepository<Shop, Integer> {
 	public Page<Shop> findByPriceLessThanEqualOrderByPriceAsc(Integer price, Pageable pageable);
 	public Page<Shop> findByPriceLessThanEqualOrderByPriceDesc(Integer price, Pageable pageable);
 	
-	public Page<Shop> findByNameContainingAndCategoriesIdOrderByPriceAsc(String nameKeyword, Integer categoriesid, Pageable pageable);
-	public Page<Shop> findByNameContainingAndCategoriesIdOrderByPriceDesc(String nameKeyword, Integer categoryiesid, Pageable pageable);
+	public Page<Shop> findByNameLikeAndCategoriesIdOrderByPriceAsc(String nameKeyword, Integer categoriesid, Pageable pageable);
+	public Page<Shop> findByNameLikeAndCategoriesIdOrderByPriceDesc(String nameKeyword, Integer categoryiesid, Pageable pageable);
 	
-	public Page<Shop> findByNameAndPriceLessThanEqualOrderByPriceAsc(String nameKeyword, Integer price, Pageable pageable);
-	public Page<Shop> findByNameAndPriceLessThanEqualOrderByPriceDesc(String nameKeyword, Integer price, Pageable pageable);
+	public Page<Shop> findByNameLikeAndPriceLessThanEqualOrderByPriceAsc(String nameKeyword, Integer price, Pageable pageable);
+	public Page<Shop> findByNameLikeAndPriceLessThanEqualOrderByPriceDesc(String nameKeyword, Integer price, Pageable pageable);
 	
 	public Page<Shop> findByCategoriesIdAndPriceLessThanEqualOrderByPriceAsc(Integer categoriesid, Integer price, Pageable pageable);
 	public Page<Shop> findByCategoriesIdAndPriceLessThanEqualOrderByPriceDesc(Integer categoriesid, Integer price, Pageable pageable);
 	
-	public Page<Shop> findByNameAndCategoriesIdAndPriceLessThanEqualOrderByPriceAsc(String nameKeyword, Integer categoriesid, Integer price, Pageable pageable);
-	public Page<Shop> findByNameAndCategoriesIdAndPriceLessThanEqualOrderByPriceDesc(String nameKeyword, Integer categoriesid, Integer price, Pageable pageable);
+	public Page<Shop> findByNameLikeAndCategoriesIdAndPriceLessThanEqualOrderByPriceAsc(String nameKeyword, Integer categoriesid, Integer price, Pageable pageable);
+	public Page<Shop> findByNameLikeAndCategoriesIdAndPriceLessThanEqualOrderByPriceDesc(String nameKeyword, Integer categoriesid, Integer price, Pageable pageable);
 	
 	public Page<Shop> findAllByOrderByPriceAsc(Pageable pageable);
 	public Page<Shop> findAllByOrderByPriceDesc(Pageable pageable);
