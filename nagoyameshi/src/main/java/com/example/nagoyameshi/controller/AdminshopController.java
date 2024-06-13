@@ -76,7 +76,10 @@ public class AdminshopController {
 
 	@GetMapping("/register")
 	public String register(Model model) {
+		List<Categories> category = categoryRepository.findAll();
+		
 		model.addAttribute("shopRegisterForm", new ShopRegisterForm());
+		model.addAttribute("category", category);
 
 		return "admin/shops/register";
 	}

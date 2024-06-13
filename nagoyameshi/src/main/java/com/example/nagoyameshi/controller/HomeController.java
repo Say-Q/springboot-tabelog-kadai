@@ -9,19 +9,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.example.nagoyameshi.entity.Shop;
 import com.example.nagoyameshi.repository.ShopRepository;
 
+
 @Controller
 public class HomeController {
 	private final ShopRepository shopRepository;
-	
+
 	public HomeController(ShopRepository shopRepository) {
 		this.shopRepository = shopRepository;
 	}
-	
+
 	@GetMapping("/")
 	public String index(Model model) {
 		List<Shop> topShops = shopRepository.findTop10ByOrderByPriceAsc();
 		model.addAttribute("topShops", topShops);
 		return "index";
 	}
-	
+
 }

@@ -40,17 +40,20 @@ public class ShopController {
 
 		Page<Shop> shopPage;
 
-		String keywordT_categoriesidT_priceT = String.valueOf(Objects.nonNull(keyword) && !keyword.isEmpty() && Objects.nonNull(categoriesid) && Objects.nonNull(price));
-		String keywordT_categoriesidT = String.valueOf(Objects.nonNull(keyword) && !keyword.isEmpty() && Objects.nonNull(categoriesid));
-		String keywordT_priceT = String.valueOf(Objects.nonNull(keyword) && !keyword.isEmpty() && Objects.nonNull(price));
-		String categoriesidT_priceT = String.valueOf(Objects.nonNull(categoriesid) && Objects.nonNull(price));
+		//		int word1_cateid1_price1 = (Objects.nonNull(keyword) && !keyword.isEmpty() && Objects.nonNull(categoriesid) && Objects.nonNull(price)) ? 111 : 0;
+		//		int word1_cateid1 = (Objects.nonNull(keyword) && !keyword.isEmpty() && Objects.nonNull(categoriesid)) ? 110 : 0;
+		//		int word1_price1 = (Objects.nonNull(keyword) && !keyword.isEmpty() && Objects.nonNull(price)) ? 101 : 0;
+		//		int cateid1_price1 = (Objects.nonNull(categoriesid) && Objects.nonNull(price)) ? 011 : 0;
+		//		int word1 = (Objects.nonNull(keyword) && !keyword.isEmpty()) ? 100 : 0;
+		//		int cateid1 = (Objects.nonNull(categoriesid)) ? 010 : 0;
+		//		int price1 = (Objects.nonNull(price)) ? 001 : 0;
+		//		int order1 = (Objects.nonNull(order) && order.equals("priceDesc")) ? 2 : 1;
 
 		boolean keywordck = Objects.nonNull(keyword) && !keyword.isEmpty();
 		boolean categoriesidck = Objects.nonNull(categoriesid);
 		boolean priceck = Objects.nonNull(price);
 		boolean orderck = Objects.nonNull(order) && order.equals("priceDesc");
 
-		
 		if (keywordck && categoriesidck && priceck) {
 			if (orderck && order.equals("priceDesc")) {
 				shopPage = shopRepository.findByNameLikeAndCategoriesIdAndPriceLessThanEqualOrderByPriceDesc(
@@ -62,11 +65,11 @@ public class ShopController {
 		} else if (keywordck && categoriesidck) {
 
 			if (orderck) {
-				shopPage = shopRepository.findByNameLikeAndCategoriesIdOrderByPriceDesc("%" + keyword + "%%", categoriesid,
-						pageable);
+				shopPage = shopRepository.findByNameLikeAndCategoriesIdOrderByPriceDesc("%" + keyword + "%",
+						categoriesid, pageable);
 			} else {
-				shopPage = shopRepository.findByNameLikeAndCategoriesIdOrderByPriceAsc("%" + keyword + "%", categoriesid,
-						pageable);
+				shopPage = shopRepository.findByNameLikeAndCategoriesIdOrderByPriceAsc("%" + keyword + "%",
+						categoriesid, pageable);
 			}
 
 		} else if (keywordck && priceck) {

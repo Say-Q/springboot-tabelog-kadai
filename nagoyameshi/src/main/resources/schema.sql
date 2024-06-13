@@ -29,8 +29,8 @@ description VARCHAR(500), --説明
 postal_code VARCHAR(50) NOT NULL,
 address VARCHAR(255) NOT NULL,
 phone_number VARCHAR(50) NOT NULL,
-open_time TIME NOT NULL,
-close_time TIME NOT NULL,
+open_time VARCHAR(10) NOT NULL,
+close_time VARCHAR(10) NOT NULL,
 regular_holiday VARCHAR(100) NOT NULL,
 price INT NOT NULL,
 seats INT NOT NULL, --座席数
