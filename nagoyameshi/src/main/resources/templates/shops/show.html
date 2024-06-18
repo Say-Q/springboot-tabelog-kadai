@@ -26,10 +26,18 @@
 							</ol>
 						</nav>
 
-						<h1 class="mb-4 text-center" th:text="${shop.getName()}"></h1>
+						<h1 class="text-center mb-3" th:text="${shop.getName()}"></h1>
 
-						<div class="text-center h5 mb-3">
-							<span>評価</span>
+						<div class="d-flex justify-content-center text-center h5 mb-2">
+							<span style="margin-right:10px;">評価</span>
+							<div class="rating">
+								<span class="star"><span class="half"></span></span>
+								<span class="star"><span class="half"></span></span>
+								<span class="star"><span class="half"></span></span>
+								<span class="star"><span class="half"></span></span>
+								<span class="star"><span class="half"></span></span>
+							</div>
+							<span></span>
 						</div>
 
 						<div th:if="${errorMessage}" class="alert alert-danger">
@@ -159,7 +167,8 @@
 										</div>
 
 										<div class="col">
-											<a th:href="@{${shop.getShopSite()}}" th:text="${shop.getShopSite()}" target="_blank" rel="noopener noreferrer"></a>
+											<a th:href="@{${shop.getShopSite()}}" th:text="${shop.getShopSite()}"
+												target="_blank" rel="noopener noreferrer"></a>
 										</div>
 									</div>
 								</div>

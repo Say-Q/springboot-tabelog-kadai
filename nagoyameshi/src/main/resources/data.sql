@@ -1,5 +1,5 @@
 --company（会社概要）テーブル
-INSERT IGNORE INTO company (id, name, location, representative, establishment, capital, content) VALUES (1, 'NAGOYAMESHI株式会社', '〒101-0022 東京都千代田区神田練塀町300番地 住友不動産秋葉原駅前ビル5F', '侍　名古屋','2024年3月1日', '1億円','飲食店等の情報提供サービス');
+INSERT IGNORE INTO company (id, name, postal_code , location, representative, establishment, capital, content) VALUES (1, 'NAGOYAMESHI株式会社', '〒101-0022', '東京都千代田区神田練塀町300番地 住友不動産秋葉原駅前ビル5F', '侍　名古屋','2024-03-01', '1億円','飲食店等の情報提供サービス');
 
 --shops（店舗）テーブル
 INSERT IGNORE INTO shops (id, categories_id, name, image_name, description, postal_code, address, phone_number, open_time, close_time, regular_holiday, price, seats, shop_site) VALUES (1, 1, '味噌煮込みうどんの山本屋　大久手店', 'shop01.jpg', '大正14年創業の味噌煮込みうどんの老舗。初代からの「伝統製法」「手作りへのこだわり」「アットホームな温もり」を感じられる店。', '464-0854', '名古屋市千種区大久手5-9-2', '052-733-7413', '11:00', '21:00', '月曜(月曜が祝日の場合は営業、翌日が振替休日)', 4500, 50, 'http://a-yamamotoya.co.jp/');

@@ -61,6 +61,12 @@
 								<div class="col-md-8">
 									<div th:if="${#fields.hasErrors('categoriesId')}" class="text-danger small mb-2"
 										th:errors="*{categoriesId}"></div>
+									
+								<!--<span th:each="categories : ${category}">-->
+									<!--<td th:if="${categories.getId() == shop.getCategoriesId()}"-->
+									<!--th:text="${categories.getCategoryName()}"></td>-->
+								<!--</span>-->
+									
 									<input type="number" min="1" max="6" class="form-control"
 										th:field="*{categoriesId}">
 								</div>

@@ -40,91 +40,8 @@ public class ShopController {
 
 		Page<Shop> shopPage;
 
-		//		int word1_cateid1_price1 = (Objects.nonNull(keyword) && !keyword.isEmpty() && Objects.nonNull(categoriesid) && Objects.nonNull(price)) ? 111 : 0;
-		//		int word1_cateid1 = (Objects.nonNull(keyword) && !keyword.isEmpty() && Objects.nonNull(categoriesid)) ? 110 : 0;
-		//		int word1_price1 = (Objects.nonNull(keyword) && !keyword.isEmpty() && Objects.nonNull(price)) ? 101 : 0;
-		//		int cateid1_price1 = (Objects.nonNull(categoriesid) && Objects.nonNull(price)) ? 011 : 0;
-		//		int word1 = (Objects.nonNull(keyword) && !keyword.isEmpty()) ? 100 : 0;
-		//		int cateid1 = (Objects.nonNull(categoriesid)) ? 010 : 0;
-		//		int price1 = (Objects.nonNull(price)) ? 001 : 0;
-		//		int order1 = (Objects.nonNull(order) && order.equals("priceDesc")) ? 2 : 1;
 
-		boolean keywordck = Objects.nonNull(keyword) && !keyword.isEmpty();
-		boolean categoriesidck = Objects.nonNull(categoriesid);
-		boolean priceck = Objects.nonNull(price);
-		boolean orderck = Objects.nonNull(order) && order.equals("priceDesc");
-
-		if (keywordck && categoriesidck && priceck) {
-			if (orderck && order.equals("priceDesc")) {
-				shopPage = shopRepository.findByNameLikeAndCategoriesIdAndPriceLessThanEqualOrderByPriceDesc(
-						"%" + keyword + "%", categoriesid, price, pageable);
-			} else {
-				shopPage = shopRepository.findByNameLikeAndCategoriesIdAndPriceLessThanEqualOrderByPriceAsc(
-						"%" + keyword + "%", categoriesid, price, pageable);
-			}
-		} else if (keywordck && categoriesidck) {
-
-			if (orderck) {
-				shopPage = shopRepository.findByNameLikeAndCategoriesIdOrderByPriceDesc("%" + keyword + "%",
-						categoriesid, pageable);
-			} else {
-				shopPage = shopRepository.findByNameLikeAndCategoriesIdOrderByPriceAsc("%" + keyword + "%",
-						categoriesid, pageable);
-			}
-
-		} else if (keywordck && priceck) {
-
-			if (orderck) {
-				shopPage = shopRepository.findByNameLikeAndPriceLessThanEqualOrderByPriceDesc("%" + keyword + "%",
-						price, pageable);
-			} else {
-				shopPage = shopRepository.findByNameLikeAndPriceLessThanEqualOrderByPriceAsc("%" + keyword + "%", price,
-						pageable);
-			}
-
-		} else if (categoriesidck && priceck) {
-
-			if (orderck) {
-				shopPage = shopRepository.findByCategoriesIdAndPriceLessThanEqualOrderByPriceDesc(categoriesid, price,
-						pageable);
-			} else {
-				shopPage = shopRepository.findByCategoriesIdAndPriceLessThanEqualOrderByPriceAsc(categoriesid, price,
-						pageable);
-			}
-
-		} else if (keywordck) {
-
-			if (orderck) {
-				shopPage = shopRepository.findByNameLikeOrderByPriceDesc("%" + keyword + "%", pageable);
-			} else {
-				shopPage = shopRepository.findByNameLikeOrderByPriceAsc("%" + keyword + "%", pageable);
-			}
-
-		} else if (categoriesidck) {
-
-			if (orderck) {
-				shopPage = shopRepository.findByCategoriesIdOrderByPriceDesc(categoriesid, pageable);
-			} else {
-				shopPage = shopRepository.findByCategoriesIdOrderByPriceAsc(categoriesid, pageable);
-			}
-
-		} else if (priceck) {
-
-			if (orderck) {
-				shopPage = shopRepository.findByPriceLessThanEqualOrderByPriceDesc(price, pageable);
-			} else {
-				shopPage = shopRepository.findByPriceLessThanEqualOrderByPriceAsc(price, pageable);
-			}
-
-		} else {
-
-			if (orderck) {
-				shopPage = shopRepository.findAllByOrderByPriceDesc(pageable);
-			} else {
-				shopPage = shopRepository.findAllByOrderByPriceAsc(pageable);
-			}
-
-		}
+		shopPage = searchshop(keyword, categoriesid, price, order, pageable);
 
 		model.addAttribute("shopPage", shopPage);
 		model.addAttribute("keyword", keyword);
@@ -133,6 +50,59 @@ public class ShopController {
 		model.addAttribute("order", order);
 
 		return "shops/index";
+	}
+
+	public Page<Shop> searchshop(String keyword, Integer categoriesid, Integer price, String order, Pageable pageable) {
+		Page<Shop> shopPage;
+
+		boolean isKeyword = Objects.nonNull(keyword) && !keyword.isEmpty();
+		boolean isCategoriesid = Objects.nonNull(categoriesid);
+		boolean isPrice = Objects.nonNull(price);
+		boolean isOrder = Objects.nonNull(order) && order.equals("priceDesc");
+		//seitchのkeyとして使うために、三項演算子でboolean型をint型に変更。
+		int keywordid = (isKeyword == true) ? 1 : 0;
+		int categoryid = (isCategoriesid == true) ? 2 : 0;
+		int priceid = (isPrice == true) ? 4 : 0;
+
+		int key = keywordid + categoryid + priceid;
+
+		switch (key) {
+		case 1:
+			return shopPage = (isOrder == true) ? shopRepository.findByNameLikeOrderByPriceDesc("%" + keyword + "%", pageable)
+					: shopRepository.findByNameLikeOrderByPriceAsc("%" + keyword + "%", pageable);
+		case 2:
+			return shopPage = (isOrder == true)
+					? shopRepository.findByCategoriesIdOrderByPriceDesc(categoriesid, pageable)
+					: shopRepository.findByCategoriesIdOrderByPriceAsc(categoriesid, pageable);
+		case 3:
+			return shopPage = (isOrder == true)
+					? shopRepository.findByNameLikeAndCategoriesIdOrderByPriceDesc("%" + keyword + "%", categoriesid, pageable)
+					: shopRepository.findByNameLikeAndCategoriesIdOrderByPriceAsc("%" + keyword + "%", categoriesid, pageable);
+		case 4:
+			return shopPage = (isOrder == true)
+					? shopRepository.findByPriceLessThanEqualOrderByPriceDesc(price, pageable)
+					: shopRepository.findByPriceLessThanEqualOrderByPriceAsc(price, pageable);
+		case 5:
+			return shopPage = (isOrder == true)
+					? shopRepository.findByNameLikeAndPriceLessThanEqualOrderByPriceDesc("%" + keyword + "%", price, pageable)
+					: shopRepository.findByNameLikeAndPriceLessThanEqualOrderByPriceAsc("%" + keyword +"%", price, pageable);
+		case 6:
+			return shopPage = (isOrder == true)
+					? shopRepository.findByCategoriesIdAndPriceLessThanEqualOrderByPriceDesc(categoriesid, price,
+							pageable)
+					: shopRepository.findByCategoriesIdAndPriceLessThanEqualOrderByPriceAsc(categoriesid, price,
+							pageable);
+		case 7:
+			return shopPage = (isOrder == true)
+					? shopRepository.findByNameLikeAndCategoriesIdAndPriceLessThanEqualOrderByPriceDesc("%" + keyword + "%",
+							categoriesid, price, pageable)
+					: shopRepository.findByNameLikeAndCategoriesIdAndPriceLessThanEqualOrderByPriceAsc("%" + keyword + "%",
+							categoriesid, price, pageable);
+		default:
+			return shopPage = (isOrder == true) ? shopRepository.findAllByOrderByPriceDesc(pageable)
+					: shopRepository.findAllByOrderByPriceAsc(pageable);
+		}
+
 	}
 
 	@GetMapping("/{id}")

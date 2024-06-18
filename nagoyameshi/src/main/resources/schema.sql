@@ -2,6 +2,7 @@
 CREATE TABLE IF NOT EXISTS company (
 id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 name VARCHAR(100) NOT NULL,
+postal_code VARCHAR(50) NOT NULL,
 location VARCHAR(100) NOT NULL, --所在地
 representative VARCHAR(50) NOT NULL, --代表者
 establishment DATE NOT NULL, --設立

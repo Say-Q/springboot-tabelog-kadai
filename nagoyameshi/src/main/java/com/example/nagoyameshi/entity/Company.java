@@ -24,6 +24,9 @@ public class Company {
 	@Column(name = "name")
 	private String name;
 	
+	@Column(name = "postal_code")
+	private String postalCode;
+	
 	//所在地
 	@Column(name = "location")
 	private String location;
@@ -33,8 +36,8 @@ public class Company {
 	private String representative;
 	
 	//設立
-	@Column(name = "estabishment")
-	private Date estabishment;
+	@Column(name = "establishment")
+	private Date establishment;
 	
 	//資本金
 	@Column(name = "capital")
