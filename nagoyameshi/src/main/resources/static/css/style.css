@@ -93,9 +93,12 @@
  	color: black;
  }
 
- .admin-page,
- .admin-a {
+ .admin-page {
  	color: #ffffff;
+ }
+ 
+ .admin-a {
+	 color:#00ffff ;
  }
 
  .nagoyameshi-wrapper {

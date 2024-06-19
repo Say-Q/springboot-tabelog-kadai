@@ -103,6 +103,7 @@ public class AdminshopController {
 	@GetMapping("/{id}/edit")
 	public String edit(@PathVariable(name = "id") Integer id, Model model) {
 		Shop shop = shopRepository.getReferenceById(id);
+		List<Categories> category = categoryRepository.findAll();
 		//店舗画像のファイル名を取得する
 		String imageName = shop.getImageName();
 
@@ -116,6 +117,8 @@ public class AdminshopController {
 		model.addAttribute("imageName", imageName);
 		//生成したインスタンスをビューに渡す
 		model.addAttribute("shopEditForm", shopEditForm);
+		//カテゴリのデータをビューに渡す
+		model.addAttribute("category", category);
 
 		return "admin/shops/edit";
 	}

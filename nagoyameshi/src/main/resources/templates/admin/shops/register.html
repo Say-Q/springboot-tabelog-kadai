@@ -20,6 +20,7 @@
 					<div class="col-xl-5 col-lg-6 col-md-8">
 						<nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
 							<ol class="breadcrumb mb-0">
+								<li class="breadcrumb-item"><a th:href="@{/admin}">管理者ページ</a></li>
 								<li class="breadcrumb-item"><a th:href="@{/admin/shops}">登録店舗一覧</a></li>
 								<li class="breadcrumb-item active" aria-current="page">店舗登録</li>
 							</ol>
@@ -61,14 +62,13 @@
 								<div class="col-md-8">
 									<div th:if="${#fields.hasErrors('categoriesId')}" class="text-danger small mb-2"
 										th:errors="*{categoriesId}"></div>
-									
-								<!--<span th:each="categories : ${category}">-->
-									<!--<td th:if="${categories.getId() == shop.getCategoriesId()}"-->
-									<!--th:text="${categories.getCategoryName()}"></td>-->
-								<!--</span>-->
-									
-									<input type="number" min="1" max="6" class="form-control"
-										th:field="*{categoriesId}">
+									<!--カテゴリ名をドロップダウンリストで表示して、登録はカテゴリIDで登録する。-->										
+									<select name="categoriesId" th:field"*{categoriesId}">
+										<option value="" disabled selected></option>
+										<option th:each="categories : ${category}" th:value="${categories.getId()}"
+											th:text="${categories.getCategoryName()}">
+										</option>
+									</select>
 								</div>
 							</div>
 

@@ -1,6 +1,5 @@
 package com.example.nagoyameshi.entity;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
 import jakarta.persistence.Column;
@@ -37,7 +36,7 @@ public class Company {
 	
 	//設立
 	@Column(name = "establishment")
-	private Date establishment;
+	private String establishment;
 	
 	//資本金
 	@Column(name = "capital")

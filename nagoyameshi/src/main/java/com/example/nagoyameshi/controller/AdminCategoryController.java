@@ -25,11 +25,11 @@ import com.example.nagoyameshi.service.CategoryService;
 
 @Controller
 @RequestMapping("/admin/categories")
-public class AdminCategoryController {
+public class AdmincategoryController {
 	private final CategoryRepository categoryRepository;
 	private final CategoryService categoryService;
 
-	public AdminCategoryController(CategoryRepository categoryRepository, CategoryService categoryService) {
+	public AdmincategoryController(CategoryRepository categoryRepository, CategoryService categoryService) {
 		this.categoryRepository = categoryRepository;
 		this.categoryService = categoryService;
 	}

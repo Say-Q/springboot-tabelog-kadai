@@ -20,6 +20,7 @@
 					<div class="col-xl-5 col-lg-6 col-md-8">
 						<nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
 							<ol class="breadcrumb mb-0">
+								<li class="breadcrumb-item"><a th:href="@{/admin}">管理者ページ</a></li>
 								<li class="breadcrumb-item"><a th:href="@{/admin/shops}">店舗一覧</a></li>
 								<li class="breadcrumb-item active" aria-current="page">店舗詳細</li>
 							</ol>
@@ -133,8 +134,15 @@
 									<span th:text="${shop.getPhoneNumber()}"></span>
 								</div>
 							</div>
+							<div class="row pb-2 mb-2 border-bottom">
+								<div class="col-4">
+									<span class="fw-bold">Webサイト</span>
+								</div>
+								<div class="col">
+									<span th:text="${shop.getShopSite()}"></span>
+								</div>
+							</div>
 						</div>
-
 					</div>
 				</div>
 			</div>
