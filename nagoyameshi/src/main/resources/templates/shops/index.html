@@ -35,15 +35,11 @@
 							</div>
 
 							<div class="col-auto me-1 mb-1 mb-sm-0">
-								<select class="form-control form-select" name="categoriesid">
+								<select class="form-control form-select" name="categoriesid" th:field"*{categoriesId}">
 									<option value="" hidden>カテゴリ</option>
 									<option value="">指定しない</option>
-									<option value="1" th:selected="${categoriesid == 1}">めん類</option>
-									<option value="2" th:selected="${categoriesid == 2}">手羽先</option>
-									<option value="3" th:selected="${categoriesid == 3}">名古屋コーチン</option>
-									<option value="4" th:selected="${categoriesid == 4}">ひつまぶし</option>
-									<option value="5" th:selected="${categoriesid == 5}">天むす</option>
-									<option value="6" th:selected="${categoriesid == 6}">鉄板スパ</option>
+									<option th:each="categories : ${category}" th:value="${categories.getId()}"
+										th:text="${categories.getCategoryName()}"></option>
 								</select>
 							</div>
 

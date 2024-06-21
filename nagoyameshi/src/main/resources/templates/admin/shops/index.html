@@ -27,17 +27,31 @@
 
 						<h1 class="mb-4 text-center">登録店舗一覧</h1>
 
-						<div class="d-flex justify-content-between align-items-end flex-wrap">
+						<div class="d-flex justify-content-between flex-wrap">
 							<form method="get" th:action="@{/admin/shops}" class="mb-3">
-								<div class="input-group">
+								<div class="input-group align-items-start">
 									<input type="text" class="form-control" name="keyword" th:value="${keyword}"
 										placeholder="店舗名" autofocus>
 									<button type="submit" class="btn text-white shadow-sm nagoyameshi-btn">検索</button>
-								</div>
 							</form>
+							<div class="">
+								<div class="d-flex justify-content-center ms-5">
+									<select class="form-select form-select-sm" name="order"
+										onChange="this.form.submit();">
+										<option value="">並べ替え</option>
+										<option value="updatedatAsc"
+											th:selected="${order == 'updatedatAsc' || order == null}">
+											更新日昇順
+										</option>
+										<option value="updatedatDesc" th:selected="${order == 'updatedDesc'}">
+											更新日降順
+										</option>
+									</select>
+								</div>
+							</div>
 
 							<a th:href="@{/admin/shops/register}"
-								class="btn text-white shadow-sm mb-3 nagoyameshi-btn">登録</a>
+								class="btn d-flex justify-content-end text-white shadow-sm mb-3 nagoyameshi-btn">登録</a>
 						</div>
 
 						<div th:if="${successMessage}" class="alert alert-info">
@@ -55,7 +69,6 @@
 									<th scope="col">更新日</th>
 									<th scope="col"></th>
 									<th scope="col"></th>
-
 								</tr>
 							</thead>
 							<tbody>

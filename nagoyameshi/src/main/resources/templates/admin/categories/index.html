@@ -27,57 +27,69 @@
 
 						<h1 class="mb-4 text-center">カテゴリ一覧</h1>
 
-						<div class="d-flex justify-content-between align-items-end flex-wrap">
-							<a th:href="@{/admin/categories/register}"
-								class="btn text-white shadow-sm mb-3 nagoyameshi-btn">登録</a>
-						</div>
 
 						<div th:if="${successMessage}" class="alert alert-info">
 							<span th:text="${successMessage}"></span>
 						</div>
 
-						<table class="table">
-							<thead>
-								<tr>
-									<th scope="col">ID</th>
-									<th scope="col">カテゴリ名</th>
-									<th scope="col"></th>
-									<th scope="col"></th>
-									
-								</tr>
-							</thead>
-							<tbody>
-								<tr th:each="category : ${categoryPage}">
-									<td th:text="${category?.getId()}"></td>
-									<td th:text="${category?.getCategoryName()}"></td>
-								</tr>
-								<td><a th:href="@{/admin/categories/__${category?.getId()}__}">詳細</a></td>
-								<td><a href="#" class="nagoyameshi-link-danger" data-bs-toggle="modal"
-										th:data-bs-target="${'#deleteCategoryModal' + category?.getId()}">削除</a></td>
-								<!-- 削除用モーダル -->
-								<div class="modal fade" th:id="${'deleteCategoryModal' + category?.getId()}"
-									tabindex="-1" th:aria-labelledby="${'deleteCategoryModalLabel' + category?.getId()}">
-									<div class="modal-dialog">
-										<div class="modal-content">
-											<div class="modal-header">
-												<h5 class="modal-title"
-													th:id="${'deleteCategoryModalLabel' + category?.getId()}"
-													th:text="${category?.getCategoryName() + 'を削除してもよろしいですか？'}"></h5>
-												<button type="button" class="btn-close" data-bs-dismiss="modal"
-													aria-label="閉じる"></button>
-											</div>
-											<div class="modal-footer">
-												<form method="post"
-													th:action="@{/admin/categories/__${category?.getId()}__/delete}">
-													<button type="submit"
-														class="btn nagoyameshi-btn-danger text-white shadow-sm">削除</button>
-												</form>
-											</div>
+						<div class="container">
+							<div class="row justify-content-center">
+								<div class="col-lg-10 px-4">
+									<div class="mb-3">
+										<div class="col-auto">
+											<a th:href="@{/admin/categories/register}"
+												class="btn text-white shadow-sm mb-3 nagoyameshi-btn">登録</a>
 										</div>
 									</div>
+									<table class="table table-striped mx-auto">
+										<thead>
+											<tr>
+												<th scope="col">ID</th>
+												<th scope="col">カテゴリ名</th>
+												<th scope="col"></th>
+												<th scope="col"></th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="category : ${categoryPage}">
+												<td th:text="${category.getId()}"></td>
+												<td th:text="${category.getCategoryName()}"></td>
+												<td>
+													<a th:href="@{/admin/categories/__${category.getId()}__/edit}">編集</a>
+												</td>
+												<td><a href="#" class="nagoyameshi-link-danger" data-bs-toggle="modal"
+														th:data-bs-target="${'#deleteCategoryModal' + category.getId()}">削除</a>
+												</td>
+												<!-- 削除用モーダル -->
+												<div class="modal fade"
+													th:id="${'deleteCategoryModal' + category.getId()}" tabindex="-1"
+													th:aria-labelledby="${'deleteCategoryModalLabel' + category.getId()}">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h5 class="modal-title"
+																	th:id="${'deleteCategoryModalLabel' + category.getId()}"
+																	th:text="${'「' + category.getId() + '　' + category.getCategoryName() + '」を削除してもよろしいですか？'}">
+																</h5>
+																<button type="button" class="btn-close"
+																	data-bs-dismiss="modal" aria-label="閉じる"></button>
+															</div>
+															<div class="modal-footer">
+																<form method="post"
+																	th:action="@{/admin/categories/__${category.getId()}__/delete}">
+																	<button type="submit"
+																		class="btn nagoyameshi-btn-danger text-white shadow-sm">削除</button>
+																</form>
+															</div>
+														</div>
+													</div>
+												</div>
+											</tr>
+										</tbody>
+									</table>
 								</div>
-							</tbody>
-						</table>
+							</div>
+						</div>
 
 						<!-- ページネーション -->
 						<div th:if="${categoryPage.getTotalPages() > 1}" class="d-flex justify-content-center">

@@ -23,7 +23,9 @@ public class WebSecurityConfig {
 		http
 			.authorizeHttpRequests((requests) -> requests
 				.requestMatchers("/css/**", "/images/**", "/js/**", "/storage/**", "/", "/signup/**", "/shops", "/shops/{id}", "/company/**").permitAll()  //すべてのユーザーにアクセスを許可するＵＲＬ
-				.requestMatchers("/admin/**").hasRole("ADMIN") //管理者にのみアクセスを許可するＵＲＬ
+				.requestMatchers("/admin/**").hasRole("ADMIN") //管理者にのみアクセスを許可するURL
+//				.requestMatchers().hasRole("PAYMEMBER") //有料会員のみアクセスを許可するURL
+//				.requestMatchers().hasRole("FREEMEMBER") //無料会員のみアクセスを許可するURL
 				.anyRequest().authenticated() //上記以外のＵＲＬはログインが必要（会員または管理者のどちらでもＯＫ）
 			)
 			.formLogin((form) -> form

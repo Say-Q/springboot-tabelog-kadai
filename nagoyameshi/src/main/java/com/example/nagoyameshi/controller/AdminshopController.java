@@ -1,6 +1,7 @@
 package com.example.nagoyameshi.controller;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +27,6 @@ import com.example.nagoyameshi.repository.CategoryRepository;
 import com.example.nagoyameshi.repository.ShopRepository;
 import com.example.nagoyameshi.service.ShopService;
 
-
 @Controller
 @RequestMapping("/admin/shops")
 public class AdminshopController {
@@ -34,33 +34,52 @@ public class AdminshopController {
 	private final ShopService shopService;
 	private final CategoryRepository categoryRepository;
 
-	public AdminshopController(ShopRepository shopRepository, ShopService shopService, CategoryRepository categoryRepository) {
+	public AdminshopController(ShopRepository shopRepository, ShopService shopService,
+			CategoryRepository categoryRepository) {
 		this.shopRepository = shopRepository;
 		this.shopService = shopService;
 		this.categoryRepository = categoryRepository;
 	}
 
 	@GetMapping
-	public String index(Model model,
+	public String index(@RequestParam(name = "keyword", required = false) String keyword,
+			@RequestParam(name = "order", required = false) String order,
 			@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable,
-			@RequestParam(name = "keyword", required = false) String keyword) {
+			Model model) {
+
 		Page<Shop> shopPage;
 		List<Categories> category = categoryRepository.findAll();
 
-		if (keyword != null && !keyword.isEmpty()) {
-			
-			shopPage = shopRepository.findByNameLike("%" + keyword + "%", pageable);
-			
-		} else {
-
-			shopPage = shopRepository.findAll(pageable);
-		}
-
+		shopPage = searchshop(keyword, order, pageable);
+		
 		model.addAttribute("shopPage", shopPage);
-		model.addAttribute("keyword", keyword);
 		model.addAttribute("category", category);
+		model.addAttribute("keyword", keyword);
+		model.addAttribute("order", order);
 
 		return "admin/shops/index";
+	}
+
+	public Page<Shop> searchshop(String keyword, String order, Pageable pageable) {
+		Page<Shop> shopPage;
+
+		boolean isKeyword = Objects.nonNull(keyword) && !keyword.isEmpty();
+		boolean isorder = Objects.nonNull(order) && order.equals("updatedatDesc");
+
+		int key = (isKeyword == true) ? 1 : 0;
+
+		switch (key) {
+		case 0:
+			return shopPage = (isorder == true)
+					? shopRepository.findAllByOrderByUpdatedAtDesc(pageable)
+					: shopRepository.findAllByOrderByUpdatedAtAsc(pageable);
+		case 1:
+			return shopPage = (isorder == true)
+					? shopRepository.findByNameLikeOrderByUpdatedAtDesc("%" + keyword + "%", pageable)
+					: shopRepository.findByNameLikeOrderByUpdatedAtAsc("%" + keyword + "%", pageable);
+		default:
+			return shopPage = shopRepository.findAll(pageable);
+		}
 	}
 
 	@GetMapping("/{id}")
@@ -77,7 +96,7 @@ public class AdminshopController {
 	@GetMapping("/register")
 	public String register(Model model) {
 		List<Categories> category = categoryRepository.findAll();
-		
+
 		model.addAttribute("shopRegisterForm", new ShopRegisterForm());
 		model.addAttribute("category", category);
 
@@ -86,9 +105,11 @@ public class AdminshopController {
 
 	@PostMapping("/create")
 	public String create(@ModelAttribute @Validated ShopRegisterForm shopRegisterForm, BindingResult bindingResult,
-			RedirectAttributes redirectAttributes) {
+			RedirectAttributes redirectAttributes, Model model) {
+		List<Categories> category = categoryRepository.findAll();
 		if (bindingResult.hasErrors()) {
 
+			model.addAttribute("category", category);
 			return "admin/shops/register";
 
 		}
@@ -125,9 +146,12 @@ public class AdminshopController {
 
 	@PostMapping("/{id}/update")
 	public String update(@ModelAttribute @Validated ShopEditForm shopEditForm, BindingResult bindingResult,
-			RedirectAttributes redirectAttributes) {
+			RedirectAttributes redirectAttributes, Model model) {
+		List<Categories> category = categoryRepository.findAll();
+
 		if (bindingResult.hasErrors()) {
 
+			model.addAttribute("category", category);
 			return "admin/shops/edit";
 
 		}
@@ -136,15 +160,14 @@ public class AdminshopController {
 		redirectAttributes.addFlashAttribute("successMessage", "店舗情報を編集しました。");
 		return "redirect:/admin/shops";
 	}
-	
+
 	@PostMapping("/{id}/delete")
 	public String delete(@PathVariable(name = "id") Integer id, RedirectAttributes redirectAttributes) {
 		shopRepository.deleteById(id);
-		
+
 		redirectAttributes.addFlashAttribute("successMessage", "民宿を削除しました。");
-		
+
 		return "redirect:/admin/shops";
 	}
-	
 
 }

@@ -69,7 +69,7 @@ public class CompanyController {
 
 		companyService.update(companyEditForm);
 		redirectAttributes.addFlashAttribute("successMessage", "会社情報を編集しました。");
-		return "redirect:admin/index";
+		return "redirect:/admin";
 	}
 
 }

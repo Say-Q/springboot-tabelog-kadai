@@ -62,7 +62,7 @@
 								<div class="col-md-8">
 									<div th:if="${#fields.hasErrors('categoriesId')}" class="text-danger small mb-2"
 										th:errors="*{categoriesId}"></div>
-									<!--カテゴリ名をドロップダウンリストで表示して、登録はカテゴリIDで登録する。-->										
+									<!--カテゴリ名をドロップダウンリストで表示して、登録はカテゴリIDで登録する。-->
 									<select name="categoriesId" th:field"*{categoriesId}">
 										<option value="" disabled selected></option>
 										<option th:each="categories : ${category}" th:value="${categories.getId()}"
@@ -92,7 +92,7 @@
 									<div th:if="${#fields.hasErrors('postalCode')}" class="text-danger small mb-2"
 										th:errors="*{postalCode}"></div>
 									<input type="text" class="form-control" th:field="*{postalCode}"
-										placeholder="101-0022">
+										placeholder="101-0022" inputmode="numeric" autocomplete="postal-code">
 								</div>
 							</div>
 
@@ -120,8 +120,8 @@
 								<div class="col-md-8">
 									<div th:if="${#fields.hasErrors('phoneNumber')}" class="text-danger small mb-2"
 										th:errors="*{phoneNumber}"></div>
-									<input type="text" class="form-control" th:field="*{phoneNumber}"
-										placeholder="0X0-XXX-XXXX">
+									<input type="tel" class="form-control" th:field="*{phoneNumber}"
+										placeholder="0X0-XXX-XXXX" inputmode="tel" autocomplete="tel">
 								</div>
 							</div>
 
@@ -166,7 +166,8 @@
 								<div class="col-md-8">
 									<div th:if="${#fields.hasErrors('price')}" class="text-danger small mb-2"
 										th:errors="*{price}"></div>
-									<input type="number" min="10" step="10" class="form-control" th:field="*{price}">
+									<input type="number" min="10" step="10" class="form-control" th:field="*{price}"
+										inputmode="numeric">
 								</div>
 							</div>
 
@@ -177,7 +178,8 @@
 								<div class="col-md-8">
 									<div th:if="${#fields.hasErrors('seats')}" class="text-danger small mb-2"
 										th:errors="*{seats}"></div>
-									<input type="number" min="0" class="form-control" th:field="*{seats}">
+									<input type="number" min="0" class="form-control" th:field="*{seats}"
+										inputmode="numeric">
 								</div>
 							</div>
 
@@ -186,8 +188,6 @@
 									<label for="shopSite" class="col-form-label text-md-left fw-bold">サイトURL</label>
 								</div>
 								<div class="col-md-8">
-									<!--<div th:if="${fieldsd.hasErrors('shopSite')}" class="text-danger small mb-2"-->
-									<!--th:errors="*{shopSite}"></div>-->
 									<input type="url" class="form-control" th:field="*{shopSite}">
 								</div>
 							</div>

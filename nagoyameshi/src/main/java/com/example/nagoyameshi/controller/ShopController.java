@@ -39,11 +39,12 @@ public class ShopController {
 			Model model) {
 
 		Page<Shop> shopPage;
-
+		List<Categories> category = categoryRepository.findAll();
 
 		shopPage = searchshop(keyword, categoriesid, price, order, pageable);
 
 		model.addAttribute("shopPage", shopPage);
+		model.addAttribute("category", category);
 		model.addAttribute("keyword", keyword);
 		model.addAttribute("categoriesid", categoriesid);
 		model.addAttribute("price", price);

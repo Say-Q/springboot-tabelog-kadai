@@ -52,8 +52,8 @@
 								<div class="col-md-7">
 									<div th:if="${#fields.hasErrors('furigana')}" class="text-danger small mb-2"
 										th:errors="*{furigana}"></div>
-									<input type="text" class="form-control" th:field="*{furigana}"
-										placeholder="ナゴヤタロウ">
+									<input type="text" class="form-control" th:field="*{furigana}" placeholder="ナゴヤタロウ"
+										inputmode="katakana">
 								</div>
 							</div>
 
@@ -70,7 +70,7 @@
 									<div th:if="${#fields.hasErrors('birthday')}" class="text-danger small mb-2"
 										th:errors="*{birthday}"></div>
 									<input type="date" class="form-control" th:field="*{birthday}"
-										placeholder="2000/01/01">
+										placeholder="2000/01/01" inputmode="numeric">
 								</div>
 							</div>
 
@@ -86,8 +86,8 @@
 								<div class="col-md-7">
 									<div th:if="${#fields.hasErrors('phoneNumber')}" class="text-danger small mb-2"
 										th:errors="*{phoneNumber}"></div>
-									<input type="text" class="form-control" th:field="*{phoneNumber}"
-										autocomplete="tel-national" placeholder="090-1234-5678">
+									<input type="tel" class="form-control" th:field="*{phoneNumber}"
+										placeholder="090-1234-5678" inputmode="tel">
 								</div>
 							</div>
 

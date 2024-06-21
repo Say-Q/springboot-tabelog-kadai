@@ -96,6 +96,7 @@ public class AdmincategoryController {
 
 		categoryService.update(categoryEditForm);
 		redirectAttributes.addFlashAttribute("successMessage", "カテゴリを編集しました。");
+		
 		return "redirect:/admin/categories";
 	}
 
