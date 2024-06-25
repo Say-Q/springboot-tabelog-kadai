@@ -3,6 +3,7 @@ package com.example.nagoyameshi.controller;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -115,6 +116,16 @@ public class ShopController {
 		model.addAttribute("category", category);
 
 		return "shops/show";
+	}
+	
+	@Value("${google.api.api_key}")
+	private String googleApiKey;
+	
+	@GetMapping("/shop-detail")
+	public String showShopDetail(Model model) {
+		//必要なデータをモデルに追加する
+		model.addAttribute("googleApiKey", googleApiKey);
+		return "show";
 	}
 
 }

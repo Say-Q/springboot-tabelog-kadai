@@ -12,7 +12,9 @@
 <body>
 	<div class="nagoyameshi-wrapper">
 		<!-- ヘッダー -->
-		<div th:replace="~{fragment :: header}"></div>
+		<div th:replace="~{fragment :: header}">
+			<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+		</div>
 
 		<main>
 			<div class="container pt-3 pb-5 nagoyameshi-container">
@@ -40,6 +42,10 @@
 									<img th:unless="${shop.getImageName()}" th:src="@{/images/noImage.png}"
 										class="img-fluid" alt="NO IMAGE">
 								</div>
+								<div>
+									<!-- 有料会員がログイン済みであれば表示する -->
+									<button class="" sec:authorize="hasRole('ROLE_PPAYMEMBER')"></button>
+								</div>
 								<div sec:authorize="isAnonymous()" class="col-lg-12 px-0 mt-2 mb-4">
 									<div class="card">
 										<div class="card-body">
@@ -51,10 +57,10 @@
 								</div>
 							</div>
 
-							<div class="col-md-8 mt-4 mb-4">
+							<div class="card col-md-8 mt-4 mb-4 pt-3" style="background-color:rgb(255, 252, 191);">
 								<div class="col-12 container mb-4">
 									<div class="row pb-2 mb-2 border-bottom">
-										<div class="col-4">
+										<div class="col-2">
 											<span class="fw-bold">カテゴリ</span>
 										</div>
 
@@ -67,7 +73,7 @@
 									</div>
 
 									<div class="row pb-2 mb-2 border-bottom">
-										<div class="col-4">
+										<div class="col-2">
 											<span class="fw-bold">説明</span>
 										</div>
 
@@ -79,7 +85,7 @@
 
 
 									<div class="row pb-2 mb-2 border-bottom">
-										<div class="col-4">
+										<div class="col-2">
 											<span class="fw-bold">住所</span>
 										</div>
 
@@ -91,7 +97,7 @@
 									</div>
 
 									<div class="row pb-2 mb-2 border-bottom">
-										<div class="col-4">
+										<div class="col-2">
 											<span class="fw-bold">電話番号</span>
 										</div>
 
@@ -101,7 +107,7 @@
 									</div>
 
 									<div class="row pb-2 mb-2 border-bottom">
-										<div class="col-4">
+										<div class="col-2">
 											<span class="fw-bold">営業時間</span>
 										</div>
 
@@ -111,18 +117,17 @@
 									</div>
 
 									<div class="row pb-2 mb-2 border-bottom">
-										<div class="col-4">
+										<div class="col-2">
 											<span class="fw-bold">定休日</span>
 										</div>
 
 										<div class="col">
-											<span
-												th:text="${shop.getRegularHoliday()} + '～' + ${shop.getRegularHoliday}"></span>
+											<span th:text="${shop.getRegularHoliday()}"></span>
 										</div>
 									</div>
 
 									<div class="row pb-2 mb-2 border-bottom">
-										<div class="col-4">
+										<div class="col-2">
 											<span class="fw-bold">予算</span>
 										</div>
 
@@ -133,7 +138,7 @@
 									</div>
 
 									<div class="row pb-2 mb-2 border-bottom">
-										<div class="col-4">
+										<div class="col-2">
 											<span class="fw-bold">座席数</span>
 										</div>
 
@@ -143,7 +148,7 @@
 									</div>
 
 									<div class="row pb-2 mb-2 border-bottom">
-										<div class="col-4">
+										<div class="col-2">
 											<span class="fw-bold">Webサイト</span>
 										</div>
 
@@ -154,8 +159,22 @@
 									</div>
 								</div>
 							</div>
-
 						</div>
+						<div id="map" class="ratio tatio-16x9"></div>
+						<script th:src="@{'https://maps.googleapis.com/maps/api/js?key=' + ${googleApiKey} + '&callback=initMapWrapper
+							&libraries=places&v=weekly&solution_channel=GMP_CCS_placedetails_v1'}" defer></script>
+						<script src="/js/initMap.js"></script>
+						<script>
+							function initMapWrapper() {
+								initMap([[${googleApiKey}]]);
+							}
+						</script>
+
+						<!--<div class="ratio ratio-16x9">-->
+						<!--<iframe-->
+						<!--th:src="'https://maps.google.co.jp/maps?output=embed&q=' + ${shop.getAddress()} + '&z=16'"-->
+						<!--allowfullscreen=""></iframe>-->
+						<!--</div>-->
 					</div>
 				</div>
 			</div>

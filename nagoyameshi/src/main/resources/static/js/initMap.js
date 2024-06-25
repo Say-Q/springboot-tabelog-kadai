@@ -1,0 +1,53 @@
+function initMap(apiKey) {
+	if (typeof google === 'undefined' || !google.maps) {
+		setTimeout(() => initMap(apiKey), 1000); //google mapsがロードされるまで待つ
+		return;
+	}
+	const map = new google.maps.Map(document.getElementById("map"), {
+		center: { lat: -33.866, lng: 151.196 },
+		zoom: 15,
+	});
+	const request = {
+		placeId: "ChIJN1t_tDeuEmsRUsoyG83frY4",
+		fields: ["name", "formatted_address", "place_id", "geometry", "icon", "formatted_phone_number", "business_status",
+			"opening_hours", "PlacePhoto", "website", "price_level", "rating", "reviews", "user_ratings_total"],
+	};
+	const infowindow = new google.maps.InfoWindow();
+	const service = new google.maps.places.PlacesService(map);
+
+	service.getDetails(request, (place, status) => {
+		if (
+			status === google.maps.places.PlacesServiceStatus.OK &&
+			place &&
+			place.geometry &&
+			place.geometry.location
+		) {
+			const marker = new google.maps.Marker({
+				map,
+				position: place.geometry.location,
+			});
+
+			google.maps.event.addListener(marker, "click", () => {
+				const content = document.createElement("div");
+				const nameElement = document.createElement("h2");
+
+				nameElement.textContent = place.name;
+				content.appendChild(nameElement);
+
+				const placeIdElement = document.createElement("p");
+
+				placeIdElement.textContent = place.place_id;
+				content.appendChild(placeIdElement);
+
+				const placeAddressElement = document.createElement("p");
+
+				placeAddressElement.textContent = place.formatted_address;
+				content.appendChild(placeAddressElement);
+				infowindow.setContent(content);
+				infowindow.open(map, marker);
+			});
+		}
+	});
+}
+
+window.initMap = initMap;
