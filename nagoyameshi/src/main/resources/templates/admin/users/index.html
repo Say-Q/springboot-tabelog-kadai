@@ -46,9 +46,13 @@
 									<th scope="col">ID</th>
 									<th scope="col">氏名</th>
 									<th scope="col">フリガナ</th>
+									<th scope="col">生年月日</th>
 									<th scope="col">電話番号</th>
 									<th scope="col">職業</th>
 									<th scope="col">メールアドレス</th>
+									<th scope="col">登録日</th>
+									<th scope="col"></th>
+									<th scope="col"></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -56,9 +60,40 @@
 									<td th:text="${user.getId()}"></td>
 									<td th:text="${user.getName()}"></td>
 									<td th:text="${user.getFurigana()}"></td>
+									<td th:text="${user.getBirthday()}"></td>
 									<td th:text="${user.getPhoneNumber()}"></td>
 									<td th:text="${user.getProfession()}"></td>
 									<td th:text="${user.getMail()}"></td>
+									<td th:text="${user.getCreatedAt()}"></td>
+									<td>
+										<a th:href="@{/admin/users/__${user.getId()}__/edit}">編集</a>
+									</td>
+									<td><a href="#" class="nagoyameshi-link-danger" data-bs-toggle="modal"
+											th:data-bs-target="${'#deleteUserModal' + user.getId()}">削除</a>
+									</td>
+									<!-- 削除用モーダル -->
+									<div class="modal fade" th:id="${'deleteUserModal' + user.getId()}" tabindex="-1"
+										th:aria-labelledby="${'deleteUserModalLabel' + user.getId()}">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title"
+														th:id="${'deleteCategoryModalLabel' + user.getId()}"
+														th:text="${'「' + user.getName() + '」を削除してもよろしいですか？'}">
+													</h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal"
+														aria-label="閉じる"></button>
+												</div>
+												<div class="modal-footer">
+													<form method="post"
+														th:action="@{/admin/users/__${user.getId()}__/delete}">
+														<button type="submit"
+															class="btn nagoyameshi-btn-danger text-white shadow-sm">削除</button>
+													</form>
+												</div>
+											</div>
+										</div>
+									</div>
 								</tr>
 							</tbody>
 						</table>

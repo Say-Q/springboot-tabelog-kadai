@@ -47,6 +47,10 @@ public class AdminshopController {
 			@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable,
 			Model model) {
 
+		if (Objects.isNull(order) || order.isEmpty()) {
+			order = "id";
+		}
+		
 		Page<Shop> shopPage;
 		List<Categories> category = categoryRepository.findAll();
 
@@ -64,21 +68,20 @@ public class AdminshopController {
 		Page<Shop> shopPage;
 
 		boolean isKeyword = Objects.nonNull(keyword) && !keyword.isEmpty();
-		boolean isorder = Objects.nonNull(order) && order.equals("updatedatDesc");
 
-		int key = (isKeyword == true) ? 1 : 0;
-
-		switch (key) {
-		case 0:
-			return shopPage = (isorder == true)
-					? shopRepository.findAllByOrderByUpdatedAtDesc(pageable)
+		switch (order) {
+		case "updatedatAsc":
+			return shopPage = isKeyword
+					? shopRepository.findByNameLikeOrderByUpdatedAtAsc("%" + keyword + "%", pageable)
 					: shopRepository.findAllByOrderByUpdatedAtAsc(pageable);
-		case 1:
-			return shopPage = (isorder == true)
+		case "updatedatDesc":
+			return shopPage = isKeyword
 					? shopRepository.findByNameLikeOrderByUpdatedAtDesc("%" + keyword + "%", pageable)
-					: shopRepository.findByNameLikeOrderByUpdatedAtAsc("%" + keyword + "%", pageable);
+					: shopRepository.findAllByOrderByUpdatedAtDesc(pageable);
 		default:
-			return shopPage = shopRepository.findAll(pageable);
+			return shopPage = isKeyword 
+					? shopRepository.findByNameLikeOrderByIdAsc("%" + keyword + "%", pageable)
+					: shopRepository.findAllByOrderByIdAsc(pageable);
 		}
 	}
 
@@ -165,7 +168,7 @@ public class AdminshopController {
 	public String delete(@PathVariable(name = "id") Integer id, RedirectAttributes redirectAttributes) {
 		shopRepository.deleteById(id);
 
-		redirectAttributes.addFlashAttribute("successMessage", "民宿を削除しました。");
+		redirectAttributes.addFlashAttribute("successMessage", "店舗情報を削除しました。");
 
 		return "redirect:/admin/shops";
 	}

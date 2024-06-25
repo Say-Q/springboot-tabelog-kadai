@@ -42,6 +42,9 @@ public interface ShopRepository extends JpaRepository<Shop, Integer> {
 	public Page<Shop> findAllByOrderByUpdatedAtAsc(Pageable pageable);
 	public Page<Shop> findAllByOrderByUpdatedAtDesc(Pageable pageable);
 	
+	public Page<Shop> findByNameLikeOrderByIdAsc(String namekeyword, Pageable pageable);
+	public Page<Shop> findAllByOrderByIdAsc(Pageable pageable);
+	
 	//トップページで使用
 	public List<Shop> findTop10ByOrderByPriceAsc();
 }

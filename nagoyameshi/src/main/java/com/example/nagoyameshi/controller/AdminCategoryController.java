@@ -42,7 +42,7 @@ public class AdmincategoryController {
 
 		model.addAttribute("categoryPage", categoryPage);
 
-		return "/admin/categories/index";
+		return "admin/categories/index";
 	}
 
 	@GetMapping("/register")

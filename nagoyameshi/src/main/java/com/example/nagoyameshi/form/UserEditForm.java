@@ -1,5 +1,7 @@
 package com.example.nagoyameshi.form;
 
+import com.example.nagoyameshi.validation.PhoneNumber;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -21,6 +23,7 @@ public class UserEditForm {
 	private String birthday;
 	
 	@NotBlank(message = "電話番号を入力してください。")
+	@PhoneNumber //カスタムバリデーション
 	private String phoneNumber;
 	
 	@NotBlank(message = "職業を入力してください。")

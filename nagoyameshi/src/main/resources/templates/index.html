@@ -11,26 +11,8 @@
 <body>
 	<div class="nagoyameshi-wrapper">
 		<!-- ヘッダー -->
-		<div th:replace="~{fragment :: header}"></div>
-
-		<main>
-			<!--画像をスライドする-->
-			<div id="carouselExampleSlidesOnly" class="carousel slide carousel-fade" data-bs-ride="carousel">
-				<div class="carousel-inner">
-					<div class="carousel-item active" date-bs-interval="5000">
-						<img th:src="@{/images/top1.png}" class="d-block w-100" alt="キャッチコッピー画像">
-					</div>
-					<div class="carousel-item" data-bs-interval="5000">
-						<img th:src="@{/images/top2.png}" class="d-block w-100" alt="名古屋城">
-					</div>
-					<div class="carousel-item" data-bs-interval="5000">
-						<img th:src="@{/images/top3.png}" class="d-block w-100" alt="名古屋めし画像">
-					</div>
-				</div>
-			</div>
-
-			<div class="container pt-4 pb-5 nagoyameshi-container">
-				<div th:if="${param.loggedIn}" class="alert alert-info">
+		<div th:replace="~{fragment :: header}">
+							<div th:if="${param.loggedIn}" class="alert alert-info">
 					ログインしました。
 				</div>
 
@@ -41,6 +23,28 @@
 				<div th:if="${successMessage}" class="alert alert-info">
 					<span th:text="${successMessage}"></span>
 				</div>
+		</div>
+
+		<main>
+			<!--画像をスライドする-->
+			<div class="col-xl-7 col-md-11 col-sm-6 mx-auto">
+				<div id="carouselExampleSlidesOnly" class="carousel slide carousel-fade" data-bs-ride="carousel">
+					<div class="carousel-inner">
+						<div class="carousel-item active" date-bs-interval="5000">
+							<img th:src="@{/images/top1.png}" class="d-block w-100" alt="キャッチコッピー画像">
+						</div>
+						<div class="carousel-item" data-bs-interval="5000">
+							<img th:src="@{/images/top2.png}" class="d-block w-100" alt="名古屋城">
+						</div>
+						<div class="carousel-item" data-bs-interval="5000">
+							<img th:src="@{/images/top3.png}" class="d-block w-100" alt="名古屋めし画像">
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="container pt-4 pb-5 nagoyameshi-container">
+
 
 				<div class="d-flex justify-content-center mb-5">
 					<form method="get" th:action="@{/shops}"
@@ -53,7 +57,7 @@
 						</div>
 
 						<div class="col-auto me-1">
-						<!--カテゴリをDBより取得してリスト化-->
+							<!--カテゴリをDBより取得してリスト化-->
 							<select class="form-control form-select" name="categoriesid" th:field"*{categoriesId}">
 								<option value="" hidden>カテゴリ</option>
 								<option value="">指定しない</option>

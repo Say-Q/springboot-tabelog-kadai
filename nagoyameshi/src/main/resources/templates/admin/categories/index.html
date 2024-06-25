@@ -44,7 +44,6 @@
 									<table class="table table-striped mx-auto">
 										<thead>
 											<tr>
-												<th scope="col">ID</th>
 												<th scope="col">カテゴリ名</th>
 												<th scope="col"></th>
 												<th scope="col"></th>
@@ -52,7 +51,6 @@
 										</thead>
 										<tbody>
 											<tr th:each="category : ${categoryPage}">
-												<td th:text="${category.getId()}"></td>
 												<td th:text="${category.getCategoryName()}"></td>
 												<td>
 													<a th:href="@{/admin/categories/__${category.getId()}__/edit}">編集</a>
@@ -69,7 +67,7 @@
 															<div class="modal-header">
 																<h5 class="modal-title"
 																	th:id="${'deleteCategoryModalLabel' + category.getId()}"
-																	th:text="${'「' + category.getId() + '　' + category.getCategoryName() + '」を削除してもよろしいですか？'}">
+																	th:text="${'「' + category.getCategoryName() + '」を削除してもよろしいですか？'}">
 																</h5>
 																<button type="button" class="btn-close"
 																	data-bs-dismiss="modal" aria-label="閉じる"></button>

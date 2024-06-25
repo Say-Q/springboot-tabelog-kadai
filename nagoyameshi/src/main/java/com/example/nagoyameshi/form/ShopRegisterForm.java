@@ -2,6 +2,9 @@ package com.example.nagoyameshi.form;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.nagoyameshi.validation.PhoneNumber;
+import com.example.nagoyameshi.validation.PostalCode;
+
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -21,12 +24,14 @@ public class ShopRegisterForm {
 	private String description;
 
 	@NotBlank(message = "郵便番号を入力してください。")
+	@PostalCode //カスタムバリデーション
 	private String postalCode;
 
 	@NotBlank(message = "住所を入力してください。")
 	private String address;
 
 	@NotBlank(message = "電話番号を入力してください。")
+	@PhoneNumber //カスタムバリデーション
 	private String phoneNumber;
 
 	@NotNull(message = "開店時間を入力してください。")
