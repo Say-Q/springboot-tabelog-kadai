@@ -1,8 +1,4 @@
-function initMap(apiKey) {
-	if (typeof google === 'undefined' || !google.maps) {
-		setTimeout(() => initMap(apiKey), 1000); //google mapsがロードされるまで待つ
-		return;
-	}
+function initMap() {
 	const map = new google.maps.Map(document.getElementById("map"), {
 		center: { lat: -33.866, lng: 151.196 },
 		zoom: 15,

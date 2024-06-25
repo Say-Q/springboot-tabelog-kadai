@@ -7,13 +7,14 @@
 	<div th:replace="~{fragment :: styles}"></div>
 
 	<title>店舗詳細</title>
+
+	<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 </head>
 
 <body>
 	<div class="nagoyameshi-wrapper">
 		<!-- ヘッダー -->
 		<div th:replace="~{fragment :: header}">
-			<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 		</div>
 
 		<main>
@@ -160,24 +161,21 @@
 								</div>
 							</div>
 						</div>
-						<div id="map" class="ratio tatio-16x9"></div>
-						<script th:src="@{'https://maps.googleapis.com/maps/api/js?key=' + ${googleApiKey} + '&callback=initMapWrapper
-							&libraries=places&v=weekly&solution_channel=GMP_CCS_placedetails_v1'}" defer></script>
-						<script src="/js/initMap.js"></script>
-						<script>
-							function initMapWrapper() {
-								initMap([[${googleApiKey}]]);
-							}
-						</script>
+						<div id="map" style="height: 500px; width: 100%;"></div>
+						<!--変数を用いてAPIキーを参照-->
+						<script th:src=" @{'https://maps.googleapis.com/maps/api/js?key=' + ${googleApiKey} + ' &callback=initMap
+							&libraries=places&v=weekly&solution_channel=GMP_CCS_placedetails_v1'}" defer>
+							</script>
+							<script src="/js/initMap.js"></script>
 
-						<!--<div class="ratio ratio-16x9">-->
-						<!--<iframe-->
-						<!--th:src="'https://maps.google.co.jp/maps?output=embed&q=' + ${shop.getAddress()} + '&z=16'"-->
-						<!--allowfullscreen=""></iframe>-->
-						<!--</div>-->
+							<!--<div class="ratio ratio-16x9">-->
+							<!--<iframe-->
+							<!--th:src="'https://maps.google.co.jp/maps?output=embed&q=' + ${shop.getAddress()} + '&z=16'"-->
+							<!--allowfullscreen=""></iframe>-->
+							<!--</div>-->
+						</div>
 					</div>
 				</div>
-			</div>
 		</main>
 
 		<!-- フッター -->
