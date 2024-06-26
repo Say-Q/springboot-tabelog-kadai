@@ -8,6 +8,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -17,6 +18,7 @@ import com.example.nagoyameshi.form.UserEditForm;
 import com.example.nagoyameshi.repository.UserRepository;
 import com.example.nagoyameshi.security.UserDetailsImpl;
 import com.example.nagoyameshi.service.UserService;
+
 
 @Controller
 @RequestMapping("/user")
@@ -71,5 +73,13 @@ public class UserController {
 
 		return "redirect:/user";
 	}
+	
+	@PostMapping("/delete")
+	public String delete(@PathVariable(name = "id") Integer id,RedirectAttributes redirectAttributes) {
+		userRepository.deleteById(id);
+		redirectAttributes.addFlashAttribute("successMessage", "アカウントとアカウントに紐付くデータを削除しました。");
+		return "redirect:/index";
+	}
+	
 
 }

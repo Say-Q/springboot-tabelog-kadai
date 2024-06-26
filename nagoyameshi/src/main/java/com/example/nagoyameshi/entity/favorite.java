@@ -1,8 +1,5 @@
 package com.example.nagoyameshi.entity;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,34 +11,19 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "reservations")
+@Table(name = "favorites")
 @Data
-public class Reservation {
+public class favorite {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer id;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "users_id")
 	private User user;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "shops_id")
 	private Shop shop;
-	
-	@Column(name = "reservation_date")
-	private LocalDate reservationDate;
-	
-	@Column(name = "reservation_time")
-	private String reservationTime;
-	
-	@Column(name = "reservation_count")
-	private Integer reservationCount;
-	
-	@Column(name = "created_at", insertable = false, updatable = false)
-	private Timestamp createdAt;
-	
-	@Column(name = "updated_at", insertable = false, updatable = false)
-	private Timestamp updatedAt;
 }

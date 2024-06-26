@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<div th:replace="~{fragment :: meta}"></div>
+
+	<div th:replace="~{fragment :: styles}"></div>
+
+	<title>店舗予約</title>
+</head>
+
+<body>
+	<div class="nagoyameshi-wrapper">
+		<!-- ヘッダー -->
+		<div th:replace="~{fragment :: header}"></div>
+
+		<main>
+			<div class="container pt-3 pb-5 nagoyameshi-container">
+				<div class="row justify-content-center">
+					<div class="col-xxl-9 col-xl-10 col-lg-11">
+						<nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0">
+								<li class="breadcrumb-item"><a th:href="@{/}">ホーム</a></li>
+								<li class="breadcrumb-item"><a th:href="@{/shops}">店舗一覧</a></li>
+								<li class="breadcrumb-item"><a th:href="@{/shops/__${shop.Id}__}">店舗詳細</a></li>
+								<li class="breadcrumb-item active" aria-current="page">店舗予約</li>
+							</ol>
+						</nav>
+
+						<h1 class="text-center mb-5" th:text="${shop.name}"></h1>
+
+						<div class="d-flex justify-content-center col-lg-4 px-0 ps-lg-4 m-auto">
+							<div class="card">
+								<div class="card-body">
+									<form method="get" th:action="@{/shops/__${shop.getId()}__/reservations/register}"
+										th:object="${reservationInputForm}">
+										<div class="form-group mb-2">
+											<label for="reservationDate"
+												class="col-form-label text-md-left fw-bold">予約日</label>
+											<div th:if="${#fields.hasErrors('reservationDate')}"
+												class="text-danger small mb-2" th:errors="*{reservationDate}"></div>
+											<input type="date" class="form-control" th:field="*{reservationDate}">
+										</div>
+
+										<div class="form-group mb-4">
+											<label for="reservationTime"
+												class="col-form-label text-md-left fw-bold">予約時間</label>
+											<div th:if="${#fields.hasErrors('reservationTime')}"
+												class="text-danger small mb-2" th:errors="*{reservationTime}"></div>
+											<input type="time" id="reservationTime" class="form-control"
+												th:field="*{reservationTime}"
+												th:attr="min=${shop.openTime}, max=${shop.closeTime}">
+										</div>
+
+										<div class="form-group mb-4">
+											<label for="reservationCount"
+												class="col-form-label text-md-left fw-bold">予約人数</label>
+											<div th:if="${#fields.hasErrors('reservationCount')}"
+												class="text-danger small mb-2" th:errors="*{reservationCount}"></div>
+											<input type="number" class="form-control" th:field="*{reservationCount}"
+												min="1">
+										</div>
+										<div class="form-group">
+											<button type="submit"
+												class="btn text-white shadow-sm w-100 nagoyameshi-btn">予約する</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<!-- フッター -->
+		<div th:replace="~{fragment :: footer}"></div>
+	</div>
+
+	<div th:replace="~{fragment :: scripts}"></div>
+
+	<script th:inline="javascript">
+		window.addEventListener('load', function () {
+			var openTime = /*[[${shop.openTime}]]*/ '09:00';
+			var closeTime = /*[[${shop.closeTime}]]*/ '18:00';
+
+			console.log("Open Time: " + openTime);
+			console.log("Close Time: " + closeTime);
+
+			var reservationTimeInput = document.getElementById("reservationTime");
+			if (reservationTimeInput) {
+				reservationTimeInput.min = openTime;
+				reservationTimeInput.max = closeTime;
+				console.log("Min and Max set for reservationTimeInput");
+			} else {
+				console.log("reservationTimeInput element not found!");
+			}
+		});
+	</script>
+
+</body>
+
+</html>

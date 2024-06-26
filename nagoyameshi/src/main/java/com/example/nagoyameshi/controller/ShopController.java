@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.nagoyameshi.entity.Categories;
 import com.example.nagoyameshi.entity.Shop;
 import com.example.nagoyameshi.repository.CategoryRepository;
+import com.example.nagoyameshi.repository.FavoriteRepository;
 import com.example.nagoyameshi.repository.ShopRepository;
 
 @Controller
@@ -25,10 +26,12 @@ import com.example.nagoyameshi.repository.ShopRepository;
 public class ShopController {
 	private final ShopRepository shopRepository;
 	private final CategoryRepository categoryRepository;
+	private final FavoriteRepository favoriteRepository;
 
-	public ShopController(ShopRepository shopRepository, CategoryRepository categoryRepository) {
+	public ShopController(ShopRepository shopRepository, CategoryRepository categoryRepository, FavoriteRepository favoriteRepository) {
 		this.shopRepository = shopRepository;
 		this.categoryRepository = categoryRepository;
+		this.favoriteRepository = favoriteRepository;
 	}
 
 	@GetMapping
@@ -117,6 +120,26 @@ public class ShopController {
 
 		return "shops/show";
 	}
+	
+//	@GetMapping("/{shopId}")
+//	public String show(@PathVariable(name = "shopId") Integer shopId, Pageable pageable,
+//	    @AuthenticationPrincipal UserDetailsImpl userDetailsImpl, Model model) {
+//	  Shop shop = shopRepository.getReferenceById(shopId);
+//	  
+//	  model.addAttribute("shop", shop);
+//
+//	  if (userDetailsImpl != null) {
+//	    User user = userDetailsImpl.getUser();
+//	    boolean userHasFavorites = !favoriteRepository.findByShopIdAndUserId(shopId, user.getId(), pageable).isEmpty();
+//	    model.addAttribute("user", user);
+//	    model.addAttribute("userHasFavorites", userHasFavorites);
+//
+//	    System.out.println("userHasFavorites: " + userHasFavorites);
+//	  } else {
+//	    System.out.println("UserDetailsImpl is null");
+//	  }
+//	  return "shops/show";
+//	}
 	
 	@Value("${google.api.api_key}")
 	private String googleApiKey;

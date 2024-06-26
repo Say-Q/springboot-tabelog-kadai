@@ -56,6 +56,33 @@ INSERT IGNORE INTO users (id, roles_id, name, furigana, birthday, phone_number, 
 INSERT IGNORE INTO users (id, roles_id, name, furigana, birthday, phone_number, profession, mail, password, enabled) VALUES (13, 2, '名古屋　五月', 'ナゴヤイツキ', '2007/05/06', '080-1234-5678', '学生', 'nagoya.itsuki@example.com', 'password', true);
 
 --reservations（予約）テーブル
-INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (1, 2, 1, '2024-10-01', '18:00', 2);
-INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (2, 2, 2, '2024-10-02', '18:00', 2);
-INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (3, 2, 3, '2024-10-03', '18:00', 2);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (1, 2, 1, '2024-01-01', '18:00', 10);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (2, 2, 2, '2024-02-02', '18:30', 9);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (3, 2, 3, '2024-03-03', '18:00', 8);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (4, 2, 6, '2024-04-04', '19:00', 7);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (5, 2, 4, '2024-05-05', '19:30', 6);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (6, 2, 5, '2024-06-06', '10:00', 5);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (7, 2, 10, '2024-07-07', '18:30', 4);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (8, 2, 8, '2024-10-08', '18:00', 3);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (9, 2, 7, '2024-09-09', '19:00', 2);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (10, 2, 9, '2024-10-10', '19:30', 1);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (11, 2, 15, '2024-11-11', '18:00', 2);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (12, 2, 12, '2024-12-12', '18:30', 3);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (13, 2, 13, '2025-01-13', '18:00', 4);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (14, 2, 11, '2024-02-14', '19:00', 5);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (15, 2, 14, '2024-03-15', '19:30', 6);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (16, 14, 1, '2024-01-01', '18:00', 10);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (17, 14, 2, '2024-02-02', '18:30', 9);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (18, 14, 3, '2024-03-03', '18:00', 8);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (19, 14, 6, '2024-04-04', '19:00', 7);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (20, 14, 4, '2024-05-05', '19:30', 6);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (21, 14, 5, '2024-06-06', '10:00', 5);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (22, 14, 10, '2024-07-07', '18:30', 4);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (23, 14, 8, '2024-10-08', '18:00', 3);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (24, 14, 7, '2024-09-09', '19:00', 2);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (25, 14, 9, '2024-10-10', '19:30', 1);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (26, 14, 15, '2024-11-11', '18:00', 2);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (27, 14, 12, '2024-12-12', '18:30', 3);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (28, 14, 13, '2025-01-13', '18:00', 4);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (29, 14, 11, '2024-02-14', '19:00', 5);
+INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (30, 14, 14, '2024-03-15', '19:30', 6);

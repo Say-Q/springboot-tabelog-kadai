@@ -43,16 +43,42 @@
 									<img th:unless="${shop.getImageName()}" th:src="@{/images/noImage.png}"
 										class="img-fluid" alt="NO IMAGE">
 								</div>
-								<div>
-									<!-- 有料会員がログイン済みであれば表示する -->
-									<button class="" sec:authorize="hasRole('ROLE_PPAYMEMBER')"></button>
-								</div>
+								<!--								<div sec:authorize="isAuthenticated()">-->
+								<!--									<div th:if="${shopHasFavorites}">-->
+								<!--										<form th:action="@{/shops/{shopId}/favorites/delete(shopId=${shop.id})}"-->
+								<!--											method="post">-->
+								<!--											<input type="hidden" name="shopId" th:value="${shop.id}">-->
+								<!--											<button type="submit" class="btn btn-link text-decolation-none right">-->
+								<!--												&#9829;お気に入り解除</button>  &#9829; は ♥ -->
+								<!--										</form>-->
+								<!--									</div>-->
+								<!--									<div th:unless="${shopHasFavorites}">-->
+								<!--										<form th:action="@{/shops/{shopId}/favorites/add(shopId=${shop.id})}"-->
+								<!--											method="post">-->
+								<!--											<input type="hidden" name="shopId" th:value="${shop.id}">-->
+								<!--											<button type="submit" class="btn btn-link text-decolation-none right">-->
+								<!--												&#9825;お気に入り追加</button>  &#9825; は ♡ -->
+								<!--										</form>-->
+								<!--									</div>-->
+								<!--								</div>-->
+
 								<div sec:authorize="isAnonymous()" class="col-lg-12 px-0 mt-2 mb-4">
 									<div class="card">
 										<div class="card-body">
 											<p class="card-text">予約するには<a th:href="@{/login}">ログイン</a>が必要です。</p>
 											<button type="submit" class="btn text-white shadow-sm w-100 nagoyameshi-btn"
 												disabled>予約する</button>
+										</div>
+									</div>
+								</div>
+								<div sec:authorize="isAuthenticated()" class="col-lg-12 px-0 mt-2 mb-4">
+									<div class="card">
+										<div class="card-body">
+											<a th:href="@{/reservation/__${shop.getId()}__}">
+												<button type="submit"
+													class="btn text-white shadow-sm w-100 nagoyameshi-btn"
+													disabled>予約する</button>
+											</a>
 										</div>
 									</div>
 								</div>
@@ -166,16 +192,16 @@
 						<script th:src=" @{'https://maps.googleapis.com/maps/api/js?key=' + ${googleApiKey} + ' &callback=initMap
 							&libraries=places&v=weekly&solution_channel=GMP_CCS_placedetails_v1'}" defer>
 							</script>
-							<script src="/js/initMap.js"></script>
+						<script src="/js/initMap.js"></script>
 
-							<!--<div class="ratio ratio-16x9">-->
-							<!--<iframe-->
-							<!--th:src="'https://maps.google.co.jp/maps?output=embed&q=' + ${shop.getAddress()} + '&z=16'"-->
-							<!--allowfullscreen=""></iframe>-->
-							<!--</div>-->
-						</div>
+						<!--<div class="ratio ratio-16x9">-->
+						<!--<iframe-->
+						<!--th:src="'https://maps.google.co.jp/maps?output=embed&q=' + ${shop.getAddress()} + '&z=16'"-->
+						<!--allowfullscreen=""></iframe>-->
+						<!--</div>-->
 					</div>
 				</div>
+			</div>
 		</main>
 
 		<!-- フッター -->

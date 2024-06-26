@@ -28,7 +28,7 @@
 						<div th:if="${successMessage}" class="alert alert-info">
 							<span th:text="${successMessage}"></span>
 						</div>
-						
+
 						<details>
 							<summary>会員情報</summary>
 							<h1 class="mb-3 text-center">会員情報</h1>
@@ -104,14 +104,31 @@
 						<div class="m-3">
 							<a>パスワード変更</a>
 						</div>
-						<div class="m-3">アカウント削除</div>
+						<!-- 削除用モーダル -->
+						<!--<div class="modal fade" th:id="${'deleteUserModal' + user.getId()}" tabindex="-1"-->
+						<!--th:aria-labelledby="${'deleteUserModalLabel' + user.getId()}">-->
+						<!--<div class="modal-dialog">-->
+						<!--<div class="modal-content">-->
+						<!--<div class="modal-header">-->
+						<!--<h5 class="modal-title" th:id="${'deleteUserModalLabel' + user.getId()}"-->
+						<!--th:text="${user.getName() + 'を削除してもよろしいですか？'}"></h5>-->
+						<!--<button type="button" class="btn-close" data-bs-dismiss="modal"-->
+						<!--aria-label="閉じる"></button>-->
+						<!--</div>-->
+						<!--<div class="modal-footer">-->
+						<!--<form method="post" th:action="@{/admin/shops/__${shop.getId()}__/delete}">-->
+						<!--<button type="submit" class="btn m-3">アカウント削除</button>-->
+						<!--</form>-->
+						<!--</div>-->
+						<!--</div>-->
+						<!--</div>-->
 						<div class="m-3">
 							<a>有料会員規約</a>
 						</div>
-						<div class="m-3">
+						<div class="m-3" sec:authorize="hasRole('ROLE_FREEMEMBER')">
 							<a>有料会員登録</a>
 						</div>
-						<div class="m-3">
+						<div class="m-3" sec:authorize="hasRole('ROLE_PAYMEMBER')">
 							<a>有料会員解約</a>
 						</div>
 						<div class="m-3">
