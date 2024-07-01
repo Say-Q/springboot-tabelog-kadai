@@ -27,38 +27,50 @@
 							</ol>
 						</nav>
 
-						<h1 class="text-center mb-5" th:text="${shop.name}"></h1>
+						<h1 class="text-center pb-3 mb-3 border-bottom">予約内容入力画面</h1>
+
+						<h2 class="text-center mb-4" th:text="${'『' + shop.name + '』'}"></h2>
 
 						<div class="d-flex justify-content-center col-lg-4 px-0 ps-lg-4 m-auto">
 							<div class="card">
 								<div class="card-body">
-									<form method="get" th:action="@{/shops/__${shop.getId()}__/reservations/register}"
+									<form method="post" th:action="@{/reservation/__${shop.getId()}__/register}"
 										th:object="${reservationInputForm}">
-										<div class="form-group mb-2">
+										<div class="form-group mb-3">
 											<label for="reservationDate"
 												class="col-form-label text-md-left fw-bold">予約日</label>
 											<div th:if="${#fields.hasErrors('reservationDate')}"
 												class="text-danger small mb-2" th:errors="*{reservationDate}"></div>
-											<input type="date" class="form-control" th:field="*{reservationDate}">
+											<input type="date" class="form-control" id="reservationDate" th:field="*{reservationDate}">
 										</div>
 
-										<div class="form-group mb-4">
+										<div class="form-group mb-3">
 											<label for="reservationTime"
 												class="col-form-label text-md-left fw-bold">予約時間</label>
 											<div th:if="${#fields.hasErrors('reservationTime')}"
 												class="text-danger small mb-2" th:errors="*{reservationTime}"></div>
-											<input type="time" id="reservationTime" class="form-control"
-												th:field="*{reservationTime}"
-												th:attr="min=${shop.openTime}, max=${shop.closeTime}">
+											<br>
+											<select th:field="*{reservationTime}">
+												<option value=""></option>
+												<option th:each="time : ${availableTimes}" th:value="${time}"
+													th:text="${time}"></option>
+											</select>
 										</div>
 
-										<div class="form-group mb-4">
+										<div class="form-group mb-3">
 											<label for="reservationCount"
 												class="col-form-label text-md-left fw-bold">予約人数</label>
 											<div th:if="${#fields.hasErrors('reservationCount')}"
 												class="text-danger small mb-2" th:errors="*{reservationCount}"></div>
-											<input type="number" class="form-control" th:field="*{reservationCount}"
-												min="1">
+											<br>
+											<select th:field="*{reservationCount}">
+												<option value=""></option>
+												<th:block th:each="count : ${availableCounts}">
+													<option th:value="${count}" th:text="${count}"
+														th:selected="${count == reservationInputForm.reservationCount}">
+													</option>
+												</th:block>
+											</select>
 										</div>
 										<div class="form-group">
 											<button type="submit"
@@ -79,22 +91,10 @@
 
 	<div th:replace="~{fragment :: scripts}"></div>
 
-	<script th:inline="javascript">
-		window.addEventListener('load', function () {
-			var openTime = /*[[${shop.openTime}]]*/ '09:00';
-			var closeTime = /*[[${shop.closeTime}]]*/ '18:00';
-
-			console.log("Open Time: " + openTime);
-			console.log("Close Time: " + closeTime);
-
-			var reservationTimeInput = document.getElementById("reservationTime");
-			if (reservationTimeInput) {
-				reservationTimeInput.min = openTime;
-				reservationTimeInput.max = closeTime;
-				console.log("Min and Max set for reservationTimeInput");
-			} else {
-				console.log("reservationTimeInput element not found!");
-			}
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			var today = new Date().toISOString().split('T')[0];
+			document.getElementById("reservationDate").setAttribute('min', today);
 		});
 	</script>
 

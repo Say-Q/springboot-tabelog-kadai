@@ -27,8 +27,11 @@
 
 						<h1 class="mb-3 text-center">予約一覧</h1>
 
-						<div th:if="${param.reserved}" class="alert alert-info">
-							予約が完了しました。
+						<div th:if="${message}" class="alert alert-info">
+							<p th:text="${message}"></p>
+						</div>
+						<div th:if="${successMessage}" class="alert alert-info">
+							<span th:text="${successMessage}"></span>
 						</div>
 
 						<table class="table">
@@ -38,6 +41,8 @@
 									<th scope="col">予約日</th>
 									<th scope="col">予約時間</th>
 									<th scope="col">人数</th>
+									<th scope="col"></th>
+									<th scope="col"></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -49,7 +54,34 @@
 									<td th:text="${reservation.getReservationDate()}"></td>
 									<td th:text="${reservation.getReservationTime()}"></td>
 									<td th:text="${reservation.getReservationCount + '名'}"></td>
-									</td>
+									<!--									<td><a th:href="@{/reservation/__${shop.getId()}__}">変更</a></td>-->
+									<td><a href="#" class="nagoyameshi-link-danger" data-bs-toggle="modal"
+											th:data-bs-target="${'#deleteShopModal' + reservation.getId()}">削除</a></td>
+									<!-- 削除用モーダル -->
+									<div class="modal fade" th:id="${'deleteShopModal' + reservation.getId()}"
+										tabindex="-1"
+										th:aria-labelledby="${'deleteShopModalLabel' + reservation.getId()}">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title"
+														th:id="${'deleteShopModalLabel' + reservation.getId()}"
+														th:text="${reservation.getReservationDate() + 'の予約を削除してもよろしいですか？'}">
+													</h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal"
+														aria-label="閉じる"></button>
+												</div>
+												<div class="modal-footer">
+													<form method="post"
+														th:action="@{/__${reservation.getId()}__/delete}">
+														<button type="submit"
+															class="btn nagoyameshi-btn-danger text-white shadow-sm">削除</button>
+													</form>
+												</div>
+											</div>
+										</div>
+									</div>
+
 								</tr>
 							</tbody>
 						</table>
@@ -61,7 +93,7 @@
 									<li class="page-item">
 										<span th:if="${reservationPage.isFirst()}" class="page-link disabled">前</span>
 										<a th:unless="${reservationPage.isFirst()}"
-											th:href="@{/reservations(page = ${reservationPage.getNumber() - 1})}"
+											th:href="@{/reservation(page = ${reservationPage.getNumber() - 1})}"
 											class="page-link nagoyameshi-page-link">前</a>
 									</li>
 									<li th:each="i : ${#numbers.sequence(0, reservationPage.getTotalPages() - 1)}"
@@ -69,13 +101,13 @@
 										<span th:if="${i == reservationPage.getNumber()}"
 											class="page-link active nagoyameshi-active" th:text="${i + 1}"></span>
 										<a th:unless="${i == reservationPage.getNumber()}"
-											th:href="@{/reservations(page = ${i})}"
+											th:href="@{/reservation(page = ${i})}"
 											class="page-link nagoyameshi-page-link" th:text="${i + 1}"></a>
 									</li>
 									<li class="page-item">
 										<span th:if="${reservationPage.isLast()}" class="page-link disabled">次</span>
 										<a th:unless="${reservationPage.isLast()}"
-											th:href="@{/reservations(page = ${reservationPage.getNumber() + 1})}"
+											th:href="@{/reservation(page = ${reservationPage.getNumber() + 1})}"
 											class="page-link nagoyameshi-page-link">次</a>
 									</li>
 								</ul>
