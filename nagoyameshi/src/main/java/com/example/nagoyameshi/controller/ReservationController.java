@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.nagoyameshi.entity.Reservation;
 import com.example.nagoyameshi.entity.Shop;
 import com.example.nagoyameshi.entity.User;
+import com.example.nagoyameshi.form.ReservationEditForm;
 import com.example.nagoyameshi.form.ReservationInputForm;
 import com.example.nagoyameshi.form.ReservationRegisterForm;
 import com.example.nagoyameshi.repository.ReservationRepository;
@@ -154,6 +155,54 @@ public class ReservationController {
 
 		//予約完了メッセージを設定
 		redirectAttributes.addFlashAttribute("message", "『" + shop.getName() + "』の予約が完了しました。");
+
+		return "redirect:/reservation";
+	}
+
+	@GetMapping("/reservation/{id}/edit")
+	public String edit(@PathVariable("id") Integer id, Model model) {
+		Reservation reservation = reservationRepository.getReferenceById(id);
+		Shop shop = shopRepository.getReferenceById(id);
+
+		String shopName = reservation.getShop().getName();
+
+		List<String> availableTimes = generateAvailableTimes(shop.getOpenTime(), shop.getCloseTime());
+		List<Integer> availableCounts = generateAvailableCounts(shop.getSeats());
+
+		ReservationEditForm reservationEditForm = new ReservationEditForm(
+				reservation.getId(),
+				reservation.getShop().getId(),
+				reservation.getUser().getId(),
+				reservation.getReservationDate(),
+				reservation.getReservationTime(),
+				reservation.getReservationCount());
+
+		model.addAttribute("shop", shop);
+		model.addAttribute("shopName", shopName);
+		model.addAttribute("availableTimes", availableTimes);
+		model.addAttribute("availableCounts", availableCounts);
+		model.addAttribute("reservationEditForm", reservationEditForm);
+
+		return "reservation/edit";
+	}
+
+	@PostMapping("/reservation/{id}/update")
+	public String update(Integer id, @ModelAttribute @Validated ReservationEditForm reservationEditForm,
+			BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
+
+		Reservation reservation = reservationRepository.getReferenceById(id);
+		reservationEditForm.setShopId(reservation.getShop().getId());
+		reservationEditForm.setUserId(reservation.getUser().getId());
+
+		if (bindingResult.hasErrors()) {
+
+			return "reservation/edit";
+
+		}
+
+		reservationService.update(reservationEditForm);
+		redirectAttributes.addFlashAttribute("successMessage",
+				"『" + reservation.getShop().getName() + "』：" + reservation.getReservationDate() + "の予約を変更しました。");
 
 		return "redirect:/reservation";
 	}

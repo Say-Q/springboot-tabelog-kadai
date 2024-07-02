@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<div th:replace="~{fragment :: meta}"></div>
+
+	<div th:replace="~{fragment :: styles}"></div>
+
+	<!-- BootstrapのJavaScriptと依存ライブラリ -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.0/js/bootstrap.min.js"></script>
+	
+	<title>予約変更</title>
+</head>
+
+<body>
+	<div class="nagoyameshi-wrapper">
+		<!-- ヘッダー -->
+		<div th:replace="~{fragment :: header}"></div>
+
+		<main>
+			<div class="container pt-3 pb-5 nagoyameshi-container">
+				<div class="row justify-content-center">
+					<div class="col-xxl-9 col-xl-10 col-lg-11">
+						<nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0">
+								<li class="breadcrumb-item"><a th:href="@{/}">ホーム</a></li>
+								<li class="breadcrumb-item"><a th:href="@{/reservation}">予約一覧</a></li>
+								<li class="breadcrumb-item active" aria-current="page">予約変更</li>
+							</ol>
+						</nav>
+
+						<h1 class="text-center pb-3 mb-3 border-bottom">予約変更画面</h1>
+
+						<h2 class="text-center mb-4" th:text="${'『' + shopName + '』'}"></h2>
+
+						<div class="d-flex justify-content-center col-lg-4 px-0 ps-lg-4 m-auto">
+							<div class="card">
+								<div class="card-body">
+									<form id="reservationForm" method="post"
+										th:action="@{/reservation/__${reservationEditForm.getId()}__/update}"
+										th:object="${reservationEditForm}">
+
+										<input type="hidden" th:field="*{id}">
+
+										<div class="form-group mb-3">
+											<label for="reservationDate"
+												class="col-form-label text-md-left fw-bold">予約日</label>
+											<div th:if="${#fields.hasErrors('reservationDate')}"
+												class="text-danger small mb-2" th:errors="*{reservationDate}"></div>
+											<input type="date" class="form-control" id="reservationDate"
+												th:field="*{reservationDate}">
+										</div>
+
+										<div class="form-group mb-3">
+											<label for="reservationTime"
+												class="col-form-label text-md-left fw-bold">予約時間</label>
+											<div th:if="${#fields.hasErrors('reservationTime')}"
+												class="text-danger small mb-2" th:errors="*{reservationTime}"></div>
+											<br>
+											<select th:field="*{reservationTime}">
+												<option value=""></option>
+												<option th:each="time : ${availableTimes}" th:value="${time}"
+													th:text="${time}"></option>
+											</select>
+										</div>
+
+										<div class="form-group mb-3">
+											<label for="reservationCount"
+												class="col-form-label text-md-left fw-bold">予約人数</label>
+											<div th:if="${#fields.hasErrors('reservationCount')}"
+												class="text-danger small mb-2" th:errors="*{reservationCount}"></div>
+											<br>
+											<select th:field="*{reservationCount}">
+												<option value=""></option>
+												<th:block th:each="count : ${availableCounts}">
+													<option th:value="${count}" th:text="${count}"
+														th:selected="${count == reservationEditForm.reservationCount}">
+													</option>
+												</th:block>
+											</select>
+										</div>
+										<div class="form-group">
+											<button type="button" class="btn text-white shadow-sm w-100 nagoyameshi-btn"
+												data-bs-toggle="modal" data-bs-target="#confirmationModal">予約変更</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+						<!-- 予約変更用モーダル -->
+						<div class="modal fade" id="confirmationModal" tabindex="-1"
+							aria-labelledby="confirmationModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="confirmationModalLabel">確認</h5>
+										<button type="button" class="btn-close" data-bs-dismiss="modal"
+											aria-label="Close"></button>
+									</div>
+									<div class="modal-body">
+										予約内容を変更しますか？
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary"
+											data-bs-dismiss="modal">いいえ</button>
+										<button type="button" class="btn btn-primary" id="confirmButton">はい</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<!-- フッター -->
+		<div th:replace="~{fragment :: footer}"></div>
+	</div>
+
+	<div th:replace="~{fragment :: scripts}"></div>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			var today = new Date().toISOString().split('T')[0];
+			document.getElementById("reservationDate").setAttribute('min', today);
+		});
+	</script>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			var today = new Date().toISOString().split('T')[0];
+			document.getElementById("reservationDate").setAttribute('min', today);
+
+			// 確認ボタンがクリックされたときにフォームを送信
+			document.getElementById("confirmButton").addEventListener("click", function () {
+				document.getElementById("reservationForm").submit();
+			});
+		});
+	</script>
+
+</body>
+
+</html>

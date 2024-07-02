@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.nagoyameshi.entity.Reservation;
 import com.example.nagoyameshi.entity.Shop;
 import com.example.nagoyameshi.entity.User;
+import com.example.nagoyameshi.form.ReservationEditForm;
 import com.example.nagoyameshi.form.ReservationRegisterForm;
 import com.example.nagoyameshi.repository.ReservationRepository;
 import com.example.nagoyameshi.repository.ShopRepository;
@@ -41,6 +42,29 @@ public class ReservationService {
 		reservation.setReservationDate(reservationRegisterForm.getReservationDate());
 		reservation.setReservationTime(reservationRegisterForm.getReservationTime());
 		reservation.setReservationCount(reservationRegisterForm.getReservationCount());
+
+		reservationRepository.save(reservation);
+	}
+
+	@Transactional
+	public void update(ReservationEditForm reservationEditForm) {
+		if (reservationEditForm.getShopId() == null) {
+			throw new IllegalArgumentException("Shop ID must not be null");
+		}
+		if (reservationEditForm.getUserId() == null) {
+			throw new IllegalArgumentException("User ID must not be null");
+		}
+		Reservation reservation = reservationRepository.getReferenceById(reservationEditForm.getId());
+		Shop shop = shopRepository.getReferenceById(reservationEditForm.getShopId());
+		User user = userRepository.getReferenceById(reservationEditForm.getUserId());
+		LocalDate reservationDate = LocalDate.parse(reservationEditForm.getReservationDate());
+		LocalTime reservationTime = LocalTime.parse(reservationEditForm.getReservationTime());
+
+		reservation.setShop(shop);
+		reservation.setUser(user);
+		reservation.setReservationDate(reservationEditForm.getReservationDate());
+		reservation.setReservationTime(reservationEditForm.getReservationTime());
+		reservation.setReservationCount(reservationEditForm.getReservationCount());
 
 		reservationRepository.save(reservation);
 	}

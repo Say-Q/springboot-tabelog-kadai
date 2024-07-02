@@ -54,7 +54,9 @@
 									<td th:text="${reservation.getReservationDate()}"></td>
 									<td th:text="${reservation.getReservationTime()}"></td>
 									<td th:text="${reservation.getReservationCount + '名'}"></td>
-									<!--									<td><a th:href="@{/reservation/__${shop.getId()}__}">変更</a></td>-->
+									<td>
+										<a th:href="@{/reservation/__${reservation.getId()}__/edit}">変更</a>
+									</td>
 									<td><a href="#" class="nagoyameshi-link-danger" data-bs-toggle="modal"
 											th:data-bs-target="${'#deleteShopModal' + reservation.getId()}">削除</a></td>
 									<!-- 削除用モーダル -->
@@ -66,7 +68,7 @@
 												<div class="modal-header">
 													<h5 class="modal-title"
 														th:id="${'deleteShopModalLabel' + reservation.getId()}"
-														th:text="${reservation.getReservationDate() + 'の予約を削除してもよろしいですか？'}">
+														th:text="${reservation.getReservationDate() + 'の予約を削除しますか？'}">
 													</h5>
 													<button type="button" class="btn-close" data-bs-dismiss="modal"
 														aria-label="閉じる"></button>
