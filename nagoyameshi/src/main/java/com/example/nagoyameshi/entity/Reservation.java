@@ -20,27 +20,28 @@ public class Reservation {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer id;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "users_id")
 	private User user;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "shops_id")
 	private Shop shop;
-	
+
 	@Column(name = "reservation_date")
 	private String reservationDate;
-	
+
 	@Column(name = "reservation_time")
 	private String reservationTime;
-	
+
 	@Column(name = "reservation_count")
 	private Integer reservationCount;
-	
+
 	@Column(name = "created_at", insertable = false, updatable = false)
 	private Timestamp createdAt;
-	
+
 	@Column(name = "updated_at", insertable = false, updatable = false)
 	private Timestamp updatedAt;
+
 }

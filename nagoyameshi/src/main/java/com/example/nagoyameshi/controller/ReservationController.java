@@ -2,8 +2,11 @@ package com.example.nagoyameshi.controller;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,9 +21,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.nagoyameshi.entity.Reservation;
+import com.example.nagoyameshi.entity.ReservationDTO;
 import com.example.nagoyameshi.entity.Shop;
 import com.example.nagoyameshi.entity.User;
 import com.example.nagoyameshi.form.ReservationEditForm;
@@ -46,27 +51,68 @@ public class ReservationController {
 
 	@GetMapping("/reservation")
 	public String index(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
-			@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable,
+			@RequestParam(name = "order", required = false) String order,
+			@PageableDefault(page = 0, size = 10, sort = "reservationDate", direction = Direction.DESC) Pageable pageable,
 			Model model) {
-
+		
 		User user = userDetailsImpl.getUser();
 		Page<Reservation> reservationPage;
 
-		if ("2".equals(user.getRole())) {
+		reservationPage = orderReservationDate(userDetailsImpl, order, pageable);
 
-			reservationPage = reservationRepository.findByUserOrderByCreatedAtDesc(user, pageable);
+		// Reservation を ReservationDTO に変換
+		List<ReservationDTO> reservationDTOs = reservationPage.stream().map(reservation -> {
+			ReservationDTO reservationDTO = new ReservationDTO();
+			reservationDTO.setId(reservation.getId());
+			reservationDTO.setShop(reservation.getShop());
+			reservationDTO.setReservationDate(LocalDate.parse(reservation.getReservationDate()).toString()); // Str -> LocalDate
+			reservationDTO.setReservationTime(reservation.getReservationTime());
+			reservationDTO.setReservationCount(reservation.getReservationCount());
+			reservationDTO.setPastReservation(isPastReservation(reservationDTO.getReservationDate()));
+			return reservationDTO;
+		}).collect(Collectors.toList());
 
-		} else {
-
-			String currentDate = LocalDate.now().toString(); // LocalDate を String に変換
-			reservationPage = reservationRepository.findByUserAndReservationDateGreaterThanEqualOrderByCreatedAtDesc(
-					user, currentDate, pageable);
-		}
-
+		model.addAttribute("order", order);
 		model.addAttribute("reservationPage", reservationPage);
+		model.addAttribute("reservationDTOs", reservationDTOs);
 
 		return "reservation/index";
 
+	}
+
+	public Page<Reservation> orderReservationDate(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,String order, Pageable pageable) {
+		Page<Reservation> reservationPage;
+		User user = userDetailsImpl.getUser();
+		
+		//orderがnullまたは空文字列の倍にデフォルトの値を設定
+		if (Objects.isNull(order) || order.isEmpty()) {
+			order = "reservationdateDesc";
+		}
+		
+		boolean isRole = user.getRole().getId() == 2;
+		String currentDate = LocalDate.now().toString(); // LocalDate を String に変換
+		
+		switch (order) {
+		case "reservationdateAsc":
+			return reservationPage = isRole
+					? reservationRepository.findByUserAndReservationDateGreaterThanEqualOrderByReservationDateAsc(user,
+							currentDate, pageable)
+					: reservationRepository.findByUserOrderByReservationDateAsc(user, pageable);
+		case "reservationdateDesc":
+			
+		default:
+			return reservationPage = isRole
+					? reservationRepository.findByUserAndReservationDateGreaterThanEqualOrderByReservationDateDesc(user,
+							currentDate, pageable)
+					: reservationRepository.findByUserOrderByReservationDateDesc(user, pageable);
+		}
+	}
+
+	private boolean isPastReservation(CharSequence reservationDate) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // 適切なパターンを指定
+		LocalDate date = LocalDate.parse(reservationDate, formatter);
+
+		return date.isBefore(LocalDate.now());
 	}
 
 	@GetMapping("/reservation/{id}")

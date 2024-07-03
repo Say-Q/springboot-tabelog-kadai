@@ -34,6 +34,24 @@
 							<span th:text="${successMessage}"></span>
 						</div>
 
+						<form method="get" th:action="@{/reservation}" class="mb-3 nagoyameshi-sort-box">
+							<div class="d-flex justify-content-between flex-wrap">
+								<div class="d-flex justify-content-center ms-2 flex-wrap">
+									<select class="form-select form-select-sm" name="order"
+										onChange="this.form.submit();">
+										<option value="reservationdateDesc"
+											th:selected="${order == 'reservationdateDesc'}">
+											予約日降順
+										</option>
+										<option value="reservationdateAsc"
+											th:selected="${order == 'reservationdateAsc'}">
+											予約日昇順
+										</option>
+									</select>
+								</div>
+							</div>
+						</form>
+						
 						<table class="table">
 							<thead>
 								<tr>
@@ -46,7 +64,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:each="reservation : ${reservationPage}">
+								<tr th:each="reservation : ${reservationDTOs}">
 									<td>
 										<a th:href="@{/shops/__${reservation.getShop().getId()}__}"
 											th:text="${reservation.getShop().getName()}"></a>
@@ -55,7 +73,11 @@
 									<td th:text="${reservation.getReservationTime()}"></td>
 									<td th:text="${reservation.getReservationCount + '名'}"></td>
 									<td>
-										<a th:href="@{/reservation/__${reservation.getId()}__/edit}">変更</a>
+										<span th:unless="${reservation.pastReservation}">
+											<a th:href="@{/reservation/__${reservation.id}__/edit}">変更</a>
+										</span>
+										<span th:if="${reservation.pastReservation}"
+											style="visibility: hidden;">-</span>
 									</td>
 									<td><a href="#" class="nagoyameshi-link-danger" data-bs-toggle="modal"
 											th:data-bs-target="${'#deleteShopModal' + reservation.getId()}">削除</a></td>
@@ -83,7 +105,6 @@
 											</div>
 										</div>
 									</div>
-
 								</tr>
 							</tbody>
 						</table>
