@@ -26,16 +26,24 @@
 						</nav>
 						<h1 class="mb-4 text-center">会員一覧</h1>
 
-						<div class="d-flex justify-content-between align-items-end">
-							<form method="get" th:action="@{/admin/users}" class="mb-3">
+						<div class="d-flex justify-content-center flex-wrap mb-3">
+							<form method="get" th:action="@{/admin/users}" class="d-flex align-items-start mx-3">
 								<div class="input-group">
 									<input type="text" class="form-control" name="keyword" th:value="${keyword}"
 										placeholder="氏名・フリガナ">
 									<button type="submit" class="btn text-white shadow-sm nagoyameshi-btn">検索</button>
 								</div>
 							</form>
-						</div>
 
+							<form method="get" th:action="@{/admin/users}" class="d-fle align-items-center">
+								<div class="input-group">
+									<input type="text" class="form-control" name="mail" th:value="${mail}"
+										placeholder="メールアドレス">
+									<button type="submit" class="btn text-white shadow-sm nagoyameshi-btn">検索</button>
+								</div>
+							</form>
+						</div>
+						
 						<div th:if="${successMessage}" class="alert alert-info">
 							<span th:text="${successMessage}"></span>
 						</div>

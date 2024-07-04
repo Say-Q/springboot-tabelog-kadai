@@ -1,5 +1,7 @@
 package com.example.nagoyameshi.controller;
 
+import java.util.Objects;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -35,13 +37,22 @@ public class AdminUserController {
 
 	@GetMapping
 	public String index(@RequestParam(name = "keyword", required = false) String keyword,
+			@RequestParam(name = "mail", required = false) String mail,
 			@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable,
 			Model model) {
 		Page<User> userPage;
 
-		if (keyword != null && !keyword.isEmpty()) {
+		boolean isWord = Objects.nonNull(keyword) && !keyword.isEmpty();
+		boolean isMail = Objects.nonNull(mail) && !mail.isEmpty();
 
-			userPage = userRepository.findByNameLikeOrFuriganaLike("%" + keyword + "%", "%" + keyword + "%", pageable);
+		if (isWord) {
+
+			userPage = userRepository.findByNameLikeOrFuriganaLike("%" + keyword + "%", pageable);
+
+		
+		} else if (isMail) {
+
+			userPage = userRepository.findByMailLike("%" + mail + "%", pageable);
 
 		} else {
 
@@ -51,10 +62,11 @@ public class AdminUserController {
 
 		model.addAttribute("userPage", userPage);
 		model.addAttribute("keyword", keyword);
+		model.addAttribute("mail", mail);
 
 		return "admin/users/index";
 	}
-	
+
 	@GetMapping("/{id}/edit")
 	public String edit(@PathVariable("id") Integer id, Model model) {
 		User user = userRepository.getReferenceById(id);
@@ -67,7 +79,8 @@ public class AdminUserController {
 	}
 
 	@PostMapping("/{id}/update")
-	public String update(@PathVariable("id") Integer id, @ModelAttribute @Validated UserEditForm userEditForm, BindingResult bindingResult,
+	public String update(@PathVariable("id") Integer id, @ModelAttribute @Validated UserEditForm userEditForm,
+			BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
 		//メールアドレスが変更されており、かつ登録済みであれば、BindingResultオブジェクトにエラー内容を追加する
 		if (userService.isEmailChanged(userEditForm) && userService.isEmailRegistered(userEditForm.getMail())) {

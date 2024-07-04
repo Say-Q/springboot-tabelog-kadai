@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<div th:replace="~{fragment :: meta}"></div>
+	<div th:replace="~{fragment :: styles}"></div>
+
+	<title>有料会員規約</title>
+</head>
+
+<body>
+	<div class="nagoyameshi-wrapper">
+		<!-- ヘッダー -->
+		<div th:replace="~{fragment :: header}"></div>
+
+		<main>
+			<div class="container pt-3 pb-5 nagoyameshi-container">
+				<div class="row justify-content-center">
+					<div class="col-xxl-6 col-xl-7 col-lg-8">
+						<nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0">
+								<li class="breadcrumb-item"><a th:href="@{/}">ホーム</a></li>
+								<li class="breadcrumb-item"><a th:href="@{/user}">マイページ</a></li>
+								<li class="breadcrumb-item active" aria-current="page">有料会員規約</li>
+							</ol>
+						</nav>
+
+						<h1 class="text-center fs-3 m-3">有料会員規約</h1>
+
+						<p class="text-justify pt-3">
+							この利用規約（以下、「本規約」といいます。）は、NAGOYAMESHI株式会社（以下、「当社」といいます。）がこのウェブサイト上で提供する有料サービス
+							（以下、「本サービス」といいます。）の利用条件を定めるものです。登録ユーザーの皆さま（以下、「ユーザー」といいます。）には本規約に従って、
+							本サービスをご利用いただきます。</p>
+						<h2 class="text-left fs-5">第1条（サービス内容）</h2>
+						<ol>
+							<li>予約データの全件閲覧</li>
+							<li>お気に入り登録サービス</li>
+						</ol>
+						<h2 class="text-left fs-5">第2条（利用料金および支払方法）</h2>
+						<ol>
+							<li>ユーザーは本サービスの有料部分の対価として300円を、決済サービス（Stripe）でクレジットカードにより毎月支払うものとします。</li>
+						</ol>
+						<h2 class="text-left fs-5">第3条（退会）</h2>
+						<p class="ms-2">ユーザーは、当社の定める退会手続により、本サービスから退会できるものとします。</p>
+					</div>
+				</div>
+			</div>
+		</main>
+		<!-- フッター -->
+		<div th:replace="~{fragment :: footer}"></div>
+	</div>
+
+	<div th:replace="~{fragment :: scripts}"></div>
+
+</body>
