@@ -20,40 +20,39 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer id;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "roles_id")
 	private Role role;
-	
+
 	@Column(name = "name")
 	private String name;
-	
+
 	@Column(name = "furigana")
 	private String furigana;
-	
+
 	@Column(name = "birthday")
 	private String birthday;
-	
+
 	@Column(name = "phone_number")
 	private String phoneNumber;
-	
+
 	@Column(name = "profession")
 	private String profession;
-	
+
 	@Column(name = "mail")
 	private String mail;
-	
+
 	@Column(name = "password")
 	private String password;
-	
+
 	@Column(name = "enabled")
 	private Boolean enabled;
-	
+
 	@Column(name = "created_at", insertable = false, updatable = false)
 	private Timestamp createdAt;
-	
+
 	@Column(name = "updated_at", insertable = false, updatable = false)
 	private Timestamp updatedAt;
-	
-	
+
 }

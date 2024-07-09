@@ -14,9 +14,6 @@ public class SignupForm {
 	@NotBlank(message = "フリガナを入力してください。")
 	private String furigana;
 	
-//	@NotBlank(message = "生年月日を入力してください。")
-//	private Date birthday;
-
 	@NotBlank(message = "生年月日を入力してください。")
 	private String birthday;
 	

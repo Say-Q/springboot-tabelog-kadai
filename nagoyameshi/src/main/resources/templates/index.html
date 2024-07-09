@@ -11,19 +11,19 @@
 <body>
 	<div class="nagoyameshi-wrapper">
 		<!-- ヘッダー -->
-		<div th:replace="~{fragment :: header}">
-							<div th:if="${param.loggedIn}" class="alert alert-info">
-					ログインしました。
-				</div>
+		<div th:replace="~{fragment :: header}"></div>
 
-				<div th:if="${param.loggedOut}" class="alert alert-info">
-					ログアウトしました。
-				</div>
-
-				<div th:if="${successMessage}" class="alert alert-info">
-					<span th:text="${successMessage}"></span>
-				</div>
+		<div th:if="${param.loggedIn}" class="alert alert-info">
+			ログインしました。
 		</div>
+
+		<div th:if="${param.loggedOut}" class="alert alert-info">
+			ログアウトしました。
+		</div>
+
+<!--		<div th:if="${successMessage} and !${param.loggedIn} and !${param.loggedOut}" class="alert alert-info">-->
+<!--			<span th:text="${successMessage}"></span>-->
+<!--		</div>-->
 
 		<main>
 			<!--画像をスライドする-->
@@ -96,13 +96,6 @@
 
 								<div class="card-body">
 									<h3 class="card-title" th:text="${topShop.getName()}"></h3>
-									<div class="rating">
-										<span class="star"><span class="half"></span></span>
-										<span class="star"><span class="half"></span></span>
-										<span class="star"><span class="half"></span></span>
-										<span class="star"><span class="half"></span></span>
-										<span class="star"><span class="half"></span></span>
-									</div>
 									<p class="card-text mb-1">
 										<small class="text-muted" th:text="${topShop.getAddress()}"></small>
 									</p>

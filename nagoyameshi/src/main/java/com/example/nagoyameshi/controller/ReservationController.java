@@ -54,7 +54,7 @@ public class ReservationController {
 			@RequestParam(name = "order", required = false) String order,
 			@PageableDefault(page = 0, size = 10, sort = "reservationDate", direction = Direction.DESC) Pageable pageable,
 			Model model) {
-		
+
 		User user = userDetailsImpl.getUser();
 		Page<Reservation> reservationPage;
 
@@ -80,32 +80,20 @@ public class ReservationController {
 
 	}
 
-	public Page<Reservation> orderReservationDate(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,String order, Pageable pageable) {
+	public Page<Reservation> orderReservationDate(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+			String order, Pageable pageable) {
 		Page<Reservation> reservationPage;
 		User user = userDetailsImpl.getUser();
-		
-		//orderがnullまたは空文字列の倍にデフォルトの値を設定
-		if (Objects.isNull(order) || order.isEmpty()) {
-			order = "reservationdateDesc";
-		}
-		
-		boolean isRole = user.getRole().getId() == 2;
+
+		boolean isOrder = Objects.isNull(order) || order.isEmpty() || order.equals("reservationdateDesc");
 		String currentDate = LocalDate.now().toString(); // LocalDate を String に変換
+
+		return reservationPage = isOrder
+				? reservationRepository.findByUserAndReservationDateGreaterThanEqualOrderByReservationDateDesc(user,
+						currentDate, pageable)
+				: reservationRepository.findByUserAndReservationDateGreaterThanEqualOrderByReservationDateAsc(user,
+						currentDate, pageable);
 		
-		switch (order) {
-		case "reservationdateAsc":
-			return reservationPage = isRole
-					? reservationRepository.findByUserAndReservationDateGreaterThanEqualOrderByReservationDateAsc(user,
-							currentDate, pageable)
-					: reservationRepository.findByUserOrderByReservationDateAsc(user, pageable);
-		case "reservationdateDesc":
-			
-		default:
-			return reservationPage = isRole
-					? reservationRepository.findByUserAndReservationDateGreaterThanEqualOrderByReservationDateDesc(user,
-							currentDate, pageable)
-					: reservationRepository.findByUserOrderByReservationDateDesc(user, pageable);
-		}
 	}
 
 	private boolean isPastReservation(CharSequence reservationDate) {
@@ -141,12 +129,11 @@ public class ReservationController {
 
 		//日を跨ぐ場合の処理
 		if (end.isBefore(start)) {
-			while (start.isBefore(LocalTime.MAX) || start.equals(LocalTime.MAX)) {
+			while (!start.equals(LocalTime.MIDNIGHT)) {
 				times.add(start.toString());
 				start = start.plusMinutes(30); //30分間隔で時間を生成
 			}
 
-			start = LocalTime.MIDNIGHT;
 		}
 
 		while (start.isBefore(end) || start.equals(end)) {
@@ -208,7 +195,7 @@ public class ReservationController {
 	@GetMapping("/reservation/{id}/edit")
 	public String edit(@PathVariable("id") Integer id, Model model) {
 		Reservation reservation = reservationRepository.getReferenceById(id);
-		Shop shop = shopRepository.getReferenceById(id);
+		Shop shop = shopRepository.getReferenceById(reservation.getShop().getId());
 
 		String shopName = reservation.getShop().getName();
 

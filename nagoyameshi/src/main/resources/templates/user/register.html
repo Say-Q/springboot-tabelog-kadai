@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<div th:replace="~{fragment :: meta}"></div>
+	<div th:replace="~{fragment :: styles}"></div>
+
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+	<title>有料会員登録</title>
+</head>
+
+<body>
+	<div class="nagoyameshi-wrapper">
+		<!-- ヘッダー -->
+		<div th:replace="~{fragment :: header}"></div>
+		<main>
+			<div class="container pt-3 pb-5 nagoyameshi-container">
+				<div class="row justify-content-center">
+					<div class="col-xl-5 col-lg-6 col-md-8">
+						<nav class="my-3" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0">
+								<li class="breadcrumb-item"><a th:href="@{/}">ホーム</a></li>
+								<li class="breadcrumb-item"><a th:href="@{/user}">マイページ</a></li>
+								<li class="breadcrumb-item active" aria-current="page">有料会員登録</li>
+							</ol>
+						</nav>
+
+						<h1 class="text-center">有料会員登録</h1>
+
+
+						<!-- 利用規約の埋め込み（例：iframe）-->
+						<div class="form-group">
+							<iframe th:src="@{/company/paidterms-body}"
+								style="transform: scale(0.9); border: solid 1px;" class="w-100" height="500"></iframe>
+						</div>
+
+						<div class="d-flex">
+							<!-- 同意チェックボックス -->
+							<div class="form-check mx-auto">
+								<input type="checkbox" class="form-check-input" style="transform: scale(1.5);"
+									id="agreeCheckbox" onclick="toggleSubmitButton()">
+								<label class="form-check-label" for="agreeCheckbox">有料会員規約に同意する</label>
+							</div>
+
+							<!-- 登録ボタン -->
+							<button type="button" class="btn btn-primary mx-5" id="submitButton"
+								onclick="handlePayment()" disabled>登録</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+		<!-- フッター -->
+		<div th:replace="~{fragment :: footer}"></div>
+	</div>
+
+	<script type="text/javascript">
+		function toggleSubmitButton() {
+			var checkbox = document.getElementById("agreeCheckbox");
+			var submitButton = document.getElementById("submitButton");
+			submitButton.disabled = !checkbox.checked;
+		}
+
+		$(document).ready(function () {
+			function handlePayment() {
+				$.ajax({
+					type: "POST",
+					url: "/api/checkout-session",
+					success: function (sessionId) {
+						const stripe = Stripe('pk_test_51P9GPqHhMxlEE4T1BFMmNNecyFFaMJ8h5Ra64MzntUvrzYvLdI0QD8ar1cz7V0Zer5Wr6w8gdD6FVtT7LtKHjsnw00ot3bYuAx');
+						stripe.redirectToCheckout({sessionId: sessionId});
+					},
+					error: function (error) {
+						console.error("エラー:", error);
+					}
+				});
+			}
+			window.handlePayment = handlePayment;
+		});
+	</script>
+</body>
+
+</html>

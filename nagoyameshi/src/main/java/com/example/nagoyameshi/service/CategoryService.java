@@ -19,8 +19,11 @@ public class CategoryService {
 	
 	@Transactional
 	public void create(CategoryRegisterForm categoryRegisterForm) {
-		Categories category = new Categories();
+//		List<Categories> categoryid = categoryRepository.findAll();
+		int nextId = categoryRepository.findMaxId() + 1;
 		
+		Categories category = new Categories();
+		category.setId(nextId);
 		category.setCategoryName(categoryRegisterForm.getName());
 
 		categoryRepository.save(category);

@@ -16,7 +16,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 
 	public Page<Reservation> findByUserOrderByReservationDateDesc(User user, Pageable pageable);
 
-	// 無料会員の予約一覧での表示。（現在の日付より）
+	// 予約一覧での表示。（現在の日付以降）
 	@Query("SELECT r FROM Reservation r WHERE r.user = :user AND r.reservationDate >= :currentDate ORDER BY r.reservationDate ASC")
 	Page<Reservation> findByUserAndReservationDateGreaterThanEqualOrderByReservationDateAsc(@Param("user") User user,
 			@Param("currentDate") String currentDate, Pageable pageable);
@@ -24,7 +24,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	@Query("SELECT r FROM Reservation r WHERE r.user = :user AND r.reservationDate >= :currentDate ORDER BY r.reservationDate DESC")
 	Page<Reservation> findByUserAndReservationDateGreaterThanEqualOrderByReservationDateDesc(@Param("user") User user,
 			@Param("currentDate") String currentDate, Pageable pageable);
-
+	
 	//ユーザーIDに基づいて予約データを削除するメソッド
 	@Modifying
 	@Transactional

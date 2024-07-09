@@ -26,6 +26,7 @@ public class ShopService {
 	@Transactional
 	public void create(ShopRegisterForm shopRegisterForm) {
 		Shop shop = new Shop();
+		
 		MultipartFile imageFile = shopRegisterForm.getImageFile();
 
 		if (!imageFile.isEmpty()) {

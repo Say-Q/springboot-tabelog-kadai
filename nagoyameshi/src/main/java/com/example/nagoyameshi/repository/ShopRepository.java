@@ -47,4 +47,5 @@ public interface ShopRepository extends JpaRepository<Shop, Integer> {
 	
 	//トップページで使用
 	public List<Shop> findTop10ByOrderByPriceAsc();
+	
 }
