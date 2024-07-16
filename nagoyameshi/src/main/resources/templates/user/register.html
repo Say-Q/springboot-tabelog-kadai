@@ -5,7 +5,7 @@
 	<div th:replace="~{fragment :: meta}"></div>
 	<div th:replace="~{fragment :: styles}"></div>
 
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
@@ -46,8 +46,7 @@
 							</div>
 
 							<!-- 登録ボタン -->
-							<button type="button" class="btn btn-primary mx-5" id="submitButton"
-								onclick="handlePayment()" disabled>登録</button>
+							<button id="paymentButton" class="btn btn-primary mx-5" disabled>登録</button>
 						</div>
 					</div>
 				</div>
@@ -60,27 +59,17 @@
 	<script type="text/javascript">
 		function toggleSubmitButton() {
 			var checkbox = document.getElementById("agreeCheckbox");
-			var submitButton = document.getElementById("submitButton");
+			var submitButton = document.getElementById("paymentButton");
 			submitButton.disabled = !checkbox.checked;
 		}
-
-		$(document).ready(function () {
-			function handlePayment() {
-				$.ajax({
-					type: "POST",
-					url: "/api/checkout-session",
-					success: function (sessionId) {
-						const stripe = Stripe('pk_test_51P9GPqHhMxlEE4T1BFMmNNecyFFaMJ8h5Ra64MzntUvrzYvLdI0QD8ar1cz7V0Zer5Wr6w8gdD6FVtT7LtKHjsnw00ot3bYuAx');
-						stripe.redirectToCheckout({sessionId: sessionId});
-					},
-					error: function (error) {
-						console.error("エラー:", error);
-					}
-				});
-			}
-			window.handlePayment = handlePayment;
-		});
 	</script>
+
+	<script src="https://js.stripe.com/v3"></script>
+	<script th:inline="javascript">
+		const sessionId = /*[[${sessionId}]]*/"sessionId";                
+	</script>
+	<script th:src="@{/js/stripe.js}"></script>
+	
 </body>
 
 </html>

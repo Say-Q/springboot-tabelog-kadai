@@ -5,14 +5,27 @@ import java.nio.charset.StandardCharsets;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.example.nagoyameshi.entity.User;
+import com.example.nagoyameshi.security.UserDetailsImpl;
+import com.example.nagoyameshi.service.StripeService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class PaidController {
+	private final StripeService stripeService;
+
+	public PaidController(StripeService stripeService) {
+		this.stripeService = stripeService;
+	}
+
 	@GetMapping("/company/paidterms")
 	public String paidterms() {
 
@@ -50,15 +63,15 @@ public class PaidController {
 	}
 
 	@GetMapping("/user/register")
-	public String showRegistrerForm() {
+	public String payment(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+			HttpServletRequest httpServletRequest, Model model) {
+		User user = userDetailsImpl.getUser();
+		String sessionId = stripeService.createStripeSession(userDetailsImpl, httpServletRequest);
+		
+		model.addAttribute("user", user);
+		model.addAttribute("sessionId", sessionId);
 
 		return "user/register"; // entry.htmlを返す
-	}
-
-	@PostMapping("/user/register")
-	public String registerUser(/*ユーザー情報の取得*/) {
-		// ユーザー登録処理
-		return "redirect:/success"; // 登録成功ページへリダイレクト
 	}
 
 }

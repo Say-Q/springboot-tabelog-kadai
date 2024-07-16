@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.nagoyameshi.entity.User;
+import com.example.nagoyameshi.form.EmailForm;
 import com.example.nagoyameshi.form.PasswordChangeForm;
 import com.example.nagoyameshi.repository.UserRepository;
 import com.example.nagoyameshi.security.UserDetailsImpl;
 import com.example.nagoyameshi.service.PassService;
-
 
 @Controller
 @RequestMapping("/pass")
@@ -61,12 +61,29 @@ public class PassController {
 
 		return "redirect:/user";
 	}
-	
+
 	@GetMapping("/reset")
-	public String reset() {
-		
+	public String reset(Model model) {
+		model.addAttribute("emailForm", new EmailForm());
 		return "pass/reset";
 	}
-	
+
+	@PostMapping("/reset")
+	public String processReset(@ModelAttribute EmailForm emailForm, Model model,
+			RedirectAttributes redirectAttributes) {
+		String email = emailForm.getMail();
+		User user = userRepository.findBymail(email);
+
+		if (user == null) {
+			model.addAttribute("errorMessage", "入力されたメールアドレスは存在しません。");
+			return "pass/reset";
+		}
+
+		// パスワード再設定リンクを生成してメール送信
+		passService.sendResetLink(email);
+
+		redirectAttributes.addFlashAttribute("successMessage", "パスワード再設定リンクをメールで送信しました。");
+		return "redirect:/pass/reset";
+	}
 
 }

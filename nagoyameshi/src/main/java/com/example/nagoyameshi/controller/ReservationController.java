@@ -235,7 +235,7 @@ public class ReservationController {
 
 		reservationService.update(reservationEditForm);
 		redirectAttributes.addFlashAttribute("successMessage",
-				"『" + reservation.getShop().getName() + "』：" + reservation.getReservationDate() + "の予約を変更しました。");
+				"『" + reservation.getShop().getName() + "』：" + "の予約を変更しました。");
 
 		return "redirect:/reservation";
 	}
