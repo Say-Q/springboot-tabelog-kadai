@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,9 +33,6 @@ public class StripeService {
 	public String createStripeSession(UserDetailsImpl userDetailsImpl, HttpServletRequest httpServletRequest) {
 		Stripe.apiKey = stripeApiKey;
 		String requestUrl = new String(httpServletRequest.getRequestURL());
-		
-		UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String userId = userDetails.getUser().getId().toString();
 
 		//定期料金オブジェクトの定義
 		SessionCreateParams.LineItem.PriceData.Recurring recurring = SessionCreateParams.LineItem.PriceData.Recurring
@@ -63,7 +59,7 @@ public class StripeService {
 				.setMode(SessionCreateParams.Mode.SUBSCRIPTION)
 				.setSuccessUrl(requestUrl.replaceAll("/register", ""))
 				.setCancelUrl(requestUrl.replace("/user/register", ""))
-				.setClientReferenceId(userId)
+				.putMetadata("userId", userDetailsImpl.getUser().getId().toString())
 				.build();
 
 		try {
@@ -84,31 +80,30 @@ public class StripeService {
 		Optional<StripeObject> optionalStripeObject = event.getDataObjectDeserializer().getObject();
 		optionalStripeObject.ifPresentOrElse(stripeObject -> {
 			Session session = (Session) stripeObject;
-			SessionRetrieveParams params = SessionRetrieveParams.builder().addExpand("payment_intent").build();
 
 			try {
+				String sessionId = session.getId();
+				session = Session.retrieve(sessionId,
+						new SessionRetrieveParams.Builder().addExpand("subscription").build(), null);
+				String userId = session.getMetadata().get("userId");
 
-				session = Session.retrieve(session.getId(), params, null);
-				//ユーザーIDを取得
-				Integer id = Integer.parseInt(session.getClientReferenceId());
-				userService.roleUpdate(id);
+				if (userId != null) {
+					userService.UpgradeRole(Integer.parseInt(userId));
+				} else {
+					System.out.println("ユーザーIDをメタデータから取得できませんでした。");
+				}
+
+				System.out.println("有料会員登録が完了しました。");
+				System.out.println("Stripe API Version" + event.getApiVersion());
+				System.out.println("stripe-java Version" + Stripe.VERSION);
 
 			} catch (StripeException e) {
-
 				e.printStackTrace();
-
 			}
-
-			System.out.println("有料会員登録が完了しました。");
-			System.out.println("Stripe API Version" + event.getApiVersion());
-			System.out.println("stripe-java Version" + Stripe.VERSION);
-
 		}, () -> {
-
 			System.out.println("有料会員登録が失敗しました。");
 			System.out.println("Stripe API Version" + event.getApiVersion());
 			System.out.println("stripe-java Version" + Stripe.VERSION);
-
 		});
 
 	}

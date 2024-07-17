@@ -24,9 +24,13 @@
 							</ol>
 						</nav>
 
-						<h1 class="mt-5 mb-5 text-center">パスワード再設定</h1>
-						<!-- エラーメッセージ -->
-						<div th:if="${errorMessage}" class="text-danger mt-3">
+						<h1 class="mt-5 mb-5 text-center">パスワード再設定<br>手続き</h1>
+
+						<div th:if="${successMessage}" class="alert alert-info">
+							<span th:text="${successMessage}"></span>
+						</div>
+
+						<div th:if="${errorMessage}" class="text-danger text-center mt-3">
 							<p th:text="${errorMessage}"></p>
 						</div>
 
@@ -34,12 +38,12 @@
 							メールアドレスまたはパスワードが正しくありません。
 						</div>
 
-						<form method="post" th:action="@{/pass/reset}" th:object="${emailForm}">
+						<form method="post" th:action="@{/pass/send}" th:object="${emailForm}">
 							<div class="text-center">
 								<div class="form-group row justify-content-center mb-3">
 									<div class="w-100">
-										<label for="email" class="col-form-label fw-bold">
-											<span class="me-1">メールアドレス</span>
+										<label for="email" class="col-form-label">
+											<span class="me-1">パスワード再設定を行いますので、<br>登録済みのメールアドレスを入力してください。</span>
 										</label>
 									</div>
 									<div class="w-50">

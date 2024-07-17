@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.nagoyameshi.entity.User;
 import com.example.nagoyameshi.form.EmailForm;
 import com.example.nagoyameshi.form.PasswordChangeForm;
+import com.example.nagoyameshi.repository.PasswordResetTokenRepository;
 import com.example.nagoyameshi.repository.UserRepository;
 import com.example.nagoyameshi.security.UserDetailsImpl;
 import com.example.nagoyameshi.service.PassService;
@@ -23,10 +24,12 @@ import com.example.nagoyameshi.service.PassService;
 public class PassController {
 	private final UserRepository userRepository;
 	private final PassService passService;
+	private final PasswordResetTokenRepository resetTokenRepository;
 
-	public PassController(UserRepository userRepository, PassService passService) {
+	public PassController(UserRepository userRepository, PassService passService, PasswordResetTokenRepository resetTokenRepository) {
 		this.userRepository = userRepository;
 		this.passService = passService;
+		this.resetTokenRepository = resetTokenRepository;
 	}
 
 	@GetMapping
@@ -65,11 +68,12 @@ public class PassController {
 	@GetMapping("/reset")
 	public String reset(Model model) {
 		model.addAttribute("emailForm", new EmailForm());
+		
 		return "pass/reset";
 	}
 
-	@PostMapping("/reset")
-	public String processReset(@ModelAttribute EmailForm emailForm, Model model,
+	@PostMapping("/send")
+	public String Resetsend(@ModelAttribute EmailForm emailForm, Model model,
 			RedirectAttributes redirectAttributes) {
 		String email = emailForm.getMail();
 		User user = userRepository.findBymail(email);

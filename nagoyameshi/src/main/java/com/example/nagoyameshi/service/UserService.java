@@ -79,7 +79,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public void roleUpdate(Integer id) {
+	public void UpgradeRole(Integer id) {
 		User user = userRepository.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("User not found"));
 		Role role = roleRepository.findByName("ROLE_PAYMEMBER");

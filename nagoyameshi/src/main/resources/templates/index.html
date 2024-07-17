@@ -21,9 +21,9 @@
 			ログアウトしました。
 		</div>
 
-<!--		<div th:if="${successMessage} and !${param.loggedIn} and !${param.loggedOut}" class="alert alert-info">-->
-<!--			<span th:text="${successMessage}"></span>-->
-<!--		</div>-->
+		<div th:if="${successMessage}" class="alert alert-info">
+			<span th:text="${successMessage}"></span>
+		</div>
 
 		<main>
 			<!--画像をスライドする-->

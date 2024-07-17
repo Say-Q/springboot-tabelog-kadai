@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.example.nagoyameshi.entity.Categories;
 import com.example.nagoyameshi.entity.Shop;
@@ -23,7 +22,7 @@ public class HomeController {
 	}
 
 	@GetMapping("/")
-	public String index(Model model, @ModelAttribute("successMessage") String successMessage) {
+	public String index(Model model) {
 		List<Shop> topShops = shopRepository.findTop10ByOrderByPriceAsc();
 		List<Categories> category = categoryRepository.findAll();
 

@@ -7,20 +7,22 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
+@Table(name = "verification_tokens")
 @Data
 public class PasswordResetToken {
 	@Id
 	private String token;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = false, name = "user_id")
 	private User user;
 
-	@Column(nullable = false)
+	@Column(nullable = false, name = "expiry_date")
 	private LocalDateTime expiryDate;
 
 	public PasswordResetToken() {
