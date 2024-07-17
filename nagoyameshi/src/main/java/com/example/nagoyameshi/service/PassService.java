@@ -16,6 +16,8 @@ import com.example.nagoyameshi.entity.User;
 import com.example.nagoyameshi.repository.PasswordResetTokenRepository;
 import com.example.nagoyameshi.repository.UserRepository;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @Service
 public class PassService {
 	private final UserRepository userRepository;
@@ -42,25 +44,24 @@ public class PassService {
 	}
 
 	@Transactional
-	public void sendResetLink(String userEmail) {
+	public void sendResetLink(String userEmail, HttpServletRequest request) {
 		User user = userRepository.findBymail(userEmail);
 
 		if (user == null) {
 			throw new IllegalArgumentException("入力されたメールアドレスは存在しません。");
 		}
 
-		//既存のトークンが存在するか確認
-		Optional<PasswordResetToken> existingTokenOpt = resetTokenRepository.findByUser(user);
-		existingTokenOpt.ifPresent(resetTokenRepository::delete); //既存のトークンを削除
+		//既存のトークンを削除
+		resetTokenRepository.deleteByUser(user);
 		
 		//新しいトークン生成
 		String token = UUID.randomUUID().toString();
 		PasswordResetToken resetToken = new PasswordResetToken(token, user, LocalDateTime.now().plusHours(24));
-
 		resetTokenRepository.save(resetToken);
 
 		//リセットリンク生成
-		String resetLink = "/pass/newcreate?token=" + token;
+		String baseUrl = request.getRequestURL().toString().replace(request.getRequestURI(), request.getContextPath());
+		String resetLink = baseUrl + "/pass/newcreate?token=" + token;
 
 		//メール送信処理
 		SimpleMailMessage message = new SimpleMailMessage();
@@ -69,8 +70,20 @@ public class PassService {
 		message.setText("パスワードを再設定するには、以下のリンクをクリックしてください。:\n" + resetLink);
 
 		mailSender.send(message);
+
 	}
 
+	//トークンの文字列で検索した結果を返す
+	public PasswordResetToken getPasswordResetToken(String token) {
+	    PasswordResetToken resetToken = resetTokenRepository.findByToken(token);
+	    if (resetToken != null) {
+	        System.out.println("Token found for user: " + resetToken.getUser().getMail());
+	    } else {
+	        System.out.println("Token not found for token: " + token);
+	    }
+		return resetTokenRepository.findByToken(token);
+	}
+	
 	public boolean validatePasswordResetToken(String token) {
 		Optional<PasswordResetToken> tokenOpt = resetTokenRepository.findById(token);
 		if (tokenOpt.isEmpty() || tokenOpt.get().getExpiryDate().isBefore(LocalDateTime.now())) {
