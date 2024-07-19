@@ -84,20 +84,9 @@ public class PassService {
 		return resetTokenRepository.findByToken(token);
 	}
 	
-	public boolean validatePasswordResetToken(String token) {
+	public void reupdate(String token, String newPassword) {
 		Optional<PasswordResetToken> tokenOpt = resetTokenRepository.findById(token);
-		if (tokenOpt.isEmpty() || tokenOpt.get().getExpiryDate().isBefore(LocalDateTime.now())) {
-			return false;
-		}
-		return true;
-	}
-
-	public void updatePassword(String token, String newPassword) {
-		Optional<PasswordResetToken> tokenOpt = resetTokenRepository.findById(token);
-		if (tokenOpt.isEmpty() || tokenOpt.get().getExpiryDate().isBefore(LocalDateTime.now())) {
-			throw new IllegalArgumentException("無効または期限切れのトークンです。");
-		}
-
+		
 		User user = tokenOpt.get().getUser();
 		user.setPassword(passwordEncoder.encode(newPassword));
 

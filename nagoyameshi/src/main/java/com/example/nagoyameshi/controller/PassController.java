@@ -100,7 +100,7 @@ public class PassController {
 		return "redirect:/pass/reset";
 	}
 
-	@GetMapping("/pass/newcreate")
+	@GetMapping("/newcreate")
 	public String newcreate(@RequestParam(name = "token") String token, Model model) {
 		PasswordResetToken resetToken = passService.getPasswordResetToken(token);
 
@@ -120,6 +120,29 @@ public class PassController {
 		}
 
 		return "pass/newcreate";
+	}
+
+	@PostMapping("/reupdate")
+	public String reudate(@RequestParam(name = "token") String token,
+			@ModelAttribute @Validated PasswordChangeForm passwordChangeForm, BindingResult bindingResult,
+			RedirectAttributes redirectAttributes) {
+
+		if (bindingResult.hasErrors()) {
+
+			return "pass/newcreate";
+		}
+
+		if (!passService.isSamePassword(passwordChangeForm.getPassword(),
+				passwordChangeForm.getPasswordConfirmation())) {
+
+			bindingResult.rejectValue("passwordConfirmation", "error.passwordConfirmation", "パスワードが一致しません");
+			return "pass/newcreate";
+		}
+		
+		passService.reupdate(token, passwordChangeForm.getPassword());
+		redirectAttributes.addFlashAttribute("successMessage", "パスワードを再設定しました。");
+
+		return "redirect:/auth/login";
 	}
 
 }
