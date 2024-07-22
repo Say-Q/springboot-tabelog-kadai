@@ -25,10 +25,10 @@
 							</ol>
 						</nav>
 
-						<div th:if="${successMessage}" class="alert alert-info">
-							<span th:text="${successMessage}"></span>
+						<div th:if="${param.registered}" class="alert alert-info">
+							有料会員登録が完了しました。
 						</div>
-
+						
 						<details>
 							<summary>会員情報</summary>
 							<h1 class="mb-3 text-center">会員情報</h1>

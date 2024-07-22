@@ -27,7 +27,7 @@ public class ShopController {
 	private final ShopRepository shopRepository;
 	private final CategoryRepository categoryRepository;
 	private final FavoriteRepository favoriteRepository;
-
+	
 	public ShopController(ShopRepository shopRepository, CategoryRepository categoryRepository, FavoriteRepository favoriteRepository) {
 		this.shopRepository = shopRepository;
 		this.categoryRepository = categoryRepository;
@@ -110,6 +110,9 @@ public class ShopController {
 
 	}
 
+	@Value("${google.api.api_key}")
+	private String googleApiKey;
+	
 	@GetMapping("/{id}")
 	public String show(@PathVariable(name = "id") Integer id, Model model) {
 		Shop shop = shopRepository.getReferenceById(id);
@@ -117,6 +120,7 @@ public class ShopController {
 
 		model.addAttribute("shop", shop);
 		model.addAttribute("category", category);
+		model.addAttribute("googleApiKey", googleApiKey);
 
 		return "shops/show";
 	}
@@ -141,14 +145,4 @@ public class ShopController {
 //	  return "shops/show";
 //	}
 	
-	@Value("${google.api.api_key}")
-	private String googleApiKey;
-	
-	@GetMapping("/shop-detail")
-	public String showShopDetail(Model model) {
-		//必要なデータをモデルに追加する
-		model.addAttribute("googleApiKey", googleApiKey);
-		return "show";
-	}
-
 }

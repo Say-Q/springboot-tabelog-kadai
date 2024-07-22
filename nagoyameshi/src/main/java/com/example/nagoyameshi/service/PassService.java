@@ -86,8 +86,8 @@ public class PassService {
 	
 	public void reupdate(String token, String newPassword) {
 		Optional<PasswordResetToken> tokenOpt = resetTokenRepository.findById(token);
-		
 		User user = tokenOpt.get().getUser();
+		
 		user.setPassword(passwordEncoder.encode(newPassword));
 
 		userRepository.save(user);

@@ -57,8 +57,8 @@ public class StripeService {
 				.addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
 				.addLineItem(lineItem)
 				.setMode(SessionCreateParams.Mode.SUBSCRIPTION)
-				.setSuccessUrl(requestUrl.replaceAll("/register", ""))
-				.setCancelUrl(requestUrl.replace("/user/register", ""))
+				.setSuccessUrl(requestUrl.replaceAll("/user/register", "/user?registered"))
+				.setCancelUrl(requestUrl)
 				.putMetadata("userId", userDetailsImpl.getUser().getId().toString())
 				.build();
 
@@ -89,6 +89,7 @@ public class StripeService {
 
 				if (userId != null) {
 					userService.UpgradeRole(Integer.parseInt(userId));
+
 				} else {
 					System.out.println("ユーザーIDをメタデータから取得できませんでした。");
 				}
@@ -105,6 +106,5 @@ public class StripeService {
 			System.out.println("Stripe API Version" + event.getApiVersion());
 			System.out.println("stripe-java Version" + Stripe.VERSION);
 		});
-
 	}
 }

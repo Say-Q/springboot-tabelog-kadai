@@ -96,7 +96,7 @@ public class PassController {
 		// パスワード再設定リンクを生成してメール送信
 		passService.sendResetLink(email, request);
 
-		redirectAttributes.addFlashAttribute("successMessage", "パスワード再設定用のリンクをご入力頂いたメールに送信しました。");
+		redirectAttributes.addFlashAttribute("successMessage", "パスワード再設定用のリンクを、ご入力頂いたメールに送信しました。");
 		return "redirect:/pass/reset";
 	}
 
@@ -106,17 +106,20 @@ public class PassController {
 
 		if (resetToken != null) {
 			User user = resetToken.getUser();
-			// Optional: トークンが有効な場合でも有効期限を追加でチェック
+			// トークンが有効な場合でも有効期限を追加でチェック
 			if (resetToken.getExpiryDate().isAfter(LocalDateTime.now())) {
 				userService.enableUser(user);
+				model.addAttribute("token", token);
 				model.addAttribute("passwordChangeForm", new PasswordChangeForm());
 			} else {
-				String errorMessage = "トークンが期限切れです。";
+				String errorMessage = "トークンが期限切れです。パスワードを再設定する場合は、再度手続きを行ってください。";
 				model.addAttribute("errorMessage", errorMessage);
+				return "auth/verify";
 			}
 		} else {
-			String errorMessage = "トークンが無効です。";
+			String errorMessage = "トークンが無効です。パスワードを再設定する場合は、再度手続きを行ってください。";
 			model.addAttribute("errorMessage", errorMessage);
+			return "auth/verify";
 		}
 
 		return "pass/newcreate";
@@ -125,7 +128,7 @@ public class PassController {
 	@PostMapping("/reupdate")
 	public String reudate(@RequestParam(name = "token") String token,
 			@ModelAttribute @Validated PasswordChangeForm passwordChangeForm, BindingResult bindingResult,
-			RedirectAttributes redirectAttributes) {
+			Model model) {
 
 		if (bindingResult.hasErrors()) {
 
@@ -138,11 +141,10 @@ public class PassController {
 			bindingResult.rejectValue("passwordConfirmation", "error.passwordConfirmation", "パスワードが一致しません");
 			return "pass/newcreate";
 		}
-		
+
 		passService.reupdate(token, passwordChangeForm.getPassword());
-		redirectAttributes.addFlashAttribute("successMessage", "パスワードを再設定しました。");
+		model.addAttribute("successMessage", "パスワードを再設定しました。");
 
-		return "redirect:/auth/login";
+		return "auth/login";
 	}
-
 }

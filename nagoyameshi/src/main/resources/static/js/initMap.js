@@ -1,49 +1,47 @@
-function initMap() {
-	const map = new google.maps.Map(document.getElementById("map"), {
-		center: { lat: -33.866, lng: 151.196 },
-		zoom: 15,
-	});
-	const request = {
-		placeId: "ChIJN1t_tDeuEmsRUsoyG83frY4",
-		fields: ["name", "formatted_address", "place_id", "geometry", "icon", "formatted_phone_number", "business_status",
-			"opening_hours", "PlacePhoto", "website", "price_level", "rating", "reviews", "user_ratings_total"],
-	};
-	const infowindow = new google.maps.InfoWindow();
-	const service = new google.maps.places.PlacesService(map);
+// 地図を初期化して追加
+let map;
 
-	service.getDetails(request, (place, status) => {
-		if (
-			status === google.maps.places.PlacesServiceStatus.OK &&
-			place &&
-			place.geometry &&
-			place.geometry.location
-		) {
-			const marker = new google.maps.Marker({
-				map,
-				position: place.geometry.location,
-			});
+async function initMap() {
+    // 必要なライブラリを追加
+    //@ts-ignore
+    const { Map } = await google.maps.importLibrary("maps");
+    const { AdvancedMarkerView } = await google.maps.importLibrary("marker");
 
-			google.maps.event.addListener(marker, "click", () => {
-				const content = document.createElement("div");
-				const nameElement = document.createElement("h2");
+    // ジオコーダーを作成
+    const geocoder = new google.maps.Geocoder();
 
-				nameElement.textContent = place.name;
-				content.appendChild(nameElement);
+    // HTMLから住所を取得
+    const address = document.getElementById('address').textContent.trim();
 
-				const placeIdElement = document.createElement("p");
+    // 住所を位置情報に変換
+    geocoder.geocode({ address: address }, (results, status) => {
+        if (status === 'OK') {
+            const position = results[0].geometry.location;
 
-				placeIdElement.textContent = place.place_id;
-				content.appendChild(placeIdElement);
+            // 地図を作成
+            map = new Map(document.getElementById("map"), {
+                zoom: 15,
+                center: position,
+                mapId: "DEMO_MAP_ID",
+            });
 
-				const placeAddressElement = document.createElement("p");
-
-				placeAddressElement.textContent = place.formatted_address;
-				content.appendChild(placeAddressElement);
-				infowindow.setContent(content);
-				infowindow.open(map, marker);
-			});
-		}
-	});
+            // マーカーを追加
+            const marker = new AdvancedMarkerView({
+                map: map,
+                position: position,
+                title: address,
+            });
+        } else {
+            console.error('Geocode was not successful for the following reason: ' + status);
+        }
+    });
 }
 
-window.initMap = initMap;
+// ページがロードされたら地図を初期化
+window.onload = initMap;
+
+
+
+
+//		fields: ["name", "formatted_address", "place_id", "geometry", "icon", "formatted_phone_number", "business_status",
+//			"opening_hours", "PlacePhoto", "website", "price_level", "rating", "reviews", "user_ratings_total"],
