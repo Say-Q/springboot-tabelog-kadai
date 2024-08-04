@@ -5,10 +5,10 @@
 	<div th:replace="~{fragment :: meta}"></div>
 
 	<div th:replace="~{fragment :: styles}"></div>
-
+	<script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=default"></script>
+	<script type="module" src="/js/initmap.js"></script>
 	<title>店舗詳細</title>
 
-	<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 </head>
 
 <body>
@@ -29,40 +29,51 @@
 							</ol>
 						</nav>
 
-						<h1 class="text-center mb-3" th:text="${shop.getName()}"></h1>
+						<h1 id="shop-name" class="text-center mb-3" th:text="${shop.getName()}"></h1>
+						<!--						<span id="shop-rating" class="fs-5" data-api-key="[[${googleApiKey}]]"></span>-->
 
-						<div th:if="${errorMessage}" class="alert alert-danger">
+						<div th:if=" ${errorMessage}" class="alert alert-danger">
 							<span th:text="${errorMessage}"></span>
 						</div>
 
+
+
 						<div class="row">
-							<div class="col-md-4 mt-4 mb-4">
+							<div class="col-md-4 mb-4">
+								<div class="d-flex flex-sm-justify-content-center">
+									<!-- 口コミボタンを追加 -->
+									<div>
+										<button id="googleReviewButton" type="button"
+											class="btn btn-link text-decolation-none fs-5">☆レビュー</button>
+									</div>
+
+									<div sec:authorize="hasRole('ROLE_PAYMEMBER')" class="ms-auto fs-4">
+										<div th:unless="${userHasFavorites}">
+											<form method="post" th:action="@{/favorite/add}">
+												<input type="hidden" name="shopId" th:value="${shop.id}">
+												<button type="submit" class="btn btn-primary btn-sm">
+													&#9825;お気に入り追加</button> <!-- &#9825; は ♡ -->
+											</form>
+										</div>
+
+										<div th:if="${userHasFavorites}">
+											<form method="post" th:action="@{/favorite/delete}">
+												<input type="hidden" name="shopId" th:value="${shop.id}">
+												<button type="submit" class="btn btn-Light border border-dark btn-sm">
+													&#9829;お気に入り解除</button> <!-- &#9829; は ♥ -->
+											</form>
+										</div>
+									</div>
+								</div>
 								<div class="image-container">
 									<img th:if="${shop.getImageName()}" th:src="@{/storage/__${shop.getImageName()}__}"
 										class="img-fluid" alt="店舗画像">
 									<img th:unless="${shop.getImageName()}" th:src="@{/images/noImage.png}"
 										class="img-fluid" alt="NO IMAGE">
 								</div>
-								<!--								<div sec:authorize="isAuthenticated()">-->
-								<!--									<div th:if="${shopHasFavorites}">-->
-								<!--										<form th:action="@{/shops/{shopId}/favorites/delete(shopId=${shop.id})}"-->
-								<!--											method="post">-->
-								<!--											<input type="hidden" name="shopId" th:value="${shop.id}">-->
-								<!--											<button type="submit" class="btn btn-link text-decolation-none right">-->
-								<!--												&#9829;お気に入り解除</button>  &#9829; は ♥ -->
-								<!--										</form>-->
-								<!--									</div>-->
-								<!--									<div th:unless="${shopHasFavorites}">-->
-								<!--										<form th:action="@{/shops/{shopId}/favorites/add(shopId=${shop.id})}"-->
-								<!--											method="post">-->
-								<!--											<input type="hidden" name="shopId" th:value="${shop.id}">-->
-								<!--											<button type="submit" class="btn btn-link text-decolation-none right">-->
-								<!--												&#9825;お気に入り追加</button>  &#9825; は ♡ -->
-								<!--										</form>-->
-								<!--									</div>-->
-								<!--								</div>-->
 
-								<div sec:authorize="isAnonymous()" class="col-lg-12 px-0 mt-2 mb-4">
+
+								<div sec:authorize="isAnonymous()" class="col-lg-12 px-0 mt-4">
 									<div class="card">
 										<div class="card-body">
 											<p class="card-text">予約するには<a th:href="@{/login}">ログイン</a>が必要です。</p>
@@ -71,7 +82,7 @@
 										</div>
 									</div>
 								</div>
-								<div sec:authorize="isAuthenticated()" class="col-lg-12 px-0 mt-2 mb-4">
+								<div sec:authorize="isAuthenticated()" class="col-lg-12 px-0 mt-4">
 									<div class="card">
 										<div class="card-body">
 											<a th:href="@{/reservation/__${shop.getId()}__}">
@@ -84,8 +95,8 @@
 								</div>
 							</div>
 
-							<div class="card col-md-8 mt-4 mb-4 pt-3" style="background-color:rgb(255, 252, 191);">
-								<div class="col-12 container mb-4">
+							<div class="card col-md-8 mb-3 pt-2" style="background-color:rgb(255, 252, 191);">
+								<div class="col-12 container">
 									<div class="row pb-2 mb-2 border-bottom">
 										<div class="col-2">
 											<span class="fw-bold">カテゴリ</span>
@@ -174,7 +185,7 @@
 										</div>
 									</div>
 
-									<div class="row pb-2 mb-2 border-bottom">
+									<div class="row pb-2 border-bottom">
 										<div class="col-2">
 											<span class="fw-bold">Webサイト</span>
 										</div>
@@ -193,10 +204,9 @@
 						<script>
 							(g => {var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window; b = b[c] || (b[c] = {}); var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => {await (a = m.createElement("script")); e.set("libraries", [...r] + ""); for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]); e.set("callback", c + ".maps." + q); a.src = `https://maps.${c}apis.com/maps/api/js?` + e; d[q] = f; a.onerror = () => h = n(Error(p + " could not load.")); a.nonce = m.querySelector("script[nonce]")?.nonce || ""; m.head.append(a)})); d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n))})({
 								key: "[[${googleApiKey}]]",
+								v: "weekly",
 							});
 						</script>
-						<script src="/js/initMaps.js"></script>
-
 					</div>
 				</div>
 			</div>
@@ -207,6 +217,9 @@
 	</div>
 
 	<div th:replace="~{fragment :: scripts}"></div>
+	<!-- 外部JavaScriptファイルを読み込む -->
+	<!--	<script src="/js/getRating.js"></script>-->
+	<script src="/js/googleReview.js"></script>
 </body>
 
 </html>

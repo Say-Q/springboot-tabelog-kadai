@@ -1,8 +1,16 @@
 package com.example.nagoyameshi.service;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.example.nagoyameshi.entity.Role;
 import com.example.nagoyameshi.entity.User;
@@ -10,6 +18,8 @@ import com.example.nagoyameshi.form.SignupForm;
 import com.example.nagoyameshi.form.UserEditForm;
 import com.example.nagoyameshi.repository.RoleRepository;
 import com.example.nagoyameshi.repository.UserRepository;
+
+import jakarta.servlet.http.HttpSession;
 
 @Service
 public class UserService {
@@ -79,12 +89,68 @@ public class UserService {
 	}
 
 	@Transactional
-	public void UpgradeRole(Integer id) {
+	public void upgradeRole(Integer id) {
 		User user = userRepository.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("User not found"));
 		Role role = roleRepository.findByName("ROLE_PAYMEMBER");
 
 		user.setRole(role);
 		userRepository.save(user);
+
+		// Spring Security コンテキストに新しいロールを反映
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Authentication newAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(), auth.getCredentials(),
+				AuthorityUtils.createAuthorityList("ROLE_PAYMEMBER"));
+		SecurityContextHolder.getContext().setAuthentication(newAuth);
+
+		// デバッグログ
+		System.out
+				.println("Authenticated: " + SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
+		System.out.println("Authorities: " + SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+
+		//セッションに変更を反映
+		HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest()
+				.getSession();
+		session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+				SecurityContextHolder.getContext());
+
+		// セッション情報をデバッグログに出力
+		SecurityContext context = (SecurityContext) session
+				.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+		System.out.println("Session Authenticated: " + context.getAuthentication().isAuthenticated());
+		System.out.println("Session Authorities: " + context.getAuthentication().getAuthorities());
+	}
+
+	@Transactional
+	public void downgradeRole(Integer id) {
+		User user = userRepository.findById(id)
+				.orElseThrow(() -> new IllegalArgumentException("User not found"));
+		Role role = roleRepository.findByName("ROLE_FREEMEMBER");
+
+		user.setRole(role);
+		userRepository.save(user);
+
+		// Spring Security コンテキストに新しいロールを反映
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Authentication newAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(), auth.getCredentials(),
+				AuthorityUtils.createAuthorityList("ROLE_PAYMEMBER"));
+		SecurityContextHolder.getContext().setAuthentication(newAuth);
+
+		// デバッグログ
+		System.out
+				.println("Authenticated: " + SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
+		System.out.println("Authorities: " + SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+
+		//セッションに変更を反映
+		HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest()
+				.getSession();
+		session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+				SecurityContextHolder.getContext());
+
+		// セッション情報をデバッグログに出力
+		SecurityContext context = (SecurityContext) session
+				.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+		System.out.println("Session Authenticated: " + context.getAuthentication().isAuthenticated());
+		System.out.println("Session Authorities: " + context.getAuthentication().getAuthorities());
 	}
 }

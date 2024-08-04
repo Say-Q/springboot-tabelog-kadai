@@ -49,6 +49,12 @@ public class UserController {
 
 		return "user/index";
 	}
+	
+	@GetMapping("/stripeEdit")
+	public String stripeEdit() {
+
+		return "user/stripeEdit";
+	}
 
 	@GetMapping("/edit")
 	public String edit(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl, Model model) {

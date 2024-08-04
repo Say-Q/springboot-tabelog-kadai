@@ -23,7 +23,7 @@ public class WebSecurityConfig {
 		http
 				.authorizeHttpRequests((requests) -> requests
 						.requestMatchers("/css/**", "/images/**", "/js/**", "/storage/**", "/", "/signup/**", "/shops",
-								"/shops/{id}", "/company/**", "/pass/**", "stripe/webhook").permitAll() //すべてのユーザーにアクセスを許可するＵＲＬ
+								"/shops/{id}", "/company/**", "/pass/**", "stripe/webhook", "/api/place/find").permitAll() //すべてのユーザーにアクセスを許可するＵＲＬ
 						.requestMatchers("/admin/**").hasRole("ADMIN") //管理者にのみアクセスを許可するURL
 						.requestMatchers("/user/", "stripe/webhook").hasRole("PAYMEMBER") //有料会員のみアクセスを許可するURL
 						.requestMatchers("/user/", "stripe/webhook").hasRole("FREEMEMBER") //無料会員のみアクセスを許可するURL

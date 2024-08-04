@@ -1,5 +1,7 @@
 package com.example.nagoyameshi.entity;
 
+import java.sql.Timestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,7 +15,7 @@ import lombok.Data;
 @Entity
 @Table(name = "favorites")
 @Data
-public class favorite {
+public class Favorite {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -26,4 +28,7 @@ public class favorite {
 	@ManyToOne
 	@JoinColumn(name = "shops_id")
 	private Shop shop;
+	
+	@Column(name = "created_at", insertable = false, updatable = false)
+	private Timestamp createdAt;
 }

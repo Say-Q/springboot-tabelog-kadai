@@ -103,6 +103,7 @@ CREATE TABLE IF NOT EXISTS favorites
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    users_id INT NOT NULL,
    shops_id INT NOT NULL,
+   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
    FOREIGN KEY (users_id) REFERENCES users (id),
    FOREIGN KEY (shops_id) REFERENCES shops (id)
 );

@@ -18,11 +18,11 @@
 			<div class="container pt-4 pb-5 nagoyameshi-container">
 				<div class="row justify-content-center">
 					<div class="col-xl-3 col-lg-4 col-md-5 col-sm-7">
-						
-						<h1 class="mb-4 text-center">ログイン</h1>
 
-						<div th:if="${successMessage}" class="alert alert-info">
-							<span th:text="${successMessage}"></span>
+						<h1 class="mb-4 text-center">ログイン</h1>
+						
+						<div th:if="${param.registered}" class="alert alert-info">
+							有料会員登録が完了しました。再ログインしてください。
 						</div>
 
 						<div th:if="${param.error}" class="alert alert-danger">
