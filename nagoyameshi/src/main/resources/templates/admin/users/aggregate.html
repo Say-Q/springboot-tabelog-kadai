@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<div th:replace="~{fragment :: meta}"></div>
+	<div th:replace="~{fragment :: styles}"></div>
+
+	<title>会員詳細</title>
+</head>
+
+<body class="admin-page" style="background-color:#00008b;">
+	<div class="nagoyameshi-wrapper">
+		<!-- ヘッダー -->
+		<div th:replace="~{fragment :: header}"></div>
+
+		<main>
+			<div class="container pt-3 pb-5 nagoyameshi-container">
+				<div class="row justify-content-center">
+					<div class="col-xl-5 col-lg-6 col-md-8">
+						<nav class="my-3" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0">
+								<li class="breadcrumb-item"><a class="admin-a" th:href="@{/admin}">管理者ページ</a></li>
+								<li class="breadcrumb-item"><a class="admin-a" th:href="@{/admin/aggregate}">集計画面</a>
+								</li>
+								<li class="breadcrumb-item active" aria-current="page">会員詳細</li>
+							</ol>
+						</nav>
+
+						<h1 class="mb-4 text-center">会員詳細</h1>
+
+						<div class="d-flex justify-content-center ms-auto mb-5 ps-lg-4">
+							<div class="card d-flex fw-bold">
+								<div class="card" style="background-color:#00008b;">
+									<div class="mt-1">
+										<table class="admin-page table align-middle mb-0" style="text-align: center;">
+											<thead>
+												<tr>
+													<th scope="col"></th>
+													<th scope="col">0-9歳</th>
+													<th scope="col">10代</th>
+													<th scope="col">20代</th>
+													<th scope="col">30代</th>
+													<th scope="col">40代</th>
+													<th scope="col">50代</th>
+													<th scope="col">60代</th>
+													<th scope="col">70代</th>
+													<th scope="col">80代</th>
+													<th scope="col">90代</th>
+													<th scope="col">100歳以上</th>
+												</tr>
+											</thead>
+											<tbody id="dataContainer">
+												<tr><!-- 三項演算子を使用（?はnullチェック） -->
+													<td>無料</td>
+													<td class="ms-2"
+														th:text="${memberCountByAgeGroup['0-9歳']?.get('ROLE_FREEMEMBER') ?: 0}">
+														0</td>
+													<td class="ms-5"
+														th:text="${memberCountByAgeGroup['10代']?.get('ROLE_FREEMEMBER')?: 0}">
+														0</td>
+													<td class="ms-5"
+														th:text="${memberCountByAgeGroup['20代']?.get('ROLE_FREEMEMBER')?: 0}">
+														0</td>
+													<td class="ms-5"
+														th:text="${memberCountByAgeGroup['30代']?.get('ROLE_FREEMEMBER')?: 0}">
+														0</td>
+													<td class="ms-5"
+														th:text="${memberCountByAgeGroup['40代']?.get('ROLE_FREEMEMBER')?: 0}">
+														0</td>
+													<td class="ms-5"
+														th:text="${memberCountByAgeGroup['50代']?.get('ROLE_FREEMEMBER')?: 0}">
+														0</td>
+													<td class="ms-5"
+														th:text="${memberCountByAgeGroup['60代']?.get('ROLE_FREEMEMBER')?: 0}">
+														0</td>
+													<td class="ms-5"
+														th:text="${memberCountByAgeGroup['70代']?.get('ROLE_FREEMEMBER')?: 0}">
+														0</td>
+													<td class="ms-5"
+														th:text="${memberCountByAgeGroup['80代']?.get('ROLE_FREEMEMBER')?: 0}">
+														0</td>
+													<td class="ms-5"
+														th:text="${memberCountByAgeGroup['90代']?.get('ROLE_FREEMEMBER')?: 0}">
+														0</td>
+													<td class="ms-5"
+														th:text="${memberCountByAgeGroup['100歳以上']?.get('ROLE_FREEMEMBER')?: 0}">
+														0</td>
+												</tr>
+												<tr>
+													<td>有料</td>
+													<td class="ms-2"
+														th:text="${memberCountByAgeGroup['0-9歳']?.get('ROLE_PAYMEMBER') ?: 0}">
+														0</td>
+													<td class="ms-5"
+														th:text="${memberCountByAgeGroup['10代']?.get('ROLE_PAYMEMBER') ?: 0}">
+														0</td>
+													<td class="ms-5"
+														th:text="${memberCountByAgeGroup['20代']?.get('ROLE_PAYMEMBER') ?: 0}">
+														0</td>
+													<td class="ms-5"
+														th:text="${memberCountByAgeGroup['30代']?.get('ROLE_PAYMEMBER') ?: 0}">
+														0</td>
+													<td class="ms-5"
+														th:text="${memberCountByAgeGroup['40代']?.get('ROLE_PAYMEMBER') ?: 0}">
+														0</td>
+													<td class="ms-5"
+														th:text="${memberCountByAgeGroup['50代']?.get('ROLE_PAYMEMBER') ?: 0}">
+														0</td>
+													<td class="ms-5"
+														th:text="${memberCountByAgeGroup['60代']?.get('ROLE_PAYMEMBER') ?: 0}">
+														0</td>
+													<td class="ms-5"
+														th:text="${memberCountByAgeGroup['70代']?.get('ROLE_PAYMEMBER') ?: 0}">
+														0</td>
+													<td class="ms-5"
+														th:text="${memberCountByAgeGroup['80代']?.get('ROLE_PAYMEMBER') ?: 0}">
+														0</td>
+													<td class="ms-5"
+														th:text="${memberCountByAgeGroup['90代']?.get('ROLE_PAYMEMBER') ?: 0}">
+														0</td>
+													<td class="ms-5"
+														th:text="${memberCountByAgeGroup['100歳以上']?.get('ROLE_PAYMEMBER') ?: 0}">
+														0</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="d-flex justify-content-center ms-auto mb-5 ps-lg-4">
+							<div class="card d-flex fw-bold">
+								<div class="card" style="background-color:#00008b;">
+									<div class="mt-1">
+										<table class="admin-page table align-middle mb-0"
+											style="text-align: center;">
+											<thead>
+												<tr>
+													<th scope="col"></th>
+													<th scope="col">無料会員</th>
+													<th scope="col">有料会員</th>
+												</tr>
+											</thead>
+											<tbody id="dataContainer">
+												<tr th:each="entry : ${memberCountByProfession}">
+													<td class="ms-2" th:text="${entry.key}"></td>
+													<td class="ms-2" th:text="${entry.value['ROLE_FREEMEMBER']} ?: 0">0
+													</td>
+													<td class="ms-2" th:text="${entry.value['ROLE_PAYMEMBER']} ?: 0">0
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+		<!-- フッター -->
+		<div th:replace="~{fragment :: footer}"></div>
+	</div>
+	<div th:replace="~{fragment :: scripts}"></div>
+
+</body>
+
+</html>

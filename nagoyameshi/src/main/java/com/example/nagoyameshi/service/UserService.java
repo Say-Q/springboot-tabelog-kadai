@@ -1,5 +1,13 @@
 package com.example.nagoyameshi.service;
 
+import java.io.Writer;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -18,6 +26,7 @@ import com.example.nagoyameshi.form.SignupForm;
 import com.example.nagoyameshi.form.UserEditForm;
 import com.example.nagoyameshi.repository.RoleRepository;
 import com.example.nagoyameshi.repository.UserRepository;
+import com.opencsv.CSVWriter;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -152,5 +161,100 @@ public class UserService {
 				.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
 		System.out.println("Session Authenticated: " + context.getAuthentication().isAuthenticated());
 		System.out.println("Session Authorities: " + context.getAuthentication().getAuthorities());
+	}
+
+	public void writeUsersToCsv(Writer writer) {
+		List<User> users = userRepository.findByRoleIdNot(1);
+		try (CSVWriter csvWriter = new CSVWriter(writer)) {
+			//ファイルに書き込み
+			csvWriter.writeNext(new String[] { "ID", "名前", "フリガナ", "生年月日", "電話番号", "職業", "メール", "登録日", "更新日" });
+			for (User user : users) {
+				csvWriter.writeNext(new String[] {
+						String.valueOf(user.getId()),
+						user.getName(),
+						user.getFurigana(),
+						user.getBirthday(),
+						user.getPhoneNumber(),
+						user.getProfession(),
+						user.getMail(),
+						String.valueOf(user.getCreatedAt()),
+						String.valueOf(user.getUpdatedAt())
+				});
+			}
+		} catch (Exception e) {
+			throw new RuntimeException("CSV書き込み中にエラーが発生しました。", e);
+		}
+	}
+	//年齢を計算するメソッド
+	public int calculateAge(String birthday) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate birthDate = LocalDate.parse(birthday,formatter); //formatter形式に変換
+		//｢Period.between｣で｢.getYears｣で年差分計算
+		return Period.between(birthDate, LocalDate.now()).getYears();
+	}
+	//年代を求めるメソッド
+	public String calculateAgeGroup(int age) {
+		if(age < 10 ) {
+			return "0-9歳";
+		} else if (age < 20) {
+			return "10代";
+		} else if (age < 30) {
+			return "20代";
+		} else if (age < 40) {
+			return "30代";
+		} else if (age < 50) {
+			return "40代";
+		} else if (age < 60) {
+			return "50代";
+		} else if (age < 70) {
+			return "60代";
+		} else if (age < 80) {
+			return "70代";
+		} else if (age < 90) {
+			return "80代";
+		} else if (age <100) {
+			return "90代";
+		} else {
+			return "100歳以上";
+		}
+	}
+	//年代毎の無料会員・有料会員の集計
+	public Map<String, Map<String, Integer>> getMemberCountByAgeGroup(List<User> users) {
+		Map<String, Map<String, Integer>> memberCountByAgeGroup = new HashMap<>();
+		
+		for (User user : users) {
+			int age = calculateAge(user.getBirthday());
+			String ageGroup = calculateAgeGroup(age);
+			String userRole = user.getRole().getName(); //Roleを区別する
+		    System.out.println(user.getName() + "," + age + "," + ageGroup + "," + userRole);
+			
+		    //年代ごとの集計用マップを初期化
+			memberCountByAgeGroup.putIfAbsent(ageGroup, new HashMap<>());
+			Map<String, Integer> memberCount = memberCountByAgeGroup.get(ageGroup);
+			//無料会員と有料会員のカウントを更新(.getOrDefaultは、データ取得できない時に初期値を設定。)
+			memberCount.put(userRole, memberCount.getOrDefault(userRole, 0) + 1);
+			System.out.println(memberCountByAgeGroup);
+		}
+		System.out.println(memberCountByAgeGroup);
+		return memberCountByAgeGroup;
+	}
+	//職業ごとの無料会員・有料会員の集計
+	public Map<String, Map<String, Integer>> getMemberCountByprofession(List<User> users) {
+		Map<String, Map<String, Integer>> memberCountByProfession = new HashMap<>();
+		
+		for (User user : users) {
+			String profession = user.getProfession();
+			String userRole = user.getRole().getName(); //Roleを区別する
+		    System.out.println(user.getName() + "," + profession + "," + userRole);
+			
+		    //職業ごとの集計用マップを初期化
+			memberCountByProfession.putIfAbsent(profession, new HashMap<>());
+			Map<String, Integer> memberCount = memberCountByProfession.get(profession);
+			//無料会員と有料会員のカウントを更新
+			memberCount.put(userRole, memberCount.getOrDefault(userRole, 0) + 1);
+			System.out.println(memberCountByProfession);
+		}
+		System.out.println(memberCountByProfession);
+		return memberCountByProfession;
 	}
 }

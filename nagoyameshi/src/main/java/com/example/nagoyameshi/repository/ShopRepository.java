@@ -1,5 +1,6 @@
 package com.example.nagoyameshi.repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -7,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.nagoyameshi.entity.Shop;
+
 
 public interface ShopRepository extends JpaRepository<Shop, Integer> {
 	public Page<Shop> findByNameLike(String keyword, Pageable pageable);
@@ -48,4 +50,8 @@ public interface ShopRepository extends JpaRepository<Shop, Integer> {
 	//トップページで使用
 	public List<Shop> findTop10ByOrderByPriceAsc();
 	
+	//集計画面で使用
+	long countByCreatedAtLessThanEqual(Timestamp date);
+	
+	long countByCreatedAtBetween(Timestamp startDate, Timestamp endDate);
 }

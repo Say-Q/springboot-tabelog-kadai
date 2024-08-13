@@ -1,9 +1,11 @@
 package com.example.nagoyameshi.service;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import com.example.nagoyameshi.entity.Shop;
 import com.example.nagoyameshi.form.ShopEditForm;
 import com.example.nagoyameshi.form.ShopRegisterForm;
 import com.example.nagoyameshi.repository.ShopRepository;
+import com.opencsv.CSVWriter;
 
 @Service
 public class ShopService {
@@ -26,7 +29,7 @@ public class ShopService {
 	@Transactional
 	public void create(ShopRegisterForm shopRegisterForm) {
 		Shop shop = new Shop();
-		
+
 		MultipartFile imageFile = shopRegisterForm.getImageFile();
 
 		if (!imageFile.isEmpty()) {
@@ -52,12 +55,12 @@ public class ShopService {
 
 		shopRepository.save(shop);
 	}
-	
+
 	@Transactional
 	public void update(ShopEditForm shopEditForm) {
 		Shop shop = shopRepository.getReferenceById(shopEditForm.getId());
 		MultipartFile imageFile = shopEditForm.getImageFile();
-		
+
 		if (!imageFile.isEmpty()) {
 			String imageName = imageFile.getOriginalFilename();
 			String hashedImageName = generateNewFileName(imageName);
@@ -65,7 +68,7 @@ public class ShopService {
 			copyImageFile(imageFile, filePath);
 			shop.setImageName(hashedImageName);
 		}
-		
+
 		shop.setName(shopEditForm.getName());
 		shop.setCategoriesId(shopEditForm.getCategoriesId());
 		shop.setDescription(shopEditForm.getDescription());
@@ -78,10 +81,10 @@ public class ShopService {
 		shop.setPrice(shopEditForm.getPrice());
 		shop.setSeats(shopEditForm.getSeats());
 		shop.setShopSite(shopEditForm.getShopSite());
-		
+
 		shopRepository.save(shop);
 	}
-	
+
 	//UUIDを使って生成したファイル名を返す
 	public String generateNewFileName(String fileName) {
 		String[] fileNames = fileName.split("\\.");
@@ -102,6 +105,35 @@ public class ShopService {
 
 			e.printStackTrace();
 
+		}
+	}
+
+	public void writeShopsToCsv(Writer writer) {
+		List<Shop> shops = shopRepository.findAll();
+		try (CSVWriter csvWriter = new CSVWriter(writer)) {
+			//ファイルに書き込み
+			csvWriter.writeNext(new String[] { "ID", "カテゴリ－", "店舗名", "説明", "郵便番号", "住所", "電話番号", "開店時間", "閉店時間", "定休日", "価格帯", "座席数", "Webサイト", "登録日", "更新日" });
+			for (Shop shop : shops) {
+				csvWriter.writeNext(new String[] {
+						String.valueOf(shop.getId()),
+						String.valueOf(shop.getCategoriesId()),
+						shop.getName(),
+						shop.getDescription(),
+						shop.getPostalCode(),
+						shop.getAddress(),
+						shop.getPhoneNumber(),
+						shop.getOpenTime(),
+						shop.getCloseTime(),
+						shop.getRegularHoliday(),
+						String.valueOf(shop.getPrice()),
+						String.valueOf(shop.getSeats()),
+						shop.getShopSite(),
+						String.valueOf(shop.getCreatedAt()),
+						String.valueOf(shop.getUpdatedAt())
+				});
+			}
+		} catch (Exception e) {
+			throw new RuntimeException("CSV書き込み中にエラーが発生しました。", e);
 		}
 	}
 }
