@@ -14,11 +14,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.example.nagoyameshi.entity.Company;
 import com.example.nagoyameshi.entity.User;
@@ -28,7 +26,6 @@ import com.example.nagoyameshi.repository.UserRepository;
 import com.example.nagoyameshi.service.ShopService;
 import com.example.nagoyameshi.service.UserService;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
@@ -59,15 +56,6 @@ public class AdminController {
 		return "/admin/index";
 	}
 	
-	@ExceptionHandler
-	public ModelAndView handleError(HttpServletRequest request, Exception e) {
-		ModelAndView maAndView = new ModelAndView();
-		maAndView.addObject("exception", e);
-		maAndView.addObject("url", request.getRequestURL());
-		maAndView.setViewName("error");
-		return maAndView;
-	}
-
 	@GetMapping("/aggregate")
 	public String aggregate(@RequestParam(required = false, defaultValue = "totalCount") String type, Model model) {
 		List<Map<String, Object>> monthlyData = new ArrayList<>();
