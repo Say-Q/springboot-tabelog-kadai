@@ -53,7 +53,7 @@ public class AdminController {
 
 		model.addAttribute("company", company);
 
-		return "/admin/index";
+		return "admin/index";
 	}
 	
 	@GetMapping("/aggregate")
