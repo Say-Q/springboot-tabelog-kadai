@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.nagoyameshi.entity.User;
 import com.example.nagoyameshi.form.UserEditForm;
+import com.example.nagoyameshi.repository.ReservationRepository;
 import com.example.nagoyameshi.repository.UserRepository;
 import com.example.nagoyameshi.service.UserService;
 
@@ -29,10 +30,12 @@ import com.example.nagoyameshi.service.UserService;
 public class AdminUserController {
 	private final UserRepository userRepository;
 	private final UserService userService;
+	private final ReservationRepository reservationRepository;
 
-	public AdminUserController(UserRepository userRepository, UserService userService) {
+	public AdminUserController(UserRepository userRepository, UserService userService, ReservationRepository reservationRepository) {
 		this.userRepository = userRepository;
 		this.userService = userService;
+		this.reservationRepository = reservationRepository;
 	}
 
 	@GetMapping
@@ -101,4 +104,14 @@ public class AdminUserController {
 
 		return "redirect:/admin/users";
 	}
+	
+//	@PostMapping("/{id}/delete")
+//	public String delete(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
+//		//ユーザー及び予約情報の削除
+//		reservationRepository.deleteByUserId(id);
+//		userRepository.deleteById(id);
+//
+//		redirectAttributes.addFlashAttribute("successMessage", "アカウントとアカウントに紐付くデータを削除しました。");
+//		return "redirect:/admin/users";
+//	}
 }

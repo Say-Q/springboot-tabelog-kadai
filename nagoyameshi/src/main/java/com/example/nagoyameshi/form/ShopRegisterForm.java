@@ -34,10 +34,10 @@ public class ShopRegisterForm {
 	@PhoneNumber //カスタムバリデーション
 	private String phoneNumber;
 
-	@NotNull(message = "開店時間を入力してください。")
+	@NotBlank(message = "開店時間を入力してください。")
 	private String openTime;
 
-	@NotNull(message = "閉店時間を入力してください。")
+	@NotBlank(message = "閉店時間を入力してください。")
 	private String closeTime;
 
 	@NotBlank(message = "定休日を入力してください。")

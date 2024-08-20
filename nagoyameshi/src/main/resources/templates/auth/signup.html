@@ -87,7 +87,7 @@
 									<div th:if="${#fields.hasErrors('phoneNumber')}" class="text-danger small mb-2"
 										th:errors="*{phoneNumber}"></div>
 									<input type="tel" class="form-control" th:field="*{phoneNumber}"
-										placeholder="090-1234-5678" inputmode="tel">
+										placeholder="090-1234-5678" inputmode="tel" autocomplete="tel">
 								</div>
 							</div>
 

@@ -43,7 +43,7 @@
 								</div>
 							</form>
 						</div>
-						
+
 						<div th:if="${successMessage}" class="alert alert-info">
 							<span th:text="${successMessage}"></span>
 						</div>
@@ -60,7 +60,6 @@
 									<th scope="col">メールアドレス</th>
 									<th scope="col">登録日</th>
 									<th scope="col"></th>
-									<th scope="col"></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -76,32 +75,6 @@
 									<td>
 										<a th:href="@{/admin/users/__${user.getId()}__/edit}">編集</a>
 									</td>
-									<td><a href="#" class="nagoyameshi-link-danger" data-bs-toggle="modal"
-											th:data-bs-target="${'#deleteUserModal' + user.getId()}">削除</a>
-									</td>
-									<!-- 削除用モーダル -->
-									<div class="modal fade" th:id="${'deleteUserModal' + user.getId()}" tabindex="-1"
-										th:aria-labelledby="${'deleteUserModalLabel' + user.getId()}">
-										<div class="modal-dialog">
-											<div class="modal-content">
-												<div class="modal-header">
-													<h5 class="modal-title"
-														th:id="${'deleteCategoryModalLabel' + user.getId()}"
-														th:text="${'「' + user.getName() + '」を削除してもよろしいですか？'}">
-													</h5>
-													<button type="button" class="btn-close" data-bs-dismiss="modal"
-														aria-label="閉じる"></button>
-												</div>
-												<div class="modal-footer">
-													<form method="post"
-														th:action="@{/admin/users/__${user.getId()}__/delete}">
-														<button type="submit"
-															class="btn nagoyameshi-btn-danger text-white shadow-sm">削除</button>
-													</form>
-												</div>
-											</div>
-										</div>
-									</div>
 								</tr>
 							</tbody>
 						</table>

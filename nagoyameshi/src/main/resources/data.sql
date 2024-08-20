@@ -46,6 +46,7 @@ INSERT IGNORE INTO users (id, roles_id, name, furigana, birthday, phone_number, 
 INSERT IGNORE INTO users (id, roles_id, name, furigana, birthday, phone_number, profession, mail, password, enabled) VALUES (12, 2, '名古屋　四葉', 'ナゴヤヨツバ', '2007/05/05', '080-1234-5678', '学生', 'nagoya.yotsuba@example.com', 'password', true);
 INSERT IGNORE INTO users (id, roles_id, name, furigana, birthday, phone_number, profession, mail, password, enabled) VALUES (13, 2, '名古屋　五月', 'ナゴヤイツキ', '2007/05/06', '080-1234-5678', '学生', 'nagoya.itsuki@example.com', 'password', true);
 INSERT IGNORE INTO users (id, roles_id, name, furigana, birthday, phone_number, profession, mail, password, enabled) VALUES (14, 3, '久保　誠和', 'クボセイカズ', '2000-01-01', '012-012-1234','エンジニア','say19840702@gmail.com','$2a$10$MT9rQRWKg8uwtUS2X6RyvuZQ4KHU0RgwjY18fBHcpRVFb9mXqhPjG',true);
+INSERT IGNORE INTO users (id, roles_id, name, furigana, birthday, phone_number, profession, mail, password, enabled) VALUES (16, 1, '名古屋　管理者', 'ナゴヤ管理者', '2024/03/01', '080-1234-5678', 'エンジニア', 'nagoya.admin@example.com', '$2a$10$2JNjTwZBwo7fprL2X4sv.OEKqxnVtsVQvuXDkI8xVGix.U3W5B7CO', true);
 
 --reservations（予約）テーブル
 INSERT IGNORE INTO reservations(id, users_id, shops_id, reservation_date, reservation_time, reservation_count) VALUES (1, 2, 1, '2024-01-01', '18:00', 10);

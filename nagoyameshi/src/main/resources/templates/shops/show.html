@@ -44,7 +44,7 @@
 									<!-- 口コミボタンを追加 -->
 									<div>
 										<button id="googleReviewButton" type="button"
-											class="btn btn-link text-decolation-none fs-5">☆レビュー</button>
+											class="btn btn-link text-decolation-none fs-6">Googleクチコミへ</button>
 									</div>
 
 									<div sec:authorize="hasRole('ROLE_PAYMEMBER')" class="ms-auto fs-4">
@@ -82,7 +82,7 @@
 										</div>
 									</div>
 								</div>
-								<div sec:authorize="isAuthenticated()" class="col-lg-12 px-0 mt-4">
+								<div sec:authorize="isAuthenticated() and !hasRole('ROLE_ADMIN')" class="col-lg-12 px-0 mt-4">
 									<div class="card">
 										<div class="card-body">
 											<a th:href="@{/reservation/__${shop.getId()}__}">
@@ -166,7 +166,7 @@
 
 									<div class="row pb-2 mb-2 border-bottom">
 										<div class="col-2">
-											<span class="fw-bold">予算</span>
+											<span class="fw-bold">価格帯</span>
 										</div>
 
 										<div class="col">

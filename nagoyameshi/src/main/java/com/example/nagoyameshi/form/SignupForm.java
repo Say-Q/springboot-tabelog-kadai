@@ -2,6 +2,9 @@ package com.example.nagoyameshi.form;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.example.nagoyameshi.validation.Katakana;
+import com.example.nagoyameshi.validation.PhoneNumber;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -12,12 +15,14 @@ public class SignupForm {
 	private String name;
 	
 	@NotBlank(message = "フリガナを入力してください。")
+	@Katakana //カスタムバリデーション
 	private String furigana;
 	
 	@NotBlank(message = "生年月日を入力してください。")
 	private String birthday;
 	
 	@NotBlank(message = "電話番号を入力してください。")
+	@PhoneNumber //カスタムバリデーション
 	private String phoneNumber;
 	
 	@NotBlank(message = "職業を入力してください。")
