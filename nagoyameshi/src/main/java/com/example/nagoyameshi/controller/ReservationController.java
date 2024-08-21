@@ -1,10 +1,13 @@
 package com.example.nagoyameshi.controller;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -35,6 +38,8 @@ import com.example.nagoyameshi.repository.ReservationRepository;
 import com.example.nagoyameshi.repository.ShopRepository;
 import com.example.nagoyameshi.security.UserDetailsImpl;
 import com.example.nagoyameshi.service.ReservationService;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Controller
 public class ReservationController {
@@ -93,7 +98,7 @@ public class ReservationController {
 						currentDate, pageable)
 				: reservationRepository.findByUserAndReservationDateGreaterThanEqualOrderByReservationDateAsc(user,
 						currentDate, pageable);
-		
+
 	}
 
 	private boolean isPastReservation(CharSequence reservationDate) {
@@ -164,12 +169,27 @@ public class ReservationController {
 
 		Shop shop = shopRepository.getReferenceById(id);
 		User user = userDetailsImpl.getUser();
-		List<String> availableTimes = generateAvailableTimes(shop.getOpenTime(), shop.getCloseTime());
-		List<Integer> availableCounts = generateAvailableCounts(shop.getSeats());
+		LocalDate reservationDate = LocalDate.parse(reservationInputForm.getReservationDate());
+		LocalTime reservationTime = LocalTime.parse(reservationInputForm.getReservationTime());
 
 		model.addAttribute("shop", shop);
-		model.addAttribute("availableTimes", availableTimes);
-		model.addAttribute("availableCounts", availableCounts);
+
+		// 定休日チェック
+		if (!isAvailableForBooking(id, reservationDate)) {
+			String dayOfWeekJapanese = DAY_OF_WEEK_JAPANESE.get(reservationDate.getDayOfWeek());
+			String errorMessage = String.format("%d年%d月%d日（%s）は、定休日のため予約できません。",
+					reservationDate.getYear(), reservationDate.getMonthValue(), reservationDate.getDayOfMonth(),
+					dayOfWeekJapanese);
+			redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
+			return "redirect:/reservation/" + id;
+		}
+
+		// 予約時間チェック
+		if (reservationDate.equals(LocalDate.now()) && reservationTime.isBefore(LocalTime.now())) {
+			String errorMessage = "本日は時間が過ぎているため、予約できません。";
+			redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
+			return "redirect:/reservation/" + id;
+		}
 
 		if (bindingResult.hasErrors()) {
 
@@ -197,8 +217,6 @@ public class ReservationController {
 		Reservation reservation = reservationRepository.getReferenceById(id);
 		Shop shop = shopRepository.getReferenceById(reservation.getShop().getId());
 
-		String shopName = reservation.getShop().getName();
-
 		List<String> availableTimes = generateAvailableTimes(shop.getOpenTime(), shop.getCloseTime());
 		List<Integer> availableCounts = generateAvailableCounts(shop.getSeats());
 
@@ -211,7 +229,6 @@ public class ReservationController {
 				reservation.getReservationCount());
 
 		model.addAttribute("shop", shop);
-		model.addAttribute("shopName", shopName);
 		model.addAttribute("availableTimes", availableTimes);
 		model.addAttribute("availableCounts", availableCounts);
 		model.addAttribute("reservationEditForm", reservationEditForm);
@@ -224,8 +241,25 @@ public class ReservationController {
 			BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
 
 		Reservation reservation = reservationRepository.getReferenceById(id);
-		reservationEditForm.setShopId(reservation.getShop().getId());
-		reservationEditForm.setUserId(reservation.getUser().getId());
+		LocalDate reservationDate = LocalDate.parse(reservationEditForm.getReservationDate());
+		LocalTime reservationTime = LocalTime.parse(reservationEditForm.getReservationTime());
+
+		// 定休日チェック
+		if (!isAvailableForBooking(reservationEditForm.getShopId(), reservationDate)) {
+			String dayOfWeekJapanese = DAY_OF_WEEK_JAPANESE.get(reservationDate.getDayOfWeek());
+			String errorMessage = String.format("%d年%d月%d日（%s）は、定休日のため予約できません。",
+					reservationDate.getYear(), reservationDate.getMonthValue(), reservationDate.getDayOfMonth(),
+					dayOfWeekJapanese);
+			redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
+			return "redirect:/reservation/" + id + "/edit";
+		}
+
+		// 予約時間チェック
+		if (reservationDate.equals(LocalDate.now()) && reservationTime.isBefore(LocalTime.now())) {
+			String errorMessage = "本日は時間が過ぎているため、予約変更できません。";
+			redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
+			return "redirect:/reservation/" + id + "/edit";
+		}
 
 		if (bindingResult.hasErrors()) {
 
@@ -233,11 +267,40 @@ public class ReservationController {
 
 		}
 
+		reservationEditForm.setShopId(reservation.getShop().getId());
+		reservationEditForm.setUserId(reservation.getUser().getId());
 		reservationService.update(reservationEditForm);
 		redirectAttributes.addFlashAttribute("successMessage",
-				"『" + reservation.getShop().getName() + "』：" + "の予約を変更しました。");
+				"『" + reservation.getShop().getName() + "』：" + reservation.getReservationDate() + "の予約を変更しました。");
 
 		return "redirect:/reservation";
+	}
+
+	private static final Map<DayOfWeek, String> DAY_OF_WEEK_JAPANESE = Map.of(
+			DayOfWeek.MONDAY, "月曜日",
+			DayOfWeek.TUESDAY, "火曜日",
+			DayOfWeek.WEDNESDAY, "水曜日",
+			DayOfWeek.THURSDAY, "木曜日",
+			DayOfWeek.FRIDAY, "金曜日",
+			DayOfWeek.SATURDAY, "土曜日",
+			DayOfWeek.SUNDAY, "日曜日");
+
+	//定休日チェック
+	public boolean isAvailableForBooking(Integer shopId, LocalDate reservationDate) {
+		Shop shop = shopRepository.findById(shopId).orElseThrow(() -> new EntityNotFoundException("Shop not found"));
+		// 定休日のリストをカンマで分割して取得
+		List<String> holidays = Arrays.asList(shop.getRegularHoliday().split(","));
+
+		// 予約日の曜日を日本語で取得
+		DayOfWeek reservationDay = reservationDate.getDayOfWeek();
+		String reservationDayJapanese = DAY_OF_WEEK_JAPANESE.get(reservationDay);
+
+		// 通常の曜日の定休日をチェック
+		if (holidays.contains(reservationDayJapanese)) {
+			return false; // 予約日は通常の定休日に該当
+		}
+
+		return true; // 予約可能
 	}
 
 	@PostMapping("/{id}/delete")
