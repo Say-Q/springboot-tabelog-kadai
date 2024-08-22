@@ -3,6 +3,8 @@ package com.example.nagoyameshi.controller;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -180,13 +182,20 @@ public class ReservationController {
 			String errorMessage = String.format("%d年%d月%d日（%s）は、定休日のため予約できません。",
 					reservationDate.getYear(), reservationDate.getMonthValue(), reservationDate.getDayOfMonth(),
 					dayOfWeekJapanese);
+			
 			redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
 			return "redirect:/reservation/" + id;
 		}
 
 		// 予約時間チェック
-		if (reservationDate.equals(LocalDate.now()) && reservationTime.isBefore(LocalTime.now())) {
+		ZoneId japanZoneId = ZoneId.of("Asia/Tokyo");
+		ZonedDateTime currentZonedDateTime = ZonedDateTime.now(japanZoneId);
+		LocalDate currentDate = currentZonedDateTime.toLocalDate();
+		LocalTime currentTime = currentZonedDateTime.toLocalTime();
+		
+		if (reservationDate.equals(currentDate) && reservationTime.isBefore(currentTime)) {
 			String errorMessage = "本日は時間が過ぎているため、予約できません。";
+			
 			redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
 			return "redirect:/reservation/" + id;
 		}
@@ -250,13 +259,20 @@ public class ReservationController {
 			String errorMessage = String.format("%d年%d月%d日（%s）は、定休日のため予約できません。",
 					reservationDate.getYear(), reservationDate.getMonthValue(), reservationDate.getDayOfMonth(),
 					dayOfWeekJapanese);
+			
 			redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
 			return "redirect:/reservation/" + id + "/edit";
 		}
 
 		// 予約時間チェック
-		if (reservationDate.equals(LocalDate.now()) && reservationTime.isBefore(LocalTime.now())) {
+		ZoneId japanZoneId = ZoneId.of("Asia/Tokyo");
+		ZonedDateTime currentZonedDateTime = ZonedDateTime.now(japanZoneId);
+		LocalDate currentDate = currentZonedDateTime.toLocalDate();
+		LocalTime currentTime = currentZonedDateTime.toLocalTime();
+		
+		if (reservationDate.equals(currentDate) && reservationTime.isBefore(currentTime)) {
 			String errorMessage = "本日は時間が過ぎているため、予約変更できません。";
+			
 			redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
 			return "redirect:/reservation/" + id + "/edit";
 		}

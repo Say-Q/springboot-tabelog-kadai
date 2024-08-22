@@ -31,7 +31,7 @@
 
 						<form method="post" th:action="@{/admin/shops/__${shopEditForm.getId()}__/update}"
 							th:object="${shopEditForm}" enctype="multipart/form-data">
-							
+
 							<input type="hidden" th:field="*{id}">
 
 							<div class="form-group row mb-3">
@@ -158,11 +158,28 @@
 								<div class="col-md-4">
 									<label for="regularHoliday" class="col-form-label text-md-left fw-bold">定休日</label>
 								</div>
-								<div class="col-md-8">
-									<div th:if="${#fields.hasErrors('regularHoliday')}" class="text-danger small mb-2"
-										th:errors="*{regularHoliday}"></div>
-									<textarea class="form-control" th:field="*{regularHoliday}" cols="30" rows="2"
-										placeholder="火曜、水曜"></textarea>
+								<div class="d-flex justify-content-between">
+									<label><input type="checkbox" name="regularHoliday" value="Sunday"
+											th:checked="${#strings.contains(shopEditForm.regularHoliday,'日曜日')}">
+										日曜</label>
+									<label><input type="checkbox" name="regularHoliday" value="Monday"
+											th:checked="${#strings.contains(shopEditForm.regularHoliday,'月曜日')}">
+										月曜</label>
+									<label><input type="checkbox" name="regularHoliday" value="Tuesday"
+											th:checked="${#strings.contains(shopEditForm.regularHoliday,'火曜日')}">
+										火曜</label>
+									<label><input type="checkbox" name="regularHoliday" value="Wednesday"
+											th:checked="${#strings.contains(shopEditForm.regularHoliday,'水曜日')}">
+										水曜</label>
+									<label><input type="checkbox" name="regularHoliday" value="Thursday"
+											th:checked="${#strings.contains(shopEditForm.regularHoliday,'木曜日')}">
+										木曜</label>
+									<label><input type="checkbox" name="regularHoliday" value="Friday"
+											th:checked="${#strings.contains(shopEditForm.regularHoliday,'金曜日')}">
+										金曜</label>
+									<label><input type="checkbox" name="regularHoliday" value="Saturday"
+											th:checked="${#strings.contains(shopEditForm.regularHoliday,'土曜日')}">
+										土曜</label>
 								</div>
 							</div>
 

@@ -151,11 +151,14 @@
 								<div class="col-md-4">
 									<label for="regularHoliday" class="col-form-label text-md-left fw-bold">定休日</label>
 								</div>
-								<div class="col-md-8">
-									<div th:if="${#fields.hasErrors('regularHoliday')}" class="text-danger small mb-2"
-										th:errors="*{regularHoliday}"></div>
-									<textarea class="form-control" th:field="*{regularHoliday}" cols="30" rows="2"
-										placeholder="火曜、水曜"></textarea>
+								<div class="d-flex justify-content-between">
+								<label><input type="checkbox" name="regularHoliday" value="Sunday"> 日曜</label>
+								<label><input type="checkbox" name="regularHoliday" value="Monday"> 月曜</label>
+								<label><input type="checkbox" name="regularHoliday" value="Tuesday"> 火曜</label>
+								<label><input type="checkbox" name="regularHoliday" value="Wednesday"> 水曜</label>
+								<label><input type="checkbox" name="regularHoliday" value="Thursday"> 木曜</label>
+								<label><input type="checkbox" name="regularHoliday" value="Friday"> 金曜</label>
+								<label><input type="checkbox" name="regularHoliday" value="Saturday"> 土曜</label>
 								</div>
 							</div>
 

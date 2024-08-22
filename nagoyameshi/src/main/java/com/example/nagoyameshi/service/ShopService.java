@@ -5,8 +5,10 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,12 @@ public class ShopService {
 			copyImageFile(imageFile, filePath);
 			shop.setImageName(hashedImageName);
 		}
+		//コンマ区切りの曜日を取得
+		String[] holidays = shopRegisterForm.getRegularHoliday().split(",");
+		//日本語曜日に変換し、再度コンマ区切りのStringにまとめる
+		String regularHoliday = Arrays.stream(holidays)
+				.map(this::convertToJapaneseDay)
+				.collect(Collectors.joining(","));
 
 		shop.setName(shopRegisterForm.getName());
 		shop.setCategoriesId(shopRegisterForm.getCategoriesId());
@@ -48,7 +56,7 @@ public class ShopService {
 		shop.setPhoneNumber(shopRegisterForm.getPhoneNumber());
 		shop.setOpenTime(shopRegisterForm.getOpenTime());
 		shop.setCloseTime(shopRegisterForm.getCloseTime());
-		shop.setRegularHoliday(shopRegisterForm.getRegularHoliday());
+		shop.setRegularHoliday(regularHoliday);
 		shop.setPrice(shopRegisterForm.getPrice());
 		shop.setSeats(shopRegisterForm.getSeats());
 		shop.setShopSite(shopRegisterForm.getShopSite());
@@ -68,7 +76,13 @@ public class ShopService {
 			copyImageFile(imageFile, filePath);
 			shop.setImageName(hashedImageName);
 		}
-
+		//コンマ区切りの曜日を取得
+		String[] holidays = shopEditForm.getRegularHoliday().split(",");
+		//日本語曜日に変換し、再度コンマ区切りのStringにまとめる
+		String regularHoliday = Arrays.stream(holidays)
+				.map(this::convertToJapaneseDay)
+				.collect(Collectors.joining(","));
+		
 		shop.setName(shopEditForm.getName());
 		shop.setCategoriesId(shopEditForm.getCategoriesId());
 		shop.setDescription(shopEditForm.getDescription());
@@ -77,7 +91,7 @@ public class ShopService {
 		shop.setPhoneNumber(shopEditForm.getPhoneNumber());
 		shop.setOpenTime(shopEditForm.getOpenTime());
 		shop.setCloseTime(shopEditForm.getCloseTime());
-		shop.setRegularHoliday(shopEditForm.getRegularHoliday());
+		shop.setRegularHoliday(regularHoliday);
 		shop.setPrice(shopEditForm.getPrice());
 		shop.setSeats(shopEditForm.getSeats());
 		shop.setShopSite(shopEditForm.getShopSite());
@@ -112,7 +126,8 @@ public class ShopService {
 		List<Shop> shops = shopRepository.findAll();
 		try (CSVWriter csvWriter = new CSVWriter(writer)) {
 			//ファイルに書き込み
-			csvWriter.writeNext(new String[] { "ID", "カテゴリ－", "店舗名", "説明", "郵便番号", "住所", "電話番号", "開店時間", "閉店時間", "定休日", "価格帯", "座席数", "Webサイト", "登録日", "更新日" });
+			csvWriter.writeNext(new String[] { "ID", "カテゴリ－", "店舗名", "説明", "郵便番号", "住所", "電話番号", "開店時間", "閉店時間", "定休日",
+					"価格帯", "座席数", "Webサイト", "登録日", "更新日" });
 			for (Shop shop : shops) {
 				csvWriter.writeNext(new String[] {
 						String.valueOf(shop.getId()),
@@ -134,6 +149,27 @@ public class ShopService {
 			}
 		} catch (Exception e) {
 			throw new RuntimeException("CSV書き込み中にエラーが発生しました。", e);
+		}
+	}
+
+	private String convertToJapaneseDay(String day) {
+		switch (day) {
+		case "Sunday":
+			return "日曜日";
+		case "Monday":
+			return "月曜日";
+		case "Tuesday":
+			return "火曜日";
+		case "Wednesday":
+			return "水曜日";
+		case "Thursday":
+			return "木曜日";
+		case "Friday":
+			return "金曜日";
+		case "Saturday":
+			return "土曜日";
+		default:
+			return day;
 		}
 	}
 }
