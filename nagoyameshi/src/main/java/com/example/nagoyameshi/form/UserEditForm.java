@@ -1,7 +1,9 @@
 package com.example.nagoyameshi.form;
 
+import com.example.nagoyameshi.validation.Katakana;
 import com.example.nagoyameshi.validation.PhoneNumber;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -17,6 +19,7 @@ public class UserEditForm {
 	private String name;
 	
 	@NotBlank(message = "フリガナを入力してください。")
+	@Katakana //カスタムバリデーション
 	private String furigana;
 	
 	@NotBlank(message = "生年月日を入力してください。")
@@ -30,6 +33,7 @@ public class UserEditForm {
 	private String profession;
 	
 	@NotBlank(message = "メールアドレスを入力してください。")
+	@Email(message = "メールアドレスは正しい形式で入力してください。")
 	private String mail;
 	
 }

@@ -50,12 +50,12 @@ public class AdminshopController {
 		if (Objects.isNull(order) || order.isEmpty()) {
 			order = "id";
 		}
-		
+
 		Page<Shop> shopPage;
 		List<Categories> category = categoryRepository.findAll();
 
 		shopPage = searchshop(keyword, order, pageable);
-		
+
 		model.addAttribute("shopPage", shopPage);
 		model.addAttribute("category", category);
 		model.addAttribute("keyword", keyword);
@@ -79,7 +79,7 @@ public class AdminshopController {
 					? shopRepository.findByNameLikeOrderByUpdatedAtDesc("%" + keyword + "%", pageable)
 					: shopRepository.findAllByOrderByUpdatedAtDesc(pageable);
 		default:
-			return shopPage = isKeyword 
+			return shopPage = isKeyword
 					? shopRepository.findByNameLikeOrderByIdAsc("%" + keyword + "%", pageable)
 					: shopRepository.findAllByOrderByIdAsc(pageable);
 		}
@@ -148,12 +148,13 @@ public class AdminshopController {
 	}
 
 	@PostMapping("/{id}/update")
-	public String update(@ModelAttribute @Validated ShopEditForm shopEditForm, BindingResult bindingResult,
+	public String update(@PathVariable("id") Integer id, @ModelAttribute @Validated ShopEditForm shopEditForm,
+			BindingResult bindingResult,
 			RedirectAttributes redirectAttributes, Model model) {
-		List<Categories> category = categoryRepository.findAll();
 
 		if (bindingResult.hasErrors()) {
 
+			List<Categories> category = categoryRepository.findAll();
 			model.addAttribute("category", category);
 			return "admin/shops/edit";
 

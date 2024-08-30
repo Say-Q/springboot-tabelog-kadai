@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS shops
    phone_number VARCHAR (50) NOT NULL,
    open_time VARCHAR (10) NOT NULL,
    close_time VARCHAR (10) NOT NULL,
-   regular_holiday VARCHAR (100) NOT NULL,
+   regular_holiday VARCHAR (100),
    price INT NOT NULL,
    seats INT NOT NULL,
    --座席数

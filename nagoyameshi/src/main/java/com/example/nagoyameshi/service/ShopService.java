@@ -41,6 +41,28 @@ public class ShopService {
 			copyImageFile(imageFile, filePath);
 			shop.setImageName(hashedImageName);
 		}
+		
+		String horiday = shopRegisterForm.getRegularHoliday();
+		
+		if (horiday == null) {
+
+			shop.setName(shopRegisterForm.getName());
+			shop.setCategoriesId(shopRegisterForm.getCategoriesId());
+			shop.setDescription(shopRegisterForm.getDescription());
+			shop.setPostalCode(shopRegisterForm.getPostalCode());
+			shop.setAddress(shopRegisterForm.getAddress());
+			shop.setPhoneNumber(shopRegisterForm.getPhoneNumber());
+			shop.setOpenTime(shopRegisterForm.getOpenTime());
+			shop.setCloseTime(shopRegisterForm.getCloseTime());
+			shop.setRegularHoliday(horiday);
+			shop.setPrice(shopRegisterForm.getPrice());
+			shop.setSeats(shopRegisterForm.getSeats());
+			shop.setShopSite(shopRegisterForm.getShopSite());
+			
+			shopRepository.save(shop);
+			
+		} else {
+
 		//コンマ区切りの曜日を取得
 		String[] holidays = shopRegisterForm.getRegularHoliday().split(",");
 		//日本語曜日に変換し、再度コンマ区切りのStringにまとめる
@@ -62,6 +84,7 @@ public class ShopService {
 		shop.setShopSite(shopRegisterForm.getShopSite());
 
 		shopRepository.save(shop);
+		}
 	}
 
 	@Transactional
@@ -76,13 +99,35 @@ public class ShopService {
 			copyImageFile(imageFile, filePath);
 			shop.setImageName(hashedImageName);
 		}
+		
+		String horiday = shopEditForm.getRegularHoliday();
+		
+		if (horiday == null) {
+
+			shop.setName(shopEditForm.getName());
+			shop.setCategoriesId(shopEditForm.getCategoriesId());
+			shop.setDescription(shopEditForm.getDescription());
+			shop.setPostalCode(shopEditForm.getPostalCode());
+			shop.setAddress(shopEditForm.getAddress());
+			shop.setPhoneNumber(shopEditForm.getPhoneNumber());
+			shop.setOpenTime(shopEditForm.getOpenTime());
+			shop.setCloseTime(shopEditForm.getCloseTime());
+			shop.setRegularHoliday(horiday);
+			shop.setPrice(shopEditForm.getPrice());
+			shop.setSeats(shopEditForm.getSeats());
+			shop.setShopSite(shopEditForm.getShopSite());
+
+			shopRepository.save(shop);
+			
+		} else {
+		
 		//コンマ区切りの曜日を取得
 		String[] holidays = shopEditForm.getRegularHoliday().split(",");
 		//日本語曜日に変換し、再度コンマ区切りのStringにまとめる
 		String regularHoliday = Arrays.stream(holidays)
 				.map(this::convertToJapaneseDay)
 				.collect(Collectors.joining(","));
-		
+
 		shop.setName(shopEditForm.getName());
 		shop.setCategoriesId(shopEditForm.getCategoriesId());
 		shop.setDescription(shopEditForm.getDescription());
@@ -97,6 +142,7 @@ public class ShopService {
 		shop.setShopSite(shopEditForm.getShopSite());
 
 		shopRepository.save(shop);
+		}
 	}
 
 	//UUIDを使って生成したファイル名を返す

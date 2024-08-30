@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.nagoyameshi.entity.Categories;
 import com.example.nagoyameshi.entity.Favorite;
@@ -68,23 +70,37 @@ public class FavoriteController {
 
 	//お気に入り登録
 	@PostMapping("/add")
-	public String addFavorite(@RequestParam("shopId") Integer shopId,
+	@ResponseBody
+	public ResponseEntity<String> addFavorite(@RequestParam("shopId") Integer shopId,
 			@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
 		User user = userDetailsImpl.getUser();
 		Optional<Shop> shopOpt = shopRepository.findById(shopId);
-		shopOpt.ifPresent(shop -> favoriteService.addFav(shop, user));
+	    
+		if (shopOpt.isPresent()) {
 
-		return "redirect:/shops/" + shopId;
+			favoriteService.addFav(shopOpt.get(), user);
+	        return ResponseEntity.ok().build();
+	    
+		} else {
+	        return ResponseEntity.status(404).body("ショップが見つかりません");
+		}
 	}
 
 	//お気に入り削除
 	@PostMapping("/delete")
-	public String deleteFav(@RequestParam("shopId") Integer shopId,
+	@ResponseBody
+	public ResponseEntity<String> deleteFav(@RequestParam("shopId") Integer shopId,
 			@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
 		User user = userDetailsImpl.getUser();
 		Optional<Shop> shopOpt = shopRepository.findById(shopId);
-		shopOpt.ifPresent(shop -> favoriteService.deleteFav(shop, user));
 
-		return "redirect:/shops/" + shopId;
+	    if (shopOpt.isPresent()) {
+	        
+	    	favoriteService.deleteFav(shopOpt.get(), user);
+	        return ResponseEntity.ok().build();
+
+	    } else {
+	        return ResponseEntity.status(404).body("ショップが見つかりません");
+	    }
 	}
 }

@@ -45,7 +45,6 @@ public class ShopEditForm {
 	@NotNull(message = "閉店時間を入力してください。")
 	private String closeTime;
 
-	@NotBlank(message = "定休日を入力してください。")
 	private String regularHoliday;
 
 	@NotNull(message = "価格帯を入力してください。")

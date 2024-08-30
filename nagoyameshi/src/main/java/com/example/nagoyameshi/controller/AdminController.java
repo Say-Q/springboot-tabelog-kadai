@@ -39,7 +39,8 @@ public class AdminController {
 	@Autowired
 	private CompanyRepository companyRepository;
 
-	public AdminController(ShopRepository shopRepository, UserRepository userRepository, ShopService shopService, UserService userService) {
+	public AdminController(ShopRepository shopRepository, UserRepository userRepository, ShopService shopService,
+			UserService userService) {
 		this.shopRepository = shopRepository;
 		this.userRepository = userRepository;
 		this.shopService = shopService;
@@ -55,7 +56,7 @@ public class AdminController {
 
 		return "admin/index";
 	}
-	
+
 	@GetMapping("/aggregate")
 	public String aggregate(@RequestParam(required = false, defaultValue = "totalCount") String type, Model model) {
 		List<Map<String, Object>> monthlyData = new ArrayList<>();
@@ -81,15 +82,15 @@ public class AdminController {
 			long shopCount = type.equals("totalCount") ? shopRepository.countByCreatedAtLessThanEqual(endDate)
 					: shopRepository.countByCreatedAtBetween(startDate, endDate);
 			long userCount = type.equals("totalCount")
-					? userRepository.countByCreatedAtLessThanEqualAndRoleNotAdmin(endDate, 1)
-					: userRepository.countByUpdatedAtBetweenAndRoleNotAdmin(startDate, endDate, 1);
+					? userRepository.countByCreatedAtLessThanEqualAndRole_IdNot(endDate, 1)
+					: userRepository.countByUpdatedAtBetweenAndRole_IdNot(startDate, endDate, 1);
 			long freeCount = type.equals("totalCount")
-					? userRepository.countByCreatedAtLessThanEqualAndRoleFree(endDate, 2)
-					: userRepository.countByCreatedAtBetweenAndRoleFree(startDate, endDate, 2);
+					? userRepository.countByCreatedAtLessThanEqualAndRole_Id(endDate, 2)
+					: userRepository.countByCreatedAtBetweenAndRole_Id(startDate, endDate, 2);
 			long payCount = type.equals("totalCount")
-					? userRepository.countByUpdatedAtLessThanEqualAndRolePay(endDate, 3)
-					: userRepository.countByUpdatedAtBetweenAndRolePay(startDate, endDate, 3);
-			
+					? userRepository.countByUpdatedAtLessThanEqualAndRole_Id(endDate, 3)
+					: userRepository.countByUpdatedAtBetweenAndRole_Id(startDate, endDate, 3);
+
 			Integer earnings = (int) payCount * 300;
 
 			Map<String, Object> data = new HashMap<>();
@@ -117,7 +118,7 @@ public class AdminController {
 		String csvFileName = "shops.csv";
 		response.setContentType("text/csv; charset=UTF-8"); //コンテンツタイプをCSV形式のファイルとして設定
 		response.setHeader("Content-Disposition", "attachment; filename=\"" + csvFileName + "\"");
-		
+
 		// BOM (Byte Order Mark)を使用する。※ExcelなどのCSVビューアがファイルのエンコーディングをUTF-8として認識しやすくなる。
 		response.getOutputStream().write(0xef);
 		response.getOutputStream().write(0xbb);
@@ -125,7 +126,7 @@ public class AdminController {
 		// UTF-8エンコーディングを指定してCSVを書き込み
 		shopService.writeShopsToCsv(new OutputStreamWriter(response.getOutputStream(), StandardCharsets.UTF_8));
 	}
-	
+
 	@GetMapping("/export-usersCsv")
 	public void exportUsersToCsv(HttpServletResponse response) throws IOException {
 		String csvFileName = "users.csv";
@@ -139,18 +140,17 @@ public class AdminController {
 		// UTF-8エンコーディングを指定してCSVを書き込み
 		userService.writeUsersToCsv(new OutputStreamWriter(response.getOutputStream(), StandardCharsets.UTF_8));
 	}
-	
+
 	@GetMapping("/users/aggregate")
 	public String aggregate(Model model) {
-		List<User> users = userRepository.findByRoleIdNot(1); //全ユーザーを取得
+		List<User> users = userRepository.findByRole_IdNot(1); //全ユーザーを取得
 		//年代ごとの無料会員・有料会員の集計データを取得
 		Map<String, Map<String, Integer>> memberCountByAgeGroup = userService.getMemberCountByAgeGroup(users);
 		Map<String, Map<String, Integer>> memberCountByProfession = userService.getMemberCountByprofession(users);
-		System.out.println(memberCountByAgeGroup);
-		System.out.println(memberCountByProfession);
+
 		model.addAttribute("memberCountByAgeGroup", memberCountByAgeGroup);
 		model.addAttribute("memberCountByProfession", memberCountByProfession);
-		
+
 		return "admin/users/aggregate";
 	}
 }

@@ -103,6 +103,7 @@ public class ReservationController {
 
 	}
 
+	//予約変更ボタン表示切り替えの為、過去日判断
 	private boolean isPastReservation(CharSequence reservationDate) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // 適切なパターンを指定
 		LocalDate date = LocalDate.parse(reservationDate, formatter);
@@ -171,10 +172,24 @@ public class ReservationController {
 
 		Shop shop = shopRepository.getReferenceById(id);
 		User user = userDetailsImpl.getUser();
-		LocalDate reservationDate = LocalDate.parse(reservationInputForm.getReservationDate());
-		LocalTime reservationTime = LocalTime.parse(reservationInputForm.getReservationTime());
 
 		model.addAttribute("shop", shop);
+
+		if (bindingResult.hasErrors()) {
+
+			List<String> availableTimes = generateAvailableTimes(shop.getOpenTime(), shop.getCloseTime());
+			List<Integer> availableCounts = generateAvailableCounts(shop.getSeats());
+
+			model.addAttribute("availableTimes", availableTimes);
+			model.addAttribute("availableCounts", availableCounts);
+			redirectAttributes.addFlashAttribute("reservationInputForm", reservationInputForm);
+
+			return "reservation/register";
+
+		}
+
+		LocalDate reservationDate = LocalDate.parse(reservationInputForm.getReservationDate());
+		LocalTime reservationTime = LocalTime.parse(reservationInputForm.getReservationTime());
 
 		// 定休日チェック
 		if (!isAvailableForBooking(id, reservationDate)) {
@@ -182,7 +197,7 @@ public class ReservationController {
 			String errorMessage = String.format("%d年%d月%d日（%s）は、定休日のため予約できません。",
 					reservationDate.getYear(), reservationDate.getMonthValue(), reservationDate.getDayOfMonth(),
 					dayOfWeekJapanese);
-			
+
 			redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
 			return "redirect:/reservation/" + id;
 		}
@@ -192,19 +207,27 @@ public class ReservationController {
 		ZonedDateTime currentZonedDateTime = ZonedDateTime.now(japanZoneId);
 		LocalDate currentDate = currentZonedDateTime.toLocalDate();
 		LocalTime currentTime = currentZonedDateTime.toLocalTime();
-		
+
 		if (reservationDate.equals(currentDate) && reservationTime.isBefore(currentTime)) {
 			String errorMessage = "本日は時間が過ぎているため、予約できません。";
-			
+
 			redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
 			return "redirect:/reservation/" + id;
 		}
 
-		if (bindingResult.hasErrors()) {
+		//重複チェック
+		List<Reservation> existingReservation = reservationRepository
+				.findByUserIdAndShopIdAndReservationDateAndReservationTime(
+						userDetailsImpl.getUser().getId(), id, reservationInputForm.getReservationDate(),
+						reservationInputForm.getReservationTime());
 
-			redirectAttributes.addFlashAttribute("reservationInputForm", reservationInputForm);
-			return "reservation/register";
-
+		if (!existingReservation.isEmpty()) {
+			String dayOfWeekJapanese = DAY_OF_WEEK_JAPANESE.get(reservationDate.getDayOfWeek());
+			String errorMessage = String.format("%d年%d月%d日（%s）は、既に予約済みです。", reservationDate.getYear(),
+					reservationDate.getMonthValue(), reservationDate.getDayOfMonth(), dayOfWeekJapanese);
+			
+			redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
+			return "redirect:/reservation/" + id;
 		}
 
 		reservationRegisterForm.setShopId(shop.getId());
@@ -253,13 +276,19 @@ public class ReservationController {
 		LocalDate reservationDate = LocalDate.parse(reservationEditForm.getReservationDate());
 		LocalTime reservationTime = LocalTime.parse(reservationEditForm.getReservationTime());
 
+		if (bindingResult.hasErrors()) {
+
+			return "reservation/edit";
+
+		}
+
 		// 定休日チェック
 		if (!isAvailableForBooking(reservationEditForm.getShopId(), reservationDate)) {
 			String dayOfWeekJapanese = DAY_OF_WEEK_JAPANESE.get(reservationDate.getDayOfWeek());
 			String errorMessage = String.format("%d年%d月%d日（%s）は、定休日のため予約できません。",
 					reservationDate.getYear(), reservationDate.getMonthValue(), reservationDate.getDayOfMonth(),
 					dayOfWeekJapanese);
-			
+
 			redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
 			return "redirect:/reservation/" + id + "/edit";
 		}
@@ -269,18 +298,12 @@ public class ReservationController {
 		ZonedDateTime currentZonedDateTime = ZonedDateTime.now(japanZoneId);
 		LocalDate currentDate = currentZonedDateTime.toLocalDate();
 		LocalTime currentTime = currentZonedDateTime.toLocalTime();
-		
+
 		if (reservationDate.equals(currentDate) && reservationTime.isBefore(currentTime)) {
 			String errorMessage = "本日は時間が過ぎているため、予約変更できません。";
-			
+
 			redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
 			return "redirect:/reservation/" + id + "/edit";
-		}
-
-		if (bindingResult.hasErrors()) {
-
-			return "reservation/edit";
-
 		}
 
 		reservationEditForm.setShopId(reservation.getShop().getId());

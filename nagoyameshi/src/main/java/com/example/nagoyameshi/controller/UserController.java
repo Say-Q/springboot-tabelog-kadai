@@ -21,6 +21,7 @@ import com.example.nagoyameshi.form.UserEditForm;
 import com.example.nagoyameshi.repository.ReservationRepository;
 import com.example.nagoyameshi.repository.UserRepository;
 import com.example.nagoyameshi.security.UserDetailsImpl;
+import com.example.nagoyameshi.service.FavoriteService;
 import com.example.nagoyameshi.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,13 +33,15 @@ public class UserController {
 	private final UserRepository userRepository;
 	private final UserService userService;
 	private final ReservationRepository reservationRepository;
+	private final FavoriteService favoriteService;
 
 	public UserController(UserRepository userRepository, UserService userService,
-			ReservationRepository reservationRepository) {
+			ReservationRepository reservationRepository, FavoriteService favoriteService) {
 
 		this.userRepository = userRepository;
 		this.userService = userService;
 		this.reservationRepository = reservationRepository;
+		this.favoriteService = favoriteService;
 	}
 
 	@GetMapping
@@ -92,10 +95,13 @@ public class UserController {
 
 	@PostMapping("/delete")
 	public String delete(@RequestParam("id") Integer id, HttpServletRequest request, HttpServletResponse response,
-			RedirectAttributes redirectAttributes) {
+			RedirectAttributes redirectAttributes, UserDetailsImpl userDetailsImpl) {
+		
+		User user = userDetailsImpl.getUser();
 		//ユーザー及び予約情報の削除
 		reservationRepository.deleteByUserId(id);
 		userRepository.deleteById(id);
+		favoriteService.allDeleteFav(user);
 
 		//ログアウト処理
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();

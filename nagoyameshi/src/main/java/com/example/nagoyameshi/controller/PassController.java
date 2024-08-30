@@ -83,10 +83,15 @@ public class PassController {
 	}
 
 	@PostMapping("/send")
-	public String Resetsend(@ModelAttribute EmailForm emailForm, Model model,
+	public String Resetsend(@ModelAttribute @Validated EmailForm emailForm, BindingResult bindingResult, Model model,
 			RedirectAttributes redirectAttributes, HttpServletRequest request) {
 		String email = emailForm.getMail();
 		User user = userRepository.findBymail(email);
+		
+		if (bindingResult.hasErrors()) {
+			
+			return "pass/reset";
+		}
 
 		if (user == null) {
 			model.addAttribute("errorMessage", "入力されたメールアドレスは存在しません。");

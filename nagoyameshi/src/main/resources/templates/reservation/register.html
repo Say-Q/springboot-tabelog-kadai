@@ -53,9 +53,9 @@
 										<div class="form-group mb-3">
 											<label for="reservationTime"
 												class="col-form-label text-md-left fw-bold">予約時間</label>
+												<br>
 											<div th:if="${#fields.hasErrors('reservationTime')}"
 												class="text-danger small mb-2" th:errors="*{reservationTime}"></div>
-											<br>
 											<select th:field="*{reservationTime}">
 												<option value=""></option>
 												<option th:each="time : ${availableTimes}" th:value="${time}"
@@ -66,9 +66,9 @@
 										<div class="form-group mb-3">
 											<label for="reservationCount"
 												class="col-form-label text-md-left fw-bold">予約人数</label>
+												<br>
 											<div th:if="${#fields.hasErrors('reservationCount')}"
 												class="text-danger small mb-2" th:errors="*{reservationCount}"></div>
-											<br>
 											<select th:field="*{reservationCount}">
 												<option value=""></option>
 												<th:block th:each="count : ${availableCounts}">

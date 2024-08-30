@@ -5,8 +5,13 @@
 	<div th:replace="~{fragment :: meta}"></div>
 
 	<div th:replace="~{fragment :: styles}"></div>
+
+	<script src="/js/favorite.js" defer></script>
 	<script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=default"></script>
 	<script type="module" src="/js/initMap.js"></script>
+	<script th:inline="javascript">
+		const hasFavorites = /*[[${userHasFavorites}]]*/ false;
+	</script>
 	<title>店舗詳細</title>
 
 </head>
@@ -30,13 +35,10 @@
 						</nav>
 
 						<h1 id="shop-name" class="text-center mb-3" th:text="${shop.getName()}"></h1>
-						<!--						<span id="shop-rating" class="fs-5" data-api-key="[[${googleApiKey}]]"></span>-->
 
 						<div th:if=" ${errorMessage}" class="alert alert-danger">
 							<span th:text="${errorMessage}"></span>
 						</div>
-
-
 
 						<div class="row">
 							<div class="col-md-4 mb-4">
@@ -48,23 +50,25 @@
 									</div>
 
 									<div sec:authorize="hasRole('ROLE_PAYMEMBER')" class="ms-auto fs-4">
-										<div th:unless="${userHasFavorites}">
-											<form method="post" th:action="@{/favorite/add}">
+										<div id="add-favorite-div" style="display: none;">
+											<form id="add-favorite-form" method="post" th:action="@{/favorite/add}">
 												<input type="hidden" name="shopId" th:value="${shop.id}">
-												<button type="submit" class="btn btn-primary btn-sm">
+												<button class="btn btn-primary btn-sm">
 													&#9825;お気に入り追加</button> <!-- &#9825; は ♡ -->
 											</form>
 										</div>
 
-										<div th:if="${userHasFavorites}">
-											<form method="post" th:action="@{/favorite/delete}">
+										<div id="delete-favorite-div" style="display: none;">
+											<form id="delete-favorite-form" method="post"
+												th:action="@{/favorite/delete}">
 												<input type="hidden" name="shopId" th:value="${shop.id}">
-												<button type="submit" class="btn btn-Light border border-dark btn-sm">
+												<button class="btn btn-light border border-dark btn-sm">
 													&#9829;お気に入り解除</button> <!-- &#9829; は ♥ -->
 											</form>
 										</div>
 									</div>
 								</div>
+
 								<div class="image-container">
 									<img th:if="${shop.getImageName()}" th:src="@{/storage/__${shop.getImageName()}__}"
 										class="img-fluid" alt="店舗画像">
@@ -82,7 +86,8 @@
 										</div>
 									</div>
 								</div>
-								<div sec:authorize="isAuthenticated() and !hasRole('ROLE_ADMIN')" class="col-lg-12 px-0 mt-4">
+								<div sec:authorize="isAuthenticated() and !hasRole('ROLE_ADMIN')"
+									class="col-lg-12 px-0 mt-4">
 									<div class="card">
 										<div class="card-body">
 											<a th:href="@{/reservation/__${shop.getId()}__}">
@@ -218,7 +223,6 @@
 
 	<div th:replace="~{fragment :: scripts}"></div>
 	<!-- 外部JavaScriptファイルを読み込む -->
-	<!--	<script src="/js/getRating.js"></script>-->
 	<script src="/js/googleReview.js"></script>
 </body>
 

@@ -20,25 +20,15 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	public Page<User> findByMailLike(String mail, Pageable pageable);
 
 	//集計画面で使用
-	@Query("SELECT COUNT(u) FROM User u WHERE u.createdAt <= :date AND u.role.id <> :roleId")
-	long countByCreatedAtLessThanEqualAndRoleNotAdmin(@Param("date") Timestamp date, @Param("roleId") Integer roleId);
+    long countByCreatedAtLessThanEqualAndRole_IdNot(Timestamp date, Integer roleId);
+    long countByCreatedAtLessThanEqualAndRole_Id(Timestamp date, Integer roleId);
+    long countByUpdatedAtLessThanEqualAndRole_Id(Timestamp date, Integer roleId);
+    
+    long countByUpdatedAtBetweenAndRole_IdNot(Timestamp startDate, Timestamp endDate, Integer roleId);
+    long countByCreatedAtBetweenAndRole_Id(Timestamp startDate, Timestamp endDate, Integer roleId);
+    long countByUpdatedAtBetweenAndRole_Id(Timestamp startDate, Timestamp endDate, Integer roleId);
 
-	@Query("SELECT COUNT(u) FROM User u WHERE u.createdAt <= :date AND u.role.id = :roleId")
-	long countByCreatedAtLessThanEqualAndRoleFree(@Param("date") Timestamp date, @Param("roleId") Integer roleId);
-
-	@Query("SELECT COUNT(u) FROM User u WHERE u.updatedAt <= :date AND u.role.id = :roleId")
-	long countByUpdatedAtLessThanEqualAndRolePay(@Param("date") Timestamp date, @Param("roleId") Integer roleId);
+    // CSV出力用
+    List<User> findByRole_IdNot(Integer roleId);	
 	
-	@Query("SELECT COUNT(u) FROM User u WHERE u.updatedAt BETWEEN :startDate AND :endDate AND u.role.id <> :roleId")
-	long countByUpdatedAtBetweenAndRoleNotAdmin(@Param("startDate") Timestamp startDate, @Param("endDate") Timestamp endDate, Integer roleId);
-
-	@Query("SELECT COUNT(u) FROM User u WHERE u.createdAt BETWEEN :startDate AND :endDate AND u.role.id = :roleId")
-	long countByCreatedAtBetweenAndRoleFree(@Param("startDate") Timestamp startDate, @Param("endDate") Timestamp endDate, Integer roleId);
-
-	@Query("SELECT COUNT(u) FROM User u WHERE u.updatedAt BETWEEN :startDate AND :endDate AND u.role.id = :roleId")
-	long countByUpdatedAtBetweenAndRolePay(@Param("startDate") Timestamp startDate, @Param("endDate") Timestamp endDate, Integer roleId);
-
-	//CSV出力用
-	@Query("SELECT u FROM User u WHERE u.role.id <> :roleId")
-	List<User> findByRoleIdNot(Integer roleId);
 }

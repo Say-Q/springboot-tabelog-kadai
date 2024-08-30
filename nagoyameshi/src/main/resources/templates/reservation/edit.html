@@ -30,11 +30,11 @@
 								<li class="breadcrumb-item active" aria-current="page">予約変更</li>
 							</ol>
 						</nav>
-						
+
 						<div th:if="${errorMessage}" class="alert alert-danger">
 							<span th:text="${errorMessage}"></span>
 						</div>
-						
+
 						<h1 class="text-center pb-3 mb-3 border-bottom">予約変更画面</h1>
 
 						<h2 class="text-center mb-4" th:text="${'『' + shop.Name + '』'}"></h2>
@@ -64,11 +64,10 @@
 										<div class="form-group mb-3">
 											<label for="reservationTime"
 												class="col-form-label text-md-left fw-bold">予約時間</label>
+											<br>
 											<div th:if="${#fields.hasErrors('reservationTime')}"
 												class="text-danger small mb-2" th:errors="*{reservationTime}"></div>
-											<br>
 											<select th:field="*{reservationTime}">
-												<option value=""></option>
 												<option th:each="time : ${availableTimes}" th:value="${time}"
 													th:text="${time}"></option>
 											</select>
@@ -77,11 +76,10 @@
 										<div class="form-group mb-3">
 											<label for="reservationCount"
 												class="col-form-label text-md-left fw-bold">予約人数</label>
+											<br>
 											<div th:if="${#fields.hasErrors('reservationCount')}"
 												class="text-danger small mb-2" th:errors="*{reservationCount}"></div>
-											<br>
 											<select th:field="*{reservationCount}">
-												<option value=""></option>
 												<th:block th:each="count : ${availableCounts}">
 													<option th:value="${count}" th:text="${count}"
 														th:selected="${count == reservationEditForm.reservationCount}">

@@ -3,6 +3,7 @@ package com.example.nagoyameshi.form;
 import org.hibernate.validator.constraints.Length;
 
 import com.example.nagoyameshi.validation.Katakana;
+import com.example.nagoyameshi.validation.Password;
 import com.example.nagoyameshi.validation.PhoneNumber;
 
 import jakarta.validation.constraints.Email;
@@ -33,9 +34,11 @@ public class SignupForm {
 	private String mail;
 	
 	@NotBlank(message = "パスワードを入力してください。")
+	@Password //カスタムバリデーション
 	@Length(min = 8, message = "パスワードは8文字以上で入力してください。")
 	private String password;
 	
 	@NotBlank(message = "パスワード（確認用）を入力してください。")
+	@Password //カスタムバリデーション
 	private String passwordConfirmation;
 }
